@@ -2,8 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-
-namespace BusinessObjects.Models;
+using BusinessObjects.Models;
+namespace DataAccess;
 
 public partial class StudentFinanceDbContext : DbContext
 {
@@ -119,7 +119,7 @@ public partial class StudentFinanceDbContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.FullName).HasMaxLength(100);
             entity.Property(e => e.IsActive).HasDefaultValue(true);
-            entity.Property(e => e.PasswordHash).HasMaxLength(255);
+            entity.Property(e => e.PasswordHash).HasMaxLength(256);
         });
 
         modelBuilder.Entity<Wallet>(entity =>

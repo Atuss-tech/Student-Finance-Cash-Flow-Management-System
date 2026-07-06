@@ -77,9 +77,9 @@ namespace Student_Finance___Cash_Flow_Management_System
             }
 
             // Kiểm tra độ phức tạp của mật khẩu
-            if (password.Length > 10)
+            if (password.Length < 6)
             {
-                MessageBox.Show("Mật khẩu chỉ được giới hạn tối đa 10 ký tự.", "Lỗi mật khẩu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Mật khẩu phải có ít nhất 6 kí tự.", "Lỗi mật khẩu", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             if (!password.Any(char.IsUpper) || !password.Any(char.IsDigit) || !password.Any(c => !char.IsLetterOrDigit(c)))
@@ -96,6 +96,8 @@ namespace Student_Finance___Cash_Flow_Management_System
                 txtRegisterFullName.Clear();
                 txtRegisterEmail.Clear();
                 txtRegisterPassword.Clear();
+                //Chuyển về Tab Đăng Nhập sau khi đăng ký thành công
+                MainTabControl.SelectedItem = TabLogin; 
             }
             else
             {
