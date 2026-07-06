@@ -1,0 +1,82 @@
+<UserControl x:Class="WPF.Views.UserControls.SummaryCardControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <!-- Glow border color converter not needed — we use solid accent border -->
+    </UserControl.Resources>
+    
+    <Border x:Name="CardBorder" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="14" BorderThickness="1"
+            BorderBrush="{DynamicResource CardBorderBrush}" Padding="20" Cursor="Hand">
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header Row -->
+            <Grid Grid.Row="0" Margin="0,0,0,12">
+                <TextBlock Text="{Binding Title}" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Left"
+                           VerticalAlignment="Center" FontFamily="Segoe UI"/>
+                <Border HorizontalAlignment="Right" Width="36" Height="36" CornerRadius="10"
+                        Background="{Binding IconBackgroundBrush}">
+                    <TextBlock Text="{Binding Icon}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                               FontSize="19"/>
+                </Border>
+            </Grid>
+
+            <!-- Amount -->
+            <TextBlock Grid.Row="1" x:Name="AmountText" Text="{Binding FormattedAmount}"
+                       FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"
+                       FontFamily="Segoe UI" Margin="0,0,0,6"/>
+            
+            <!-- Subtext -->
+            <TextBlock Grid.Row="2" Text="{Binding Subtext}" FontSize="12"
+                       Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,10"/>
+            
+            <!-- Change Badge -->
+            <Border Grid.Row="3" HorizontalAlignment="Left" CornerRadius="20" Padding="8,3" Background="{DynamicResource BadgeBackgroundBrush}">
+                <TextBlock Text="{Binding FormattedChange}" FontSize="12" FontWeight="SemiBold"
+                           Foreground="{Binding ChangeColorBrush}"/>
+            </Border>
+        </Grid>
+    </Border>
+
+    <UserControl.Style>
+        <Style TargetType="UserControl">
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.025" Duration="0:0:0.18">
+                                    <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.025" Duration="0:0:0.18">
+                                    <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="0:0:0.18"/>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="1" Duration="0:0:0.18"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Style>
+</UserControl>

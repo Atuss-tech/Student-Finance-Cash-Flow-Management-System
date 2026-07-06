@@ -1,0 +1,338 @@
+<UserControl x:Class="WPF.Views.UserControls.BudgetsViewControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:uc="clr-namespace:WPF.Views.UserControls"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             Background="Transparent">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        
+        <!-- Button Styles for Modal -->
+        <Style x:Key="ModalBtnPrimary" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource PrimaryAccentBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource AppBackgroundBrush}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModalBtnCancel" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource CardBorderBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.Triggers>
+            <EventTrigger RoutedEvent="Loaded">
+                <BeginStoryboard Storyboard="{StaticResource FadeInSlideUpAnimation}"/>
+            </EventTrigger>
+        </Grid.Triggers>
+        <ScrollViewer VerticalScrollBarVisibility="Hidden" PanningMode="VerticalOnly" Margin="0,0,10,0">
+            <StackPanel>
+
+                <!-- ── Removed Create Budget Button Row ── -->
+
+                <!-- ── 4 Stat Mini Cards ── -->
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Total Budget -->
+                    <Border Grid.Column="0" Background="{DynamicResource CardBackgroundBrush}"
+                            BorderBrush="{DynamicResource ChartBlueBrush}" BorderThickness="0,0,0,3"
+                            CornerRadius="12" Padding="18" Margin="0,0,10,0" Style="{StaticResource HoverBorderStyle}">
+                        <Grid>
+                            <StackPanel HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding CardTotalBudget.Label}" FontSize="11" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                <TextBlock Text="{Binding CardTotalBudget.FormattedValue}" FontSize="24" FontWeight="Bold"
+                                           Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,4,0,0"/>
+                            </StackPanel>
+                            <Border HorizontalAlignment="Right" VerticalAlignment="Center" Width="36" Height="36"
+                                    CornerRadius="10" Background="{DynamicResource TranslucentBlueBrush}">
+                                <TextBlock Text="{Binding CardTotalBudget.Icon}" FontSize="18"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- Spent -->
+                    <Border Grid.Column="1" Background="{DynamicResource CardBackgroundBrush}"
+                            CornerRadius="12" Padding="18" Margin="5,0,5,0"
+                            BorderBrush="{DynamicResource RoseAccentBrush}" BorderThickness="0,0,0,3" Style="{StaticResource HoverBorderStyle}">
+                        <Grid>
+                            <StackPanel HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding CardSpent.Label}" FontSize="11" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                <TextBlock Text="{Binding CardSpent.FormattedValue}" FontSize="24" FontWeight="Bold"
+                                           Foreground="{DynamicResource RoseAccentBrush}" Margin="0,4,0,0"/>
+                            </StackPanel>
+                            <Border HorizontalAlignment="Right" VerticalAlignment="Center" Width="36" Height="36"
+                                    CornerRadius="10" Background="{DynamicResource TranslucentRoseBrush}">
+                                <TextBlock Text="{Binding CardSpent.Icon}" FontSize="18"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- Remaining -->
+                    <Border Grid.Column="2" Background="{DynamicResource CardBackgroundBrush}"
+                            CornerRadius="12" Padding="18" Margin="5,0,5,0"
+                            BorderBrush="{DynamicResource PrimaryAccentBrush}" BorderThickness="0,0,0,3" Style="{StaticResource HoverBorderStyle}">
+                        <Grid>
+                            <StackPanel HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding CardRemaining.Label}" FontSize="11" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                <TextBlock Text="{Binding CardRemaining.FormattedValue}" FontSize="24" FontWeight="Bold"
+                                           Foreground="{DynamicResource PrimaryAccentBrush}" Margin="0,4,0,0"/>
+                            </StackPanel>
+                            <Border HorizontalAlignment="Right" VerticalAlignment="Center" Width="36" Height="36"
+                                    CornerRadius="10" Background="{DynamicResource TranslucentPrimaryBrush}">
+                                <TextBlock Text="{Binding CardRemaining.Icon}" FontSize="18"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- Saving Rate -->
+                    <Border Grid.Column="3" Background="{DynamicResource CardBackgroundBrush}"
+                            CornerRadius="12" Padding="18" Margin="10,0,0,0"
+                            BorderBrush="{DynamicResource VioletAccentBrush}" BorderThickness="0,0,0,3">
+                        <Grid>
+                            <StackPanel HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding CardSavingRate.Label}" FontSize="11" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                <TextBlock Text="{Binding CardSavingRate.FormattedValue}" FontSize="24" FontWeight="Bold"
+                                           Foreground="{DynamicResource VioletAccentBrush}" Margin="0,4,0,0"/>
+                            </StackPanel>
+                            <Border HorizontalAlignment="Right" VerticalAlignment="Center" Width="36" Height="36"
+                                    CornerRadius="10" Background="{DynamicResource TranslucentVioletBrush}">
+                                <TextBlock Text="{Binding CardSavingRate.Icon}" FontSize="18"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- ── Alert Banner (If Overbudget) ── -->
+                <Border Background="{DynamicResource CardPastelRoseBrush}" BorderBrush="{DynamicResource RoseAccentBrush}" BorderThickness="1" CornerRadius="8"
+                        Padding="16,12" Margin="0,0,0,20" Visibility="{Binding HasAlert, Converter={StaticResource BoolToVis}}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="⚠️" FontSize="18" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="{Binding AlertMessage}" Foreground="{DynamicResource RoseAccentBrush}"
+                                   FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                    </Grid>
+                </Border>
+
+                <!-- ── Charts Row (Donut, Bar, Area) ── -->
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Donut Overall -->
+                    <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,10,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Tổng quan" FontWeight="Bold" FontSize="15" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10"/>
+                            <lvc:PieChart Grid.Row="1" Series="{Binding DonutSeries}" AnimationsSpeed="00:00:01.0"
+                                          LegendPosition="Bottom" LegendTextPaint="{Binding ChartLegendTextPaint}" Height="180"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Bar Chart (Budget vs Actual) -->
+                    <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="5,0,5,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Ngân sách vs Thực chi" FontWeight="Bold" FontSize="15" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10"/>
+                            <lvc:CartesianChart Grid.Row="1" Series="{Binding BarChartSeries}" XAxes="{Binding BarChartXAxes}" YAxes="{Binding BarChartYAxes}"
+                                                TooltipPosition="Top" AnimationsSpeed="00:00:00.5" LegendPosition="Bottom" LegendTextPaint="{Binding ChartLegendTextPaint}" Height="180"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Area Chart (6 month trend) -->
+                    <Border Grid.Column="2" Style="{StaticResource CardStyle}" Margin="10,0,0,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Xu hướng 6 tháng" FontWeight="Bold" FontSize="15" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10"/>
+                            <lvc:CartesianChart Grid.Row="1" Series="{Binding AreaChartSeries}" XAxes="{Binding AreaChartXAxes}" YAxes="{Binding AreaChartYAxes}"
+                                                TooltipPosition="Top" AnimationsSpeed="00:00:00.5" LegendPosition="Bottom" LegendTextPaint="{Binding ChartLegendTextPaint}" Height="180"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- ── AI Suggestion Banner ── -->
+                <Border Background="{DynamicResource HoverSidebarProfileBrush}" BorderBrush="{DynamicResource VioletAccentBrush}" BorderThickness="1" CornerRadius="12" Padding="20" Margin="0,0,0,20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="🧠" FontSize="28" VerticalAlignment="Center" Margin="0,0,16,0"/>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Phân tích từ FinanceAI" FontWeight="Bold" FontSize="14" Foreground="#c0cfe8" Margin="0,0,0,4"/>
+                            <TextBlock Text="Tháng này bạn đã tiêu nhiều hơn 15% vào 'Giải trí' so với tháng trước. Nên cân nhắc điều chỉnh ngân sách hoặc cắt giảm chi tiêu tuần cuối để đảm bảo an toàn."
+                                       Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" FontSize="13"/>
+                        </StackPanel>
+                        <Button Grid.Column="2" Content="Tối ưu ngay" Background="{DynamicResource VioletAccentBrush}" Foreground="White"
+                                FontWeight="Bold" BorderThickness="0" Padding="16,8" Cursor="Hand" VerticalAlignment="Center" Margin="16,0,0,0">
+                            <Button.Resources>
+                                <Style TargetType="Border"><Setter Property="CornerRadius" Value="8"/></Style>
+                            </Button.Resources>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <!-- ── Category Budget Grid ── -->
+                <TextBlock Text="Chi tiết danh mục" FontWeight="Bold" FontSize="18" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,12"/>
+                <ItemsControl ItemsSource="{Binding AllBudgets}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="2"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource CardStyle}" Margin="0,0,10,10">
+                                <Grid>
+                                    <uc:BudgetProgressControl />
+                                    <!-- Edit Button (overlay on top right) -->
+                                    <Button Content="⋮" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                            Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextMutedBrush}"
+                                            FontSize="18" FontWeight="Bold" Cursor="Hand"
+                                            Command="{Binding DataContext.OpenEditCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}">
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- ══════════════════ EDIT MODAL OVERLAY ══════════════════ -->
+        <Grid Visibility="{Binding IsEditModalOpen, Converter={StaticResource BoolToVis}}">
+            <!-- Dark overlay -->
+            <Border Background="#B2000000">
+                <Border.InputBindings>
+                    <MouseBinding Gesture="LeftClick" Command="{Binding CloseEditCommand}"/>
+                </Border.InputBindings>
+            </Border>
+            
+            <!-- Modal Box -->
+            <Border Background="{DynamicResource CardBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1"
+                    CornerRadius="16" Width="400" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Padding="24">
+                <Border.RenderTransform>
+                    <TranslateTransform Y="0"/>
+                </Border.RenderTransform>
+                <Border.Triggers>
+                    <EventTrigger RoutedEvent="Border.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Y" From="50" To="0" Duration="0:0:0.25">
+                                    <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Border.Triggers>
+
+                <StackPanel DataContext="{Binding EditingBudget}">
+                    <Grid Margin="0,0,0,20">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Icon}" FontSize="24" Margin="0,0,10,0"/>
+                            <TextBlock Text="Chỉnh sửa ngân sách" FontSize="18" FontWeight="Bold"
+                                       Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <Button Content="✕" HorizontalAlignment="Right" Background="Transparent"
+                                BorderThickness="0" Foreground="{DynamicResource TextSecondaryBrush}"
+                                FontSize="16" Cursor="Hand"
+                                Command="{Binding DataContext.CloseEditCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                    </Grid>
+
+                    <TextBlock Text="Danh mục" Foreground="{DynamicResource TextMutedBrush}" FontSize="13" Margin="0,0,0,4"/>
+                    <Border Background="{DynamicResource CardBorderBrush}" CornerRadius="8" Padding="12" Margin="0,0,0,16">
+                        <TextBlock Text="{Binding CategoryName}" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold"/>
+                    </Border>
+
+                    <TextBlock Text="Số tiền ngân sách (VND)" Foreground="{DynamicResource TextMutedBrush}" FontSize="13" Margin="0,0,0,4"/>
+                    <Border Background="{DynamicResource AppBackgroundBrush}" BorderBrush="{DynamicResource ChartBlueBrush}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,16">
+                        <TextBox Text="{Binding TotalAmount, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N0}}"
+                                 Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextPrimaryBrush}"
+                                 FontWeight="Bold" FontSize="16" CaretBrush="{DynamicResource ChartBlueBrush}"/>
+                    </Border>
+
+                    <TextBlock Text="Chu kỳ" Foreground="{DynamicResource TextMutedBrush}" FontSize="13" Margin="0,0,0,4"/>
+                    <Grid Margin="0,0,0,24">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <RadioButton Grid.Column="0" Content="Hàng ngày" GroupName="Period" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,5,0"/>
+                        <RadioButton Grid.Column="1" Content="Hàng tuần" GroupName="Period" Foreground="{DynamicResource TextPrimaryBrush}" Margin="5,0,5,0"/>
+                        <RadioButton Grid.Column="2" Content="Hàng tháng" GroupName="Period" Foreground="{DynamicResource TextPrimaryBrush}" IsChecked="True" Margin="5,0,0,0"/>
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="Hủy" Style="{StaticResource ModalBtnCancel}" Margin="0,0,6,0"
+                                Command="{Binding DataContext.CloseEditCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                        <Button Grid.Column="1" Content="Lưu thay đổi" Style="{StaticResource ModalBtnPrimary}" Margin="6,0,0,0"
+                                Command="{Binding DataContext.SaveEditCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

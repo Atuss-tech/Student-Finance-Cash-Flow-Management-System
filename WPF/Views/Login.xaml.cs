@@ -52,10 +52,11 @@ namespace Student_Finance___Cash_Flow_Management_System
             if (user != null)
             {
                 MessageBox.Show($"Đăng nhập thành công! Chào mừng {user.FullName}", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
-                // TODO: Open MainWindow and close this
-                // MainWindow main = new MainWindow();
-                // main.Show();
-                // this.Close();
+                
+                // Mở giao diện DashboardWindow và đóng cửa sổ Đăng nhập
+                WPF.Views.DashboardWindow dashboard = new WPF.Views.DashboardWindow();
+                dashboard.Show();
+                this.Close();
             }
             else
             {
