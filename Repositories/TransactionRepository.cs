@@ -1,62 +1,70 @@
-using BusinessObjects.Models;
+﻿using BusinessObjects.Models;
 using DataAccess;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Repositories
 {
-    /// <summary>
-    /// Repository trung gian cho Entity FinanceTransaction.
-    /// Chuyển tiếp các yêu cầu dữ liệu từ Service xuống TransactionDAO.
-    /// </summary>
     public class TransactionRepository : ITransactionRepository
     {
-        /// <summary>
-        /// Lấy giao dịch trong tháng thông qua DAO.
-        /// </summary>
-        public async Task<List<FinanceTransaction>> GetTransactionsByMonthAsync(int userId, int month, int year)
+        public void AddTransaction(FinanceTransaction transaction)
         {
-            return await TransactionDAO.Instance.GetTransactionsByMonthAsync(userId, month, year);
+            TransactionDAO.Instance
+                .AddTransaction(transaction);
         }
 
-        /// <summary>
-        /// Lấy giao dịch trong năm thông qua DAO.
-        /// </summary>
-        public async Task<List<FinanceTransaction>> GetTransactionsByYearAsync(int userId, int year)
+        public void DeleteTransaction(int transactionId, int userId)
         {
-            return await TransactionDAO.Instance.GetTransactionsByYearAsync(userId, year);
+            TransactionDAO.Instance
+                .DeleteTransaction(
+                    transactionId,
+                    userId);
         }
 
-        /// <summary>
-        /// Lấy chi tiết một giao dịch thông qua DAO.
-        /// </summary>
-        public async Task<FinanceTransaction?> GetTransactionByIdAsync(int id)
+        public Category? GetCategoryById(int categoryId, int userId)
         {
-            return await TransactionDAO.Instance.GetTransactionByIdAsync(id);
+            return TransactionDAO.Instance
+                .GetCategoryById(
+                    categoryId,
+                    userId);
         }
 
-        /// <summary>
-        /// Gọi DAO để lưu giao dịch mới.
-        /// </summary>
-        public async Task AddTransactionAsync(FinanceTransaction transaction)
+        public FinanceTransaction? GetTransactionById(int transactionId, int userId)
         {
-            await TransactionDAO.Instance.AddTransactionAsync(transaction);
+            return TransactionDAO.Instance
+                .GetTransactionById(
+                    transactionId,
+                    userId);
         }
 
-        /// <summary>
-        /// Gọi DAO để cập nhật giao dịch.
-        /// </summary>
-        public async Task UpdateTransactionAsync(FinanceTransaction transaction)
+        public List<FinanceTransaction> GetTransactionsByUserId(int userId)
         {
-            await TransactionDAO.Instance.UpdateTransactionAsync(transaction);
+            return TransactionDAO.Instance
+                .GetTransactionsByUserId(userId);
         }
 
-        /// <summary>
-        /// Gọi DAO để xóa giao dịch.
-        /// </summary>
-        public async Task DeleteTransactionAsync(int id)
+        public Wallet? GetWalletById(int walletId, int userId)
         {
-            await TransactionDAO.Instance.DeleteTransactionAsync(id);
+            return TransactionDAO.Instance
+               .GetWalletById(
+                   walletId,
+                   userId);
+        }
+
+        public void UpdateTransaction(int transactionId, int userId, int newWalletId, int newCategoryId, string newTransactionType, decimal newAmount, DateTime newTransactionDate, string? newDescription)
+        {
+            TransactionDAO.Instance.UpdateTransaction(
+                transactionId,
+                userId,
+                newWalletId,
+                newCategoryId,
+                newTransactionType,
+                newAmount,
+                newTransactionDate,
+                newDescription);
         }
     }
 }
