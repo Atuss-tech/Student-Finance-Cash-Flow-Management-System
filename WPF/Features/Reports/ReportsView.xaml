@@ -1,0 +1,254 @@
+﻿<UserControl x:Class="WPF.Features.Reports.ReportsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:uc="clr-namespace:WPF.Features.Reports"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             Background="Transparent">
+    
+    <UserControl.Resources>
+        <!-- Stitch AI Design System Colors -->
+                                <SolidColorBrush x:Key="AppBackground" Color="#f0f2f5"/>
+        <SolidColorBrush x:Key="SurfaceColor" Color="#ffffff"/>
+        <SolidColorBrush x:Key="PrimaryBlue" Color="#0052ff"/>
+        <SolidColorBrush x:Key="PrimaryBlueHover" Color="#003ecc"/>
+        <SolidColorBrush x:Key="PrimaryGreen" Color="#05b169"/>
+        <SolidColorBrush x:Key="PrimaryLightGreen" Color="#05b169"/>
+        <SolidColorBrush x:Key="PrimaryRed" Color="#cf202f"/>
+        <SolidColorBrush x:Key="IncomeColor" Color="#05b169"/>
+        <SolidColorBrush x:Key="IncomePurple" Color="#05b169"/>
+        <SolidColorBrush x:Key="ExpenseColor" Color="#cf202f"/>
+        <SolidColorBrush x:Key="ExpenseRed" Color="#cf202f"/>
+        <SolidColorBrush x:Key="SavingsOrange" Color="#0052ff"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#111827"/>
+        <SolidColorBrush x:Key="TextSecondary" Color="#6b7280"/>
+        <SolidColorBrush x:Key="BorderColor" Color="#e5e7eb"/>
+        
+        <Style x:Key="StitchCard" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource SurfaceColor}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="12"/>
+        </Style>
+
+        <Style x:Key="RangeBtn" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource SurfaceColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#e6f0ff"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.Triggers>
+            <EventTrigger RoutedEvent="Loaded">
+                <BeginStoryboard Storyboard="{StaticResource FadeInSlideUpAnimation}"/>
+            </EventTrigger>
+        </Grid.Triggers>
+        <ScrollViewer VerticalScrollBarVisibility="Hidden" PanningMode="VerticalOnly" Margin="0,0,10,0">
+            <StackPanel>
+                
+                <!-- ── Time Filters Row ── -->
+                <Grid Margin="0,0,0,20">
+                    <!-- Time Filters -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <TextBlock Text="Thời gian: " Foreground="{StaticResource TextSecondary}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <Button Content="30 ngày" Style="{StaticResource RangeBtn}" Click="SetRange30_Click"/>
+                        <Button Content="3 tháng" Style="{StaticResource RangeBtn}" Click="SetRange90_Click"/>
+                        <Button Content="6 tháng" Style="{StaticResource RangeBtn}" Click="SetRange180_Click" Margin="0"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- ── 3 Stat Mini Cards ── -->
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Style="{StaticResource StitchCard}" Margin="0,0,10,0">
+                        <Grid>
+                            <Border Height="4" VerticalAlignment="Bottom" Background="{StaticResource PrimaryLightGreen}" CornerRadius="0,0,24,24"/>
+                            <StackPanel HorizontalAlignment="Left" Margin="20">
+                                <TextBlock Text="{Binding TotalIncomeReport.Title}" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}"/>
+                                <TextBlock Text="{Binding TotalIncomeReport.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryLightGreen}" Margin="0,6,0,4"/>
+                                <TextBlock Text="{Binding TotalIncomeReport.Subtext}" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
+                            </StackPanel>
+                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Width="44" Height="44" CornerRadius="24" Background="#e6f0ff">
+                                <TextBlock Text="{Binding TotalIncomeReport.Icon}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    
+                    <Border Grid.Column="1" Style="{StaticResource StitchCard}" Margin="5,0,5,0">
+                        <Grid>
+                            <Border Height="4" VerticalAlignment="Bottom" Background="{StaticResource ExpenseRed}" CornerRadius="0,0,24,24"/>
+                            <StackPanel HorizontalAlignment="Left" Margin="20">
+                                <TextBlock Text="{Binding TotalExpenseReport.Title}" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}"/>
+                                <TextBlock Text="{Binding TotalExpenseReport.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource ExpenseRed}" Margin="0,6,0,4"/>
+                                <TextBlock Text="{Binding TotalExpenseReport.Subtext}" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
+                            </StackPanel>
+                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Width="44" Height="44" CornerRadius="24" Background="#e6f0ff">
+                                <TextBlock Text="{Binding TotalExpenseReport.Icon}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    
+                    <Border Grid.Column="2" Style="{StaticResource StitchCard}" Margin="10,0,0,0">
+                        <Grid>
+                            <Border Height="4" VerticalAlignment="Bottom" Background="{StaticResource IncomePurple}" CornerRadius="0,0,24,24"/>
+                            <StackPanel HorizontalAlignment="Left" Margin="20">
+                                <TextBlock Text="{Binding NetCashFlowReport.Title}" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}"/>
+                                <TextBlock Text="{Binding NetCashFlowReport.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource IncomePurple}" Margin="0,6,0,4"/>
+                                <TextBlock Text="{Binding NetCashFlowReport.Subtext}" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
+                            </StackPanel>
+                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Width="44" Height="44" CornerRadius="24" Background="#e6f0ff">
+                                <TextBlock Text="{Binding NetCashFlowReport.Icon}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- ── Charts Row ── -->
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="6*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Donut: Expense Allocation -->
+                    <Border Grid.Column="0" Style="{StaticResource StitchCard}" Margin="0,0,10,0" Padding="20">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Tỷ trọng chi tiêu" FontWeight="Bold" FontSize="16" Foreground="{StaticResource TextPrimary}"/>
+                                <TextBlock Text="Nhấn vào biểu đồ để xem chi tiết" FontSize="13" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,16"/>
+                            </StackPanel>
+                            <lvc:PieChart Grid.Row="1" Series="{Binding ExpenseAllocationSeries}" AnimationsSpeed="00:00:01.0"
+                                          LegendPosition="Bottom" LegendTextPaint="{Binding ChartLegendTextPaint}" Height="280"
+                                          TooltipPosition="Top"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Bar Chart: Cash Flow Trend -->
+                    <Border Grid.Column="1" Style="{StaticResource StitchCard}" Margin="10,0,0,0" Padding="20">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Xu hướng dòng tiền" FontWeight="Bold" FontSize="16" Foreground="{StaticResource TextPrimary}"/>
+                                <TextBlock Text="So sánh TỔNG THU vs TỔNG CHI" FontSize="13" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,16"/>
+                            </StackPanel>
+                            <lvc:CartesianChart Grid.Row="1" Series="{Binding CashFlowTrendSeries}" XAxes="{Binding CashFlowXAxes}" YAxes="{Binding CashFlowYAxes}"
+                                                TooltipPosition="Top" AnimationsSpeed="00:00:00.5" LegendPosition="Bottom" LegendTextPaint="{Binding ChartLegendTextPaint}" Height="280"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- ── Drill Down: Detailed Transactions ── -->
+                <Border Style="{StaticResource StitchCard}" Margin="0,0,0,20" Padding="24">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="0,0,0,20">
+                            <TextBlock Text="{Binding SelectedCategoryLabel}" FontWeight="Bold" FontSize="16" Foreground="{StaticResource TextPrimary}"/>
+                            <TextBlock Text="Không có giao dịch nào thỏa mãn bộ lọc." Foreground="{StaticResource TextSecondary}" 
+                                       FontStyle="Italic" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                       Visibility="{Binding HasData, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}"/>
+                        </Grid>
+
+                        <Border Grid.Row="1" Background="#f3f4f6" CornerRadius="100" Padding="16,12" Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Giao dịch" Foreground="{StaticResource TextSecondary}" FontSize="13" FontWeight="SemiBold"/>
+                                <TextBlock Grid.Column="1" Text="Danh mục" Foreground="{StaticResource TextSecondary}" FontSize="13" FontWeight="SemiBold"/>
+                                <TextBlock Grid.Column="2" Text="Thời gian" Foreground="{StaticResource TextSecondary}" FontSize="13" FontWeight="SemiBold"/>
+                                <TextBlock Grid.Column="3" Text="Số tiền" Foreground="{StaticResource TextSecondary}" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                            </Grid>
+                        </Border>
+
+                        <ItemsControl Grid.Row="2" ItemsSource="{Binding DetailTransactions}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1" Padding="12,16" Background="Transparent">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#e6f0ff"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="2*"/>
+                                                <ColumnDefinition Width="2*"/>
+                                                <ColumnDefinition Width="2*"/>
+                                                <ColumnDefinition Width="1.5*"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <!-- Title -->
+                                            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                                <Border Width="36" Height="36" CornerRadius="100" Background="#e6f0ff" Margin="0,0,12,0">
+                                                    <TextBlock Text="{Binding Icon}" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI Emoji"/>
+                                                </Border>
+                                                <TextBlock Text="{Binding Title}" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="14"/>
+                                            </StackPanel>
+                                            
+                                            <!-- Category Badge -->
+                                            <Border Grid.Column="1" Background="#263b82f6" CornerRadius="6" Padding="8,4" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Category}" Foreground="#60a5fa" FontSize="12" FontWeight="SemiBold"/>
+                                            </Border>
+                                            
+                                            <!-- Date -->
+                                            <TextBlock Grid.Column="2" Text="{Binding FormattedDate}" Foreground="{StaticResource TextSecondary}" VerticalAlignment="Center" FontSize="13"/>
+                                            
+                                            <!-- Amount -->
+                                            <TextBlock Grid.Column="3" Text="{Binding FormattedAmount}" Foreground="{StaticResource TextPrimary}" 
+                                                       FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="15"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
+
+

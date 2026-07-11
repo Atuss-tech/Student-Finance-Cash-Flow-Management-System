@@ -4,4 +4,10 @@ obj/
 *.user
 *.suo
 *.log
+# Bỏ qua các thư mục tài liệu và AI agents (không push lên Git)
+.my-project/
+.agents/
+.specify/
+.codegraph/
+AGENTS.md
 mcp.json

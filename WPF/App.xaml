@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:Student_Finance___Cash_Flow_Management_System"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Storyboard x:Key="FadeInSlideUpAnimation">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.4" />
+            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,20,0,-20" To="0,0,0,0" Duration="0:0:0.4" DecelerationRatio="0.9" />
+        </Storyboard>
     </Application.Resources>
 </Application>
+

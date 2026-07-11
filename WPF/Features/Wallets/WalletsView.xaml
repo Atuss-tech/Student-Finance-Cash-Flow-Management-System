@@ -1,0 +1,271 @@
+﻿<UserControl x:Class="WPF.Features.Wallets.WalletsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             mc:Ignorable="d" 
+             Background="Transparent">
+
+    <UserControl.Resources>
+        <!-- Stitch AI Design System Colors Unified -->
+                                <SolidColorBrush x:Key="AppBackground" Color="#f0f2f5"/>
+        <SolidColorBrush x:Key="SurfaceColor" Color="#ffffff"/>
+        <SolidColorBrush x:Key="PrimaryBlue" Color="#0052ff"/>
+        <SolidColorBrush x:Key="PrimaryBlueHover" Color="#003ecc"/>
+        <SolidColorBrush x:Key="PrimaryGreen" Color="#05b169"/>
+        <SolidColorBrush x:Key="PrimaryLightGreen" Color="#05b169"/>
+        <SolidColorBrush x:Key="PrimaryRed" Color="#cf202f"/>
+        <SolidColorBrush x:Key="IncomeColor" Color="#05b169"/>
+        <SolidColorBrush x:Key="IncomePurple" Color="#05b169"/>
+        <SolidColorBrush x:Key="ExpenseColor" Color="#cf202f"/>
+        <SolidColorBrush x:Key="ExpenseRed" Color="#cf202f"/>
+        <SolidColorBrush x:Key="SavingsOrange" Color="#0052ff"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#111827"/>
+        <SolidColorBrush x:Key="TextSecondary" Color="#6b7280"/>
+        <SolidColorBrush x:Key="BorderColor" Color="#e5e7eb"/>
+        
+        <Style x:Key="StitchCard" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource SurfaceColor}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="24"/>
+        </Style>
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="300"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Margin="0,0,0,24">
+            <Grid>
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock Text="Ví" FontSize="30" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+                    <TextBlock Text="Quản lý các tài khoản và nguồn tiền của bạn" FontSize="14" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,0"/>
+                </StackPanel>
+                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Background="{StaticResource SurfaceColor}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" Foreground="{StaticResource TextPrimary}" Cursor="Hand" Padding="16,10">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="100">
+                                <StackPanel Orientation="Horizontal" Margin="{TemplateBinding Padding}">
+                                    <TextBlock Text="+" Margin="0,0,8,0" FontWeight="Bold"/>
+                                    <TextBlock Text="Thêm ví mới" FontWeight="Bold" FontSize="14"/>
+                                </StackPanel>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- Summary Box -->
+        <Border Grid.Row="1" Style="{StaticResource StitchCard}" Margin="0,0,0,24" Padding="24">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="TỔNG SỐ DƯ" Foreground="{StaticResource TextSecondary}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                        <TextBlock Text="342.500.000 đ" Foreground="{StaticResource PrimaryBlue}" FontSize="32" FontWeight="Bold"/>
+                    </StackPanel>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="2" Margin="0,0,24,0" HorizontalAlignment="Right">
+                    <TextBlock Text="TỔNG THU (Tháng này)" Foreground="{StaticResource TextSecondary}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,8" HorizontalAlignment="Right"/>
+                    <TextBlock Text="45.000.000 đ" Foreground="{StaticResource TextPrimary}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Right"/>
+                </StackPanel>
+                
+                <Border Grid.Column="3" Background="{StaticResource BorderColor}" Margin="0,5,0,5" Width="1"/>
+
+                <StackPanel Grid.Column="4" Margin="24,0,0,0" HorizontalAlignment="Right">
+                    <TextBlock Text="TỔNG CHI (Tháng này)" Foreground="{StaticResource TextSecondary}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,8" HorizontalAlignment="Right"/>
+                    <TextBlock Text="12.500.000 đ" Foreground="{StaticResource ExpenseColor}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Right"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Wallets Grid -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalOnly" Margin="0,0,0,24">
+            <WrapPanel Orientation="Horizontal">
+                <!-- Techcombank -->
+                <Border Style="{StaticResource StitchCard}" Width="320" Margin="0,0,24,24" Padding="20">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <!-- Card Header -->
+                        <Grid Grid.Row="0" Margin="0,0,0,24">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="100" Background="#ffffff" Margin="0,0,12,0">
+                                <TextBlock Text="TCB" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Foreground="#cf202f"/>
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="Techcombank" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}"/>
+                                <TextBlock Text="**** 9876" FontSize="12" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,0"/>
+                            </StackPanel>
+                            <Border Grid.Column="2" Background="#0d0052ff" BorderBrush="#330052ff" BorderThickness="1" CornerRadius="100" Padding="8,4" VerticalAlignment="Top">
+                                <TextBlock Text="Active" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBlue}"/>
+                            </Border>
+                        </Grid>
+                        <!-- Card Body -->
+                        <StackPanel Grid.Row="1">
+                            <TextBlock Text="Số dư hiện tại" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,4"/>
+                            <TextBlock Text="125.000.000 đ" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Momo -->
+                <Border Style="{StaticResource StitchCard}" Width="320" Margin="0,0,24,24" Padding="20">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <!-- Card Header -->
+                        <Grid Grid.Row="0" Margin="0,0,0,24">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="100" Background="#a50064" Margin="0,0,12,0">
+                                <TextBlock Text="M" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="Ví MoMo" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}"/>
+                                <TextBlock Text="**** 1234" FontSize="12" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,0"/>
+                            </StackPanel>
+                            <Border Grid.Column="2" Background="#0d0052ff" BorderBrush="#330052ff" BorderThickness="1" CornerRadius="100" Padding="8,4" VerticalAlignment="Top">
+                                <TextBlock Text="Active" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBlue}"/>
+                            </Border>
+                        </Grid>
+                        <!-- Card Body -->
+                        <StackPanel Grid.Row="1">
+                            <TextBlock Text="Số dư hiện tại" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,4"/>
+                            <TextBlock Text="5.500.000 đ" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Savings -->
+                <Border Style="{StaticResource StitchCard}" Width="320" Margin="0,0,24,24" Padding="20">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <!-- Card Header -->
+                        <Grid Grid.Row="0" Margin="0,0,0,24">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="100" Background="{StaticResource BorderColor}" Margin="0,0,12,0">
+                                <TextBlock Text="$" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="Sổ tiết kiệm" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}"/>
+                                <TextBlock Text="**** 5542" FontSize="12" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,0"/>
+                            </StackPanel>
+                            <Border Grid.Column="2" Background="{StaticResource BorderColor}" BorderThickness="0" CornerRadius="100" Padding="8,4" VerticalAlignment="Top">
+                                <TextBlock Text="Locked" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}"/>
+                            </Border>
+                        </Grid>
+                        <!-- Card Body -->
+                        <StackPanel Grid.Row="1">
+                            <TextBlock Text="Số dư hiện tại" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,4"/>
+                            <TextBlock Text="200.000.000 đ" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Cash -->
+                <Border Style="{StaticResource StitchCard}" Width="320" Margin="0,0,24,24" Padding="20">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <!-- Card Header -->
+                        <Grid Grid.Row="0" Margin="0,0,0,24">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="40" Height="40" CornerRadius="100" Background="{StaticResource BorderColor}" Margin="0,0,12,0">
+                                <TextBlock Text="đ" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="Tiền mặt" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}"/>
+                                <TextBlock Text="Ví cá nhân" FontSize="12" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,0"/>
+                            </StackPanel>
+                            <Border Grid.Column="2" Background="#0d0052ff" BorderBrush="#330052ff" BorderThickness="1" CornerRadius="100" Padding="8,4" VerticalAlignment="Top">
+                                <TextBlock Text="Active" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBlue}"/>
+                            </Border>
+                        </Grid>
+                        <!-- Card Body -->
+                        <StackPanel Grid.Row="1">
+                            <TextBlock Text="Số dư hiện tại" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}" Margin="0,0,0,4"/>
+                            <TextBlock Text="12.000.000 đ" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+            </WrapPanel>
+        </ScrollViewer>
+
+        <!-- Analytics Split Layout -->
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="24"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Bar Chart -->
+            <Border Grid.Column="0" Style="{StaticResource StitchCard}" Padding="24">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Dòng tiền theo ví (Dữ liệu tĩnh)" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
+                    <lvc:CartesianChart Grid.Row="1" Series="{Binding CashFlowByWalletSeries}" XAxes="{Binding CashFlowXAxes}" TooltipPosition="Hidden" />
+                </Grid>
+            </Border>
+
+            <!-- Pie Chart -->
+            <Border Grid.Column="2" Style="{StaticResource StitchCard}" Padding="24">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Phân bổ nguồn tiền" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
+                    <lvc:PieChart Grid.Row="1" Series="{Binding WalletAllocationSeries}" LegendPosition="Right" LegendTextPaint="{Binding LegendTextPaint}"/>
+                </Grid>
+            </Border>
+        </Grid>
+
+    </Grid>
+</UserControl>
+
