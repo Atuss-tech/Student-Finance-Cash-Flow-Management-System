@@ -1,4 +1,4 @@
-﻿using BusinessObjects.Models;
+using BusinessObjects.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,5 +39,12 @@ namespace Repositories
         void DeleteTransaction(
             int transactionId,
             int userId);
+
+        Task<List<FinanceTransaction>> GetTransactionsByMonthAsync(int userId, int month, int year);
+        Task<List<FinanceTransaction>> GetTransactionsByYearAsync(int userId, int year);
+        Task<FinanceTransaction?> GetTransactionByIdAsync(int id);
+        Task AddTransactionAsync(FinanceTransaction transaction);
+        Task UpdateTransactionAsync(FinanceTransaction transaction);
+        Task DeleteTransactionAsync(int id);
     }
 }

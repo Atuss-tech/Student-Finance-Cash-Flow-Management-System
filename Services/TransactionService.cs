@@ -1,4 +1,4 @@
-﻿using BusinessObjects.Models;
+using BusinessObjects.Models;
 using Repositories;
 using System;
 using System.Collections.Generic;
@@ -18,6 +18,11 @@ namespace Services
         {
             transactionRepository =
                 new TransactionRepository();
+        }
+
+        public TransactionService(ITransactionRepository repository)
+        {
+            transactionRepository = repository;
         }
 
         public List<FinanceTransaction> GetTransactionsByUserId(int userId)
@@ -324,7 +329,34 @@ namespace Services
         }
 
 
+        public async Task<List<FinanceTransaction>> GetTransactionsByMonthAsync(int userId, int month, int year)
+        {
+            return await transactionRepository.GetTransactionsByMonthAsync(userId, month, year);
+        }
 
+        public async Task<List<FinanceTransaction>> GetTransactionsByYearAsync(int userId, int year)
+        {
+            return await transactionRepository.GetTransactionsByYearAsync(userId, year);
+        }
 
+        public async Task<FinanceTransaction?> GetTransactionByIdAsync(int id)
+        {
+            return await transactionRepository.GetTransactionByIdAsync(id);
+        }
+
+        public async Task AddTransactionAsync(FinanceTransaction transaction)
+        {
+            await transactionRepository.AddTransactionAsync(transaction);
+        }
+
+        public async Task UpdateTransactionAsync(FinanceTransaction transaction)
+        {
+            await transactionRepository.UpdateTransactionAsync(transaction);
+        }
+
+        public async Task DeleteTransactionAsync(int id)
+        {
+            await transactionRepository.DeleteTransactionAsync(id);
+        }
     }
 }

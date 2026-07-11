@@ -1,4 +1,4 @@
-﻿using BusinessObjects.Models;
+using BusinessObjects.Models;
 using DataAccess;
 using System;
 using System.Collections.Generic;
@@ -65,6 +65,36 @@ namespace Repositories
                 newAmount,
                 newTransactionDate,
                 newDescription);
+        }
+
+        public async Task<List<FinanceTransaction>> GetTransactionsByMonthAsync(int userId, int month, int year)
+        {
+            return await TransactionDAO.Instance.GetTransactionsByMonthAsync(userId, month, year);
+        }
+
+        public async Task<List<FinanceTransaction>> GetTransactionsByYearAsync(int userId, int year)
+        {
+            return await TransactionDAO.Instance.GetTransactionsByYearAsync(userId, year);
+        }
+
+        public async Task<FinanceTransaction?> GetTransactionByIdAsync(int id)
+        {
+            return await TransactionDAO.Instance.GetTransactionByIdAsync(id);
+        }
+
+        public async Task AddTransactionAsync(FinanceTransaction transaction)
+        {
+            await TransactionDAO.Instance.AddTransactionAsync(transaction);
+        }
+
+        public async Task UpdateTransactionAsync(FinanceTransaction transaction)
+        {
+            await TransactionDAO.Instance.UpdateTransactionAsync(transaction);
+        }
+
+        public async Task DeleteTransactionAsync(int id)
+        {
+            await TransactionDAO.Instance.DeleteTransactionAsync(id);
         }
     }
 }
