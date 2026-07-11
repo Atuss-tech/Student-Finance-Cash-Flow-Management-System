@@ -1,13 +1,15 @@
-﻿using System;
+using BusinessObjects.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Repositories
 {
-    internal interface IBudgetRepository
+    public interface IBudgetRepository
     {
-
+        Task<List<Budget>> GetBudgetsAsync(int userId, int month, int year);
+        Task<Budget?> GetBudgetAsync(int userId, int categoryId, int month, int year);
+        Task AddBudgetAsync(Budget budget);
+        Task UpdateBudgetAsync(Budget budget);
+        Task DeleteBudgetAsync(int budgetId);
     }
 }

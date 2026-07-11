@@ -8,5 +8,6 @@ namespace DataAccess
 {
     internal class CategoryDAO
     {
+
     }
 }

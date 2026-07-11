@@ -1,0 +1,304 @@
+﻿<UserControl x:Class="WPF.Features.Categories.CategoriesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             mc:Ignorable="d" 
+             Background="Transparent">
+
+    <UserControl.Resources>
+        <!-- Stitch AI Design System Colors -->
+                                <SolidColorBrush x:Key="AppBackground" Color="#f0f2f5"/>
+        <SolidColorBrush x:Key="SurfaceColor" Color="#ffffff"/>
+        <SolidColorBrush x:Key="PrimaryBlue" Color="#0052ff"/>
+        <SolidColorBrush x:Key="PrimaryBlueHover" Color="#003ecc"/>
+        <SolidColorBrush x:Key="PrimaryGreen" Color="#05b169"/>
+        <SolidColorBrush x:Key="PrimaryLightGreen" Color="#05b169"/>
+        <SolidColorBrush x:Key="PrimaryRed" Color="#cf202f"/>
+        <SolidColorBrush x:Key="IncomeColor" Color="#05b169"/>
+        <SolidColorBrush x:Key="IncomePurple" Color="#05b169"/>
+        <SolidColorBrush x:Key="ExpenseColor" Color="#cf202f"/>
+        <SolidColorBrush x:Key="ExpenseRed" Color="#cf202f"/>
+        <SolidColorBrush x:Key="SavingsOrange" Color="#0052ff"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#111827"/>
+        <SolidColorBrush x:Key="TextSecondary" Color="#6b7280"/>
+        <SolidColorBrush x:Key="BorderColor" Color="#e5e7eb"/>
+        
+        <Style x:Key="StitchCard" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource SurfaceColor}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="12"/>
+        </Style>
+        
+        <Style x:Key="CategoryListCard" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource SurfaceColor}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#e6f0ff" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style x:Key="ButtonPrimary" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PrimaryLightGreen}"/>
+            <Setter Property="Foreground" Value="#f0f2f5"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="100">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="ButtonSecondaryDark" TargetType="Button">
+            <Setter Property="Background" Value="#e6f0ff"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="100">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.Triggers>
+            <EventTrigger RoutedEvent="Loaded">
+                <BeginStoryboard Storyboard="{StaticResource FadeInSlideUpAnimation}"/>
+            </EventTrigger>
+        </Grid.Triggers>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Margin="0,0,0,24">
+            <Grid>
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock Text="Danh mục" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+                    <TextBlock Text="Quản lý và phân loại các khoản thu chi của bạn" FontSize="14" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,0"/>
+                </StackPanel>
+                <Button Content="+ Thêm Danh Mục Mới" Click="AddCategory_Click" Style="{StaticResource ButtonPrimary}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- Summary Bento Box -->
+        <Grid Grid.Row="1" Margin="0,0,0,24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1.5*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Tổng số Danh mục -->
+            <Border Grid.Column="0" Style="{StaticResource StitchCard}" Margin="0,0,16,0" Padding="24">
+                <StackPanel>
+                    <Grid>
+                        <Border Width="48" Height="48" CornerRadius="24" Background="#e6f0ff" HorizontalAlignment="Left">
+                            <TextBlock Text="📂" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                        </Border>
+                    </Grid>
+                    <TextBlock Text="Tổng số Danh mục" FontSize="14" Foreground="{StaticResource TextSecondary}" Margin="0,16,0,4"/>
+                    <TextBlock Text="{Binding TotalCategories}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Chi tiêu cao nhất -->
+            <Border Grid.Column="1" Style="{StaticResource StitchCard}" Margin="0,0,16,0" Padding="24">
+                <StackPanel>
+                    <Grid>
+                        <Border Width="48" Height="48" CornerRadius="24" Background="#e6f0ff" HorizontalAlignment="Left">
+                            <TextBlock Text="🔥" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                        </Border>
+                    </Grid>
+                    <TextBlock Text="Chi tiêu cao nhất" FontSize="14" Foreground="{StaticResource TextSecondary}" Margin="0,16,0,4"/>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                        <TextBlock Text="{Binding HighestSpendingCategory}" FontSize="20" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,8,0"/>
+                        <TextBlock Text="{Binding HighestSpendingAmount}" FontSize="14" Foreground="{StaticResource ExpenseRed}" VerticalAlignment="Bottom" Margin="0,0,0,2"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Sức khỏe ngân sách -->
+            <Border Grid.Column="2" Style="{StaticResource StitchCard}" Padding="24">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,16">
+                        <Border Width="48" Height="48" CornerRadius="24" Background="#e6f0ff" Margin="0,0,16,0">
+                            <TextBlock Text="💚" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Sức khỏe ngân sách" FontSize="14" Foreground="{StaticResource TextSecondary}"/>
+                            <TextBlock Text="Rất tốt - Bạn đang chi tiêu hợp lý" FontSize="16" FontWeight="Bold" Foreground="{StaticResource PrimaryLightGreen}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" VerticalAlignment="Bottom">
+                        <Grid Margin="0,0,0,8">
+                            <TextBlock Text="Đã sử dụng ngân sách tháng" FontSize="13" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Left"/>
+                            <TextBlock Text="68%" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <ProgressBar Value="{Binding BudgetHealthPercentage, Mode=OneWay}" Maximum="100" Height="8" BorderThickness="0" Background="#e6f0ff" Foreground="{StaticResource PrimaryLightGreen}">
+                            <ProgressBar.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="4"/>
+                                </Style>
+                            </ProgressBar.Resources>
+                        </ProgressBar>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Split Layout -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Column: Danh sách phân bổ -->
+            <Border Grid.Column="0" Style="{StaticResource StitchCard}" Padding="24">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Grid Grid.Row="0" Margin="0,0,0,16">
+                        <TextBlock Text="Danh sách phân bổ" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center"/>
+                        <!-- Search and Filter placeholders -->
+                    </Grid>
+
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding Categories}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource CategoryListCard}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="200"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Icon -->
+                                            <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Margin="0,0,16,0" Background="#e6f0ff">
+                                                <TextBlock Text="{Binding Icon}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                                            </Border>
+
+                                            <!-- Info -->
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+                                                <TextBlock Text="{Binding Type}" FontSize="13" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,0"/>
+                                            </StackPanel>
+
+                                            <!-- Progress Bar (Only show if BudgetLimit > 0) -->
+                                            <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="16,0">
+                                                <StackPanel.Style>
+                                                    <Style TargetType="StackPanel">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding BudgetLimit}" Value="0">
+                                                                <Setter Property="Visibility" Value="Hidden"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </StackPanel.Style>
+                                                <Grid Margin="0,0,0,8">
+                                                    <TextBlock Text="{Binding CurrentSpendingText}" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" HorizontalAlignment="Left"/>
+                                                    <TextBlock Text="{Binding BudgetLimitText}" FontSize="13" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right"/>
+                                                </Grid>
+                                                <!-- The foreground should bind to ColorHex with a converter, using PrimaryAccentBrush as fallback -->
+                                                <ProgressBar Value="{Binding ProgressPercentage, Mode=OneWay}" Maximum="100" Height="6" BorderThickness="0" Background="#e6f0ff" Foreground="{StaticResource PrimaryLightGreen}">
+                                                    <ProgressBar.Resources>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="CornerRadius" Value="3"/>
+                                                        </Style>
+                                                    </ProgressBar.Resources>
+                                                </ProgressBar>
+                                            </StackPanel>
+
+                                            <!-- Menu -->
+                                            <Button Grid.Column="3" Content="⋮" Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextSecondary}"
+                                                    FontSize="18" FontWeight="Bold" Cursor="Hand" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            <!-- Right Column: Cơ cấu chi tiêu & Action -->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="16"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Pie Chart -->
+                <Border Grid.Row="0" Style="{StaticResource StitchCard}" Padding="24">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="250"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Cơ cấu chi tiêu" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
+                        <lvc:PieChart Grid.Row="1" Series="{Binding CategoryBreakdownSeries}" LegendPosition="Bottom"/>
+                    </Grid>
+                </Border>
+
+                <!-- Action Card -->
+                <Border Grid.Row="2" Style="{StaticResource StitchCard}" Padding="24">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,16">
+                            <Border Width="48" Height="48" CornerRadius="24" Background="#e6f0ff" HorizontalAlignment="Left">
+                                <TextBlock Text="💡" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                            </Border>
+                        </Grid>
+                        <TextBlock Text="Quản lý Danh mục" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
+                        <TextBlock Text="Phân bổ ngân sách hợp lý giúp bạn đạt được mục tiêu tài chính nhanh hơn." FontSize="14" Foreground="{StaticResource TextSecondary}" TextWrapping="Wrap" Margin="0,0,0,24"/>
+                        <Button Content="Thiết lập ngân sách" Style="{StaticResource ButtonSecondaryDark}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+    </Grid>
+</UserControl>
+
+
