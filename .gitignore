@@ -10,3 +10,4 @@ obj/
 .specify/
 .codegraph/
 AGENTS.md
+mcp.json
