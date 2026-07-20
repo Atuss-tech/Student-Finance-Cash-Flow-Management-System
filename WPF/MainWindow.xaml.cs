@@ -27,7 +27,7 @@ namespace Student_Finance___Cash_Flow_Management_System
             GlobalAddButton.Content = "Thêm Giao dịch";
         }
 
-        private void GlobalAddButton_Click(object sender, RoutedEventArgs e)
+        private async void GlobalAddButton_Click(object sender, RoutedEventArgs e)
         {
             Window window = null;
             switch (_currentContext)
@@ -52,7 +52,12 @@ namespace Student_Finance___Cash_Flow_Management_System
                 window.Owner = this;
                 if (window.ShowDialog() == true)
                 {
-                    // Refresh view if needed
+                    // Auto-refresh view sau khi thêm thành công
+                    if (_currentContext == "Categories" &&
+                        MainContentControl?.Content is WPF.Features.Categories.CategoriesView catView)
+                    {
+                        await catView.LoadDataAsync();
+                    }
                 }
             }
         }

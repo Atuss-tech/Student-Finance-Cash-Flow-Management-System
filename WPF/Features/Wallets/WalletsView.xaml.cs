@@ -23,7 +23,7 @@ namespace WPF.Features.Wallets
         private void LoadWallets()
         {
             Wallets.Clear();
-            var backendWallets = _walletService.GetWalletsByUserId(1); // Hardcoded UserId = 1 for now
+            var backendWallets = _walletService.GetAllWalletsByUser(1); // Hardcoded UserId = 1 for now
 
             foreach (var w in backendWallets)
             {

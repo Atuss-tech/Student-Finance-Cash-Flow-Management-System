@@ -1,4 +1,4 @@
-﻿using BusinessObjects.Models;
+using BusinessObjects.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,16 +10,16 @@ namespace Services
     //Các chức năng nghiệp vụ mà giao diện được phép sử dụng 
     public interface IWalletService
     {
-        List<Wallet> GetWalletsByUserId(int userId);
+        List<Wallet> GetAllWalletsByUser(int userId);
 
-        void AddWallet(
+        void CreateNewWallet(
             int userId,
             string walletName,
             string walletType,
             decimal initialBalance,
             string? note);
 
-        void UpdateWallet(
+        void UpdateWalletInfo(
             int userId,
             int walletId,
             string walletName,
@@ -28,7 +28,7 @@ namespace Services
 
         // Trả về true nếu ví được chuyển sang ngừng sử dụng.
         // Trả về false nếu ví được xóa hẳn.
-        bool DeleteWallet(
+        bool RemoveOrDeactivateWallet(
             int userId,
             int walletId);
     }

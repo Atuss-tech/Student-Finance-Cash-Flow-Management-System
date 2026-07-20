@@ -29,7 +29,7 @@ namespace WPF.Features.Transactions
             try
             {
                 int userId = 1;
-                var wallets = _walletService.GetWalletsByUserId(userId);
+                var wallets = _walletService.GetAllWalletsByUser(userId);
                 WalletComboBox.ItemsSource = wallets;
                 if (wallets.Any())
                 {

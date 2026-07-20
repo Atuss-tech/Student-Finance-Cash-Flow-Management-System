@@ -35,6 +35,21 @@ namespace DataAccess
                 .ThenBy(category => category.CategoryName)
                 .ToList();
         }
+
+        // Lấy TOÀN BỘ danh mục trong hệ thống (không lọc theo userId).
+        public List<Category> GetAllCategories()
+        {
+            using StudentFinanceDbContext db =
+                new StudentFinanceDbContext();
+
+            return db.Categories
+                .AsNoTracking()
+                .OrderByDescending(category => category.IsActive)
+                .ThenBy(category => category.UserId)
+                .ThenBy(category => category.CategoryType)
+                .ThenBy(category => category.CategoryName)
+                .ToList();
+        }
         //Lấy các danh mục đang hoạt động theo loại Income hoặc Expense
         //Hàm này sử dụng khi làm chức năng giao dịch
         public List<Category> GetActiveCategoriesByType(

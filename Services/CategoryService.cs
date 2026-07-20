@@ -1,4 +1,4 @@
-﻿using BusinessObjects.Models;
+using BusinessObjects.Models;
 using Repositories;
 using System;
 using System.Collections.Generic;
@@ -25,6 +25,13 @@ namespace Services
             return categoryRepository
                 .GetCategoriesByUserId(userId);
         }
+
+        // Lấy toàn bộ danh mục trong hệ thống (không lọc userId)
+        public List<Category> GetAllCategories()
+        {
+            return categoryRepository.GetAllCategories();
+        }
+
         // Lấy danh mục đang hoạt động theo loại.
         // Được sử dụng cho ComboBox khi thêm giao dịch.
         public List<Category> GetActiveCategoriesByType(

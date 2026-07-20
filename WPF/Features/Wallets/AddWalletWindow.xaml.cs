@@ -48,7 +48,7 @@ namespace WPF.Features.Wallets
             try
             {
                 int userId = 1;
-                _walletService.AddWallet(userId, walletName, type, balance, note);
+                _walletService.CreateNewWallet(userId, walletName, type, balance, note);
                 MessageBox.Show("Thêm ví thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                 this.DialogResult = true;
                 this.Close();

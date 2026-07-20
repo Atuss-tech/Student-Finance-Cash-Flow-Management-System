@@ -1,4 +1,4 @@
-﻿using BusinessObjects.Models;
+using BusinessObjects.Models;
 using Repositories;
 using System;
 using System.Collections.Generic;
@@ -26,16 +26,16 @@ namespace Services
             walletRepository = new WalletRepository();
         }
         // Thêm ví mới.
-        public void AddWallet(
+        public void CreateNewWallet(
             int userId,
             string walletName,
             string walletType,
             decimal initialBalance,
             string? note)
         {
-            ValidateUserId(userId);
+            CheckUserId(userId);
 
-            ValidateWalletData(
+            CheckWalletInput(
                 walletName,
                 walletType);
 
@@ -70,7 +70,7 @@ namespace Services
                 // Khi mới tạo, số dư hiện tại bằng số dư ban đầu.
                 Balance = initialBalance,
 
-                Note = NormalizeNote(note),
+                Note = GetNote(note),
                 IsActive = true,
                 CreatedAt = DateTime.Now
             };
@@ -79,11 +79,11 @@ namespace Services
         }
 
         // Xóa hoặc ngừng sử dụng ví.
-        public bool DeleteWallet(
+        public bool RemoveOrDeactivateWallet(
             int userId,
             int walletId)
         {
-            ValidateUserId(userId);
+            CheckUserId(userId);
 
             Wallet? wallet =
                 walletRepository.GetWalletById(
@@ -120,9 +120,9 @@ namespace Services
         }
 
         // Lấy các ví thuộc người dùng hiện tại.
-        public List<Wallet> GetWalletsByUserId(int userId)
+        public List<Wallet> GetAllWalletsByUser(int userId)
         {
-            ValidateUserId(userId);
+            CheckUserId(userId);
 
             return walletRepository
                 .GetWalletsByUserId(userId);
@@ -130,16 +130,16 @@ namespace Services
 
 
         // Sửa thông tin ví.
-        public void UpdateWallet(
+        public void UpdateWalletInfo(
             int userId,
             int walletId,
             string walletName,
             string walletType,
             string? note)
         {
-            ValidateUserId(userId);
+            CheckUserId(userId);
 
-            ValidateWalletData(
+            CheckWalletInput(
                 walletName,
                 walletType);
 
@@ -174,10 +174,10 @@ namespace Services
                 userId,
                 normalizedName,
                 walletType,
-                NormalizeNote(note));
+                GetNote(note));
         }
         // Kiểm tra UserId.
-        private static void ValidateUserId(int userId)
+        private static void CheckUserId(int userId)
         {
             if (userId <= 0)
             {
@@ -187,7 +187,7 @@ namespace Services
         }
 
         // Kiểm tra tên ví và loại ví.
-        private void ValidateWalletData(
+        private void CheckWalletInput(
             string walletName,
             string walletType)
         {
@@ -211,7 +211,7 @@ namespace Services
             }
         }
         // Chuẩn hóa ghi chú trước khi lưu.
-        private static string? NormalizeNote(string? note)
+        private static string? GetNote(string? note)
         {
             if (string.IsNullOrWhiteSpace(note))
             {

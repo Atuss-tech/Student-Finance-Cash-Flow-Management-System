@@ -124,9 +124,13 @@
                         </Border>
                     </Grid>
                     <TextBlock Text="Tổng số Danh mục" FontSize="14" Foreground="{StaticResource TextSecondary}" Margin="0,16,0,4"/>
-                    <TextBlock Text="{Binding TotalCategories}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                        <TextBlock Text="{Binding TotalCategoryCount}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,6,0"/>
+                        <TextBlock Text="Danh mục" FontSize="14" Foreground="{StaticResource TextSecondary}" VerticalAlignment="Bottom" Margin="0,0,0,3"/>
+                    </StackPanel>
                 </StackPanel>
             </Border>
+
 
             <!-- Chi tiêu cao nhất -->
             <Border Grid.Column="1" Style="{StaticResource StitchCard}" Margin="0,0,16,0" Padding="24">
@@ -249,9 +253,28 @@
                                                 </ProgressBar>
                                             </StackPanel>
 
-                                            <!-- Menu -->
-                                            <Button Grid.Column="3" Content="⋮" Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextSecondary}"
-                                                    FontSize="18" FontWeight="Bold" Cursor="Hand" VerticalAlignment="Center"/>
+                                            <!-- Menu 3 chấm -->
+                                            <Button Grid.Column="3"
+                                                    Content="⋮"
+                                                    Background="Transparent" BorderThickness="0"
+                                                    Foreground="{StaticResource TextSecondary}"
+                                                    FontSize="20" FontWeight="Bold" Cursor="Hand"
+                                                    VerticalAlignment="Center" Width="32" Height="32"
+                                                    Click="MenuButton_Click"
+                                                    Tag="{Binding}">
+                                                <Button.ContextMenu>
+                                                    <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                        <MenuItem Header="✏️  Sửa danh mục"
+                                                                  Click="EditCategory_Click"
+                                                                  Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                                        <Separator/>
+                                                        <MenuItem Header="🗑️  Xóa danh mục"
+                                                                  Click="DeleteCategory_Click"
+                                                                  Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                  Foreground="#cf202f"/>
+                                                    </ContextMenu>
+                                                </Button.ContextMenu>
+                                            </Button>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -274,10 +297,16 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="250"/>
+                            <RowDefinition Height="300"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="Cơ cấu chi tiêu" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
-                        <lvc:PieChart Grid.Row="1" Series="{Binding CategoryBreakdownSeries}" LegendPosition="Bottom"/>
+                        <TextBlock Grid.Row="0" Text="Cơ cấu chi tiêu" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,12"/>
+                        <!-- LegendPosition=Hidden vì 23 mục sẽ bị tràn -->
+                        <lvc:PieChart Grid.Row="1"
+                                      Series="{Binding CategoryBreakdownSeries}"
+                                      LegendPosition="Hidden"
+                                      AnimationsSpeed="00:00:00.5"
+                                      TooltipPosition="Top"
+                                      MinHeight="280"/>
                     </Grid>
                 </Border>
 

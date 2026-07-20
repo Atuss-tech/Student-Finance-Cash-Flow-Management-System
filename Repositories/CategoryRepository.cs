@@ -1,4 +1,4 @@
-﻿using BusinessObjects.Models;
+using BusinessObjects.Models;
 using DataAccess;
 using System;
 using System.Collections.Generic;
@@ -17,6 +17,13 @@ namespace Repositories
             return CategoryDAO.Instance
                 .GetCategoriesByUserId(userId);
         }
+
+        // Lấy toàn bộ danh mục (không lọc userId)
+        public List<Category> GetAllCategories()
+        {
+            return CategoryDAO.Instance.GetAllCategories();
+        }
+
         //Lấy danh mục theo Id và userId
         public List<Category> GetActiveCategoriesByType(
            int userId,

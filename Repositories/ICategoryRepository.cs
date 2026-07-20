@@ -1,4 +1,4 @@
-﻿using BusinessObjects.Models;
+using BusinessObjects.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +11,9 @@ namespace Repositories
     public interface ICategoryRepository
     {
         List<Category> GetCategoriesByUserId(int userId);
+
+        // Lấy toàn bộ danh mục trong hệ thống (không lọc userId)
+        List<Category> GetAllCategories();
 
         List<Category> GetActiveCategoriesByType(
             int userId,
