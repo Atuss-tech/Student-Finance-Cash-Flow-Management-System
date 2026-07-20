@@ -13,7 +13,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Kernel;
 using SkiaSharp;
-using WPF.Models;
+using WPF.UIData;
 using Services;
 using Repositories;
 using System.Collections.Generic;
@@ -42,7 +42,7 @@ namespace WPF.Features.Reports
             get
             {
                 var abs = Math.Abs(Value);
-                string fmt = abs >= 1_000_000 ? (abs / 1_000_000).ToString("0.#") + "M₫" : (abs / 1_000).ToString("0") + "K₫";
+                string fmt = abs >= 1_000_000 ? (abs / 1_000_000).ToString("0.#") + "Mđ" : (abs / 1_000).ToString("0") + "Kđ";
                 return Value < 0 ? "-" + fmt : fmt;
             }
         }
@@ -88,8 +88,8 @@ namespace WPF.Features.Reports
         public Axis[] CashFlowXAxes { get; set; }
         public Axis[] CashFlowYAxes { get; set; }
 
-        private ObservableCollection<TransactionModel> _detailTransactions = new();
-        public ObservableCollection<TransactionModel> DetailTransactions
+        private ObservableCollection<TransactionData> _detailTransactions = new();
+        public ObservableCollection<TransactionData> DetailTransactions
         {
             get => _detailTransactions;
             set { _detailTransactions = value; OnPropertyChanged(); OnPropertyChanged(nameof(HasData)); }
@@ -115,7 +115,7 @@ namespace WPF.Features.Reports
             _reportService = new ReportService(new TransactionRepository());
             _transactionService = new TransactionService(new TransactionRepository());
 
-            DetailTransactions = new ObservableCollection<TransactionModel>();
+            DetailTransactions = new ObservableCollection<TransactionData>();
 
             CashFlowXAxes = new Axis[] { new Axis { LabelsPaint = new SolidColorPaint(SKColor.Parse("#4a5568")) } };
             CashFlowYAxes = new Axis[] { new Axis { LabelsPaint = new SolidColorPaint(SKColor.Parse("#4a5568")), Labeler = v => (v / 1_000_000).ToString("0.#") + "M" } };
@@ -228,7 +228,7 @@ namespace WPF.Features.Reports
                 ? allTransactions.Where(t => t.TransactionType == "Expense").OrderByDescending(t => t.TransactionDate)
                 : allTransactions.Where(t => t.Category?.CategoryName == category).OrderByDescending(t => t.TransactionDate);
                 
-            var models = details.Select(t => new TransactionModel
+            var models = details.Select(t => new TransactionData
             {
                 Title = t.Description ?? "Không có mô tả",
                 Category = t.Category?.CategoryName ?? "Khác",
@@ -239,7 +239,7 @@ namespace WPF.Features.Reports
                 IconBackground = t.TransactionType == "Expense" ? "#45f43f5e" : "#4510d9a0"
             }).ToList();
 
-            DetailTransactions = new ObservableCollection<TransactionModel>(models);
+            DetailTransactions = new ObservableCollection<TransactionData>(models);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

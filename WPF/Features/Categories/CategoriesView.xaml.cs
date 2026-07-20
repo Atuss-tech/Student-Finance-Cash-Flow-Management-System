@@ -10,7 +10,7 @@ using SkiaSharp;
 
 namespace WPF.Features.Categories
 {
-    public class CategoryItemModel : INotifyPropertyChanged
+    public class CategoryItemData : INotifyPropertyChanged
     {
         public string Name { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty;
@@ -22,8 +22,8 @@ namespace WPF.Features.Categories
         public double CurrentSpending { get; set; }
         public double BudgetLimit { get; set; }
         public double ProgressPercentage => BudgetLimit > 0 ? (CurrentSpending / BudgetLimit) * 100 : 0;
-        public string CurrentSpendingText => $"{CurrentSpending:N0} ₫";
-        public string BudgetLimitText => $"{BudgetLimit:N0} ₫";
+        public string CurrentSpendingText => $"{CurrentSpending:N0} đ";
+        public string BudgetLimitText => $"{BudgetLimit:N0} đ";
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -40,13 +40,13 @@ namespace WPF.Features.Categories
         private string _highestSpendingCategory = "Ăn uống";
         public string HighestSpendingCategory { get => _highestSpendingCategory; set { _highestSpendingCategory = value; OnPropertyChanged(); } }
 
-        private string _highestSpendingAmount = "3,500,000 ₫";
+        private string _highestSpendingAmount = "3,500,000 đ";
         public string HighestSpendingAmount { get => _highestSpendingAmount; set { _highestSpendingAmount = value; OnPropertyChanged(); } }
 
         private double _budgetHealthPercentage = 68;
         public double BudgetHealthPercentage { get => _budgetHealthPercentage; set { _budgetHealthPercentage = value; OnPropertyChanged(); } }
 
-        public ObservableCollection<CategoryItemModel> Categories { get; set; }
+        public ObservableCollection<CategoryItemData> Categories { get; set; }
 
         private string _searchText = string.Empty;
         public string SearchText { get => _searchText; set { _searchText = value; OnPropertyChanged(); } }
@@ -59,7 +59,7 @@ namespace WPF.Features.Categories
             InitializeComponent();
             this.DataContext = this;
 
-            Categories = new ObservableCollection<CategoryItemModel>();
+            Categories = new ObservableCollection<CategoryItemData>();
             CategoryBreakdownSeries = System.Array.Empty<ISeries>();
         }
 
@@ -80,7 +80,11 @@ namespace WPF.Features.Categories
 
         private void AddCategory_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Add category logic
+            var window = new AddCategoryWindow();
+            if (window.ShowDialog() == true)
+            {
+                // Reload categories if needed
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

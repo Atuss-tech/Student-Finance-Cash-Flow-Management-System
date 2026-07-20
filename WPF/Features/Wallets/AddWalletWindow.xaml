@@ -1,0 +1,100 @@
+<Window x:Class="WPF.Features.Wallets.AddWalletWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Thêm Ví mới" Width="440" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        MouseDown="Window_MouseDown">
+    <Window.Resources>
+        <!-- Colors from Design System -->
+        <SolidColorBrush x:Key="SurfaceColor" Color="#ffffff"/>
+        <SolidColorBrush x:Key="PrimaryBlue" Color="#0052ff"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#111827"/>
+        <SolidColorBrush x:Key="TextSecondary" Color="#6b7280"/>
+        <SolidColorBrush x:Key="BorderColor" Color="#e5e7eb"/>
+    </Window.Resources>
+
+    <Border Background="{StaticResource SurfaceColor}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="24" Padding="32" Margin="16">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" ShadowDepth="4" Opacity="0.1" Color="Black"/>
+        </Border.Effect>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Title -->
+            <Grid Grid.Row="0" Margin="0,0,0,32">
+                <TextBlock Text="Thêm Ví mới" FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center"/>
+                <Button Content="✕" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextSecondary}" FontSize="20" Cursor="Hand" Click="CancelButton_Click"/>
+            </Grid>
+
+            <!-- Tên ví -->
+            <StackPanel Grid.Row="1" Margin="0,0,0,16">
+                <TextBlock Text="Tên ví" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
+                <Border CornerRadius="8" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Background="#ffffff" Height="40">
+                    <TextBox x:Name="WalletNameTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="12,0"/>
+                </Border>
+            </StackPanel>
+
+            <!-- Loại ví -->
+            <StackPanel Grid.Row="2" Margin="0,0,0,16">
+                <TextBlock Text="Loại ví" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
+                <Border CornerRadius="8" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Background="#ffffff" Height="40">
+                    <ComboBox x:Name="WalletTypeComboBox" FontSize="14" SelectedIndex="0" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="8,0">
+                        <ComboBoxItem Content="Tiền mặt" Tag="Cash"/>
+                        <ComboBoxItem Content="Tài khoản ngân hàng" Tag="Bank"/>
+                        <ComboBoxItem Content="Ví điện tử" Tag="EWallet"/>
+                    </ComboBox>
+                </Border>
+            </StackPanel>
+
+            <!-- Số dư ban đầu -->
+            <StackPanel Grid.Row="3" Margin="0,0,0,16">
+                <TextBlock Text="Số dư ban đầu (VNĐ)" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
+                <Border CornerRadius="8" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Background="#ffffff" Height="40">
+                    <TextBox x:Name="BalanceTextBox" FontSize="16" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="12,0"/>
+                </Border>
+            </StackPanel>
+
+            <!-- Note -->
+            <StackPanel Grid.Row="4" Margin="0,0,0,24">
+                <TextBlock Text="Ghi chú thêm" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
+                <Border CornerRadius="8" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Background="#ffffff" Height="80">
+                    <TextBox x:Name="NoteTextBox" FontSize="14" Background="Transparent" BorderThickness="0" AcceptsReturn="True" TextWrapping="Wrap" Padding="12,8"/>
+                </Border>
+            </StackPanel>
+
+            <!-- Buttons -->
+            <Grid Grid.Row="6" Margin="0,16,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Content="Hủy bỏ" Height="44" Background="Transparent" Foreground="{StaticResource TextSecondary}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" Cursor="Hand" Click="CancelButton_Click">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="22"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <Button Grid.Column="2" Content="Lưu Ví" Height="44" Background="{StaticResource PrimaryBlue}" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="SaveButton_Click">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="22"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

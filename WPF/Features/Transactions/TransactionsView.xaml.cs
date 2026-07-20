@@ -14,7 +14,7 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.Win32;
 using SkiaSharp;
-using WPF.Models;
+using WPF.UIData;
 using Services;
 using Repositories;
 
@@ -51,8 +51,8 @@ namespace WPF.Features.Transactions
             {
                 if (Label == "Tổng giao dịch") return Value.ToString("0");
                 return Value >= 1_000_000
-                    ? (Value / 1_000_000).ToString("0.#") + "M₫"
-                    : (Value / 1_000).ToString("0") + "K₫";
+                    ? (Value / 1_000_000).ToString("0.#") + "Mđ"
+                    : (Value / 1_000).ToString("0") + "Kđ";
             }
         }
 
@@ -111,13 +111,13 @@ namespace WPF.Features.Transactions
         public string DateLabel  { get; set; } = string.Empty;
         public string DayTotal   { get; set; } = string.Empty;
         public Brush  TotalBrush { get; set; } = Brushes.White;
-        public ObservableCollection<TransactionModel> Items { get; set; } = new();
+        public ObservableCollection<TransactionData> Items { get; set; } = new();
     }
 
     public partial class TransactionsView : UserControl, INotifyPropertyChanged
     {
         private readonly ITransactionService _transactionService;
-        private List<TransactionModel> _allRaw = new();
+        private List<TransactionData> _allRaw = new();
 
         public TxStatCardModel CardTotal   { get; } = new() { Label = "Tổng giao dịch", Icon = "🔢", AccentColor = "#7c6df8" };
         public TxStatCardModel CardIncome  { get; } = new() { Label = "Tổng thu",        Icon = "📈", AccentColor = "#10d9a0" };
@@ -179,8 +179,8 @@ namespace WPF.Features.Transactions
         }
         public double DetailPanelWidth => IsDetailOpen ? 320 : 0;
 
-        private TransactionModel? _selectedTransaction;
-        public TransactionModel? SelectedTransaction
+        private TransactionData? _selectedTransaction;
+        public TransactionData? SelectedTransaction
         {
             get => _selectedTransaction;
             set { _selectedTransaction = value; OnPropertyChanged(); IsDetailOpen = value != null; }
@@ -226,7 +226,7 @@ namespace WPF.Features.Transactions
             try
             {
                 var transactionsDb = await _transactionService.GetTransactionsByYearAsync(1, DateTime.Now.Year);
-                _allRaw = transactionsDb.Select(t => new TransactionModel
+                _allRaw = transactionsDb.Select(t => new TransactionData
                 {
                     Title = t.Description ?? "Giao dịch",
                     Category = t.Category?.CategoryName ?? "Khác",
@@ -279,9 +279,18 @@ namespace WPF.Features.Transactions
         private void PrevPage_Click(object sender, RoutedEventArgs e) { if (CanPrev) PageIndex--; }
         private void NextPage_Click(object sender, RoutedEventArgs e) { if (CanNext) PageIndex++; }
 
+        private void AddTransaction_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new AddTransactionWindow();
+            if (window.ShowDialog() == true)
+            {
+                // Reload transactions if needed
+            }
+        }
+
         private void SelectTransaction_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is FrameworkElement fe && fe.DataContext is TransactionModel tx)
+            if (sender is FrameworkElement fe && fe.DataContext is TransactionData tx)
                 SelectedTransaction = tx;
         }
 
@@ -358,7 +367,7 @@ namespace WPF.Features.Transactions
                         DayTotal   = (netAmount >= 0 ? "+" : "") + FormatAmount(netAmount),
                         TotalBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(
                                          netAmount >= 0 ? "#10d9a0" : "#f43f5e")),
-                        Items = new ObservableCollection<TransactionModel>(g.OrderByDescending(t => t.Date))
+                        Items = new ObservableCollection<TransactionData>(g.OrderByDescending(t => t.Date))
                     };
                 }).ToList();
 
@@ -409,8 +418,8 @@ namespace WPF.Features.Transactions
 
         private static string FormatAmount(decimal v)
         {
-            var abs = Math.Abs(v);
-            return abs >= 1_000_000 ? (v / 1_000_000).ToString("0.#") + "M₫" : (v / 1_000).ToString("0") + "K₫";
+            decimal abs = Math.Abs(v);
+            return abs >= 1_000_000 ? (v / 1_000_000).ToString("0.#") + "Mđ" : (v / 1_000).ToString("0") + "Kđ";
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

@@ -11,7 +11,7 @@ using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using WPF.Models;
+using WPF.UIData;
 using Services;
 using Repositories;
 
@@ -45,8 +45,8 @@ namespace WPF.Features.Budget
             {
                 if (IsPercentage) return Value.ToString("0.0") + "%";
                 return Value >= 1_000_000
-                    ? (Value / 1_000_000).ToString("0.#") + "M₫"
-                    : (Value / 1_000).ToString("0") + "K₫";
+                    ? (Value / 1_000_000).ToString("0.#") + "Mđ"
+                    : (Value / 1_000).ToString("0") + "Kđ";
             }
         }
 
@@ -90,7 +90,7 @@ namespace WPF.Features.Budget
         public BudgetStatCardModel CardRemaining   { get; } = new() { Label = "Còn khả dụng",   Icon = "✨", AccentColor = "#10d9a0" };
         public BudgetStatCardModel CardSavingRate  { get; } = new() { Label = "Tỷ lệ tiết kiệm",Icon = "📈", AccentColor = "#7c6df8", IsPercentage = true };
 
-        public ObservableCollection<BudgetModel> AllBudgets { get; set; }
+        public ObservableCollection<BudgetData> AllBudgets { get; set; }
 
         public ISeries[] BarChartSeries { get; set; }
         public Axis[] BarChartXAxes { get; set; }
@@ -125,8 +125,8 @@ namespace WPF.Features.Budget
             set { _isEditModalOpen = value; OnPropertyChanged(); }
         }
 
-        private BudgetModel? _editingBudget;
-        public BudgetModel? EditingBudget
+        private BudgetData? _editingBudget;
+        public BudgetData? EditingBudget
         {
             get => _editingBudget;
             set { _editingBudget = value; OnPropertyChanged(); IsEditModalOpen = value != null; }
@@ -142,7 +142,7 @@ namespace WPF.Features.Budget
             // Initialize services
             _budgetService = new BudgetService(new BudgetRepository(), new TransactionRepository());
 
-            AllBudgets = new ObservableCollection<BudgetModel>();
+            AllBudgets = new ObservableCollection<BudgetData>();
 
             // Load real data when view loads
             this.Loaded += BudgetsView_Loaded;
@@ -170,7 +170,7 @@ namespace WPF.Features.Budget
                 AllBudgets.Clear();
                 foreach (var progress in budgetProgresses)
                 {
-                    AllBudgets.Add(new BudgetModel
+                    AllBudgets.Add(new BudgetData
                     {
                         CategoryName = progress.CategoryName,
                         Icon = "🏷️", // Default icon
@@ -285,7 +285,7 @@ namespace WPF.Features.Budget
 
         private void OpenEdit_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.DataContext is BudgetModel b)
+            if (sender is Button btn && btn.DataContext is BudgetData b)
             {
                 EditingBudget = b;
             }

@@ -154,14 +154,14 @@
                         <TextBlock Text="🔔" Foreground="{StaticResource TextPrimary}" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                     
-                    <!-- Add Transaction Button -->
-                    <Button Height="44" Padding="24,0,24,0" Background="{StaticResource PrimaryBlue}" BorderThickness="0" Cursor="Hand">
+                    <!-- Global Add Button -->
+                    <Button x:Name="GlobalAddButton" Height="44" Padding="24,0,24,0" Background="{StaticResource PrimaryBlue}" BorderThickness="0" Cursor="Hand" Click="GlobalAddButton_Click" Foreground="White" FontWeight="SemiBold" FontSize="15">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border Background="{TemplateBinding Background}" CornerRadius="22">
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24,0,24,0">
                                         <TextBlock Text="+" FontSize="20" Foreground="White" FontWeight="Bold" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Thêm Giao dịch" Foreground="White" FontWeight="SemiBold" FontSize="15" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{TemplateBinding Content}" Foreground="White" FontWeight="SemiBold" FontSize="15" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Border>
                             </ControlTemplate>

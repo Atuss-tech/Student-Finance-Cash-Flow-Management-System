@@ -10,7 +10,7 @@ using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using WPF.Models;
+using WPF.UIData;
 using Services;
 using Repositories;
 using System.Collections.Generic;
@@ -25,13 +25,13 @@ namespace WPF.Features.Dashboard
     {
         // --- CÁC PROPERTY RÀNG BUỘC (BINDING) LÊN GIAO DIỆN ---
         
-        public DashboardSummaryModel TotalBalance { get; set; }
-        public DashboardSummaryModel TotalIncome { get; set; }
-        public DashboardSummaryModel TotalExpense { get; set; }
-        public DashboardSummaryModel NetCashFlow { get; set; }
+        public DashboardSummaryData TotalBalance { get; set; }
+        public DashboardSummaryData TotalIncome { get; set; }
+        public DashboardSummaryData TotalExpense { get; set; }
+        public DashboardSummaryData NetCashFlow { get; set; }
 
-        public ObservableCollection<TransactionModel> RecentTransactions { get; set; }
-        public ObservableCollection<BudgetModel> BudgetProgresses { get; set; }
+        public ObservableCollection<TransactionData> RecentTransactions { get; set; }
+        public ObservableCollection<BudgetData> BudgetProgresses { get; set; }
 
         private ISeries[] _chartSeries = Array.Empty<ISeries>();
         public ISeries[] ChartSeries { get => _chartSeries; set { _chartSeries = value; OnPropertyChanged(); } }
@@ -63,13 +63,13 @@ namespace WPF.Features.Dashboard
             _transactionService = new TransactionService(new TransactionRepository());
             _budgetService = new BudgetService(new BudgetRepository(), new TransactionRepository());
 
-            TotalBalance = new DashboardSummaryModel { Title = "SỐ DƯ HIỆN TẠI", TargetAmount = 0, Subtext = "Tổng", BorderAccentBrush = "#10d9a0", Icon = "💳" };
-            TotalIncome  = new DashboardSummaryModel { Title = "THU NHẬP THÁNG", TargetAmount = 0, Subtext = "Tháng này", BorderAccentBrush = "#3b82f6", Icon = "📈" };
-            TotalExpense = new DashboardSummaryModel { Title = "CHI TIÊU THÁNG", TargetAmount = 0, Subtext = "Tháng này", BorderAccentBrush = "#f43f5e", Icon = "💸" };
-            NetCashFlow  = new DashboardSummaryModel { Title = "DÒNG TIỀN",      TargetAmount = 0, Subtext = "Thu - Chi", BorderAccentBrush = "#f59e0b", Icon = "🎯" };
+            TotalBalance = new DashboardSummaryData { Title = "SỐ DƯ HIỆN TẠI", TargetAmount = 0, Subtext = "Tổng", BorderAccentBrush = "#10d9a0", Icon = "💳" };
+            TotalIncome  = new DashboardSummaryData { Title = "THU NHẬP THÁNG", TargetAmount = 0, Subtext = "Tháng này", BorderAccentBrush = "#3b82f6", Icon = "📈" };
+            TotalExpense = new DashboardSummaryData { Title = "CHI TIÊU THÁNG", TargetAmount = 0, Subtext = "Tháng này", BorderAccentBrush = "#f43f5e", Icon = "💸" };
+            NetCashFlow  = new DashboardSummaryData { Title = "DÒNG TIỀN",      TargetAmount = 0, Subtext = "Thu - Chi", BorderAccentBrush = "#f59e0b", Icon = "🎯" };
 
-            RecentTransactions = new ObservableCollection<TransactionModel>();
-            BudgetProgresses = new ObservableCollection<BudgetModel>();
+            RecentTransactions = new ObservableCollection<TransactionData>();
+            BudgetProgresses = new ObservableCollection<BudgetData>();
 
             InitCharts();
 
@@ -108,7 +108,7 @@ namespace WPF.Features.Dashboard
                 
                 RecentTransactions.Clear();
                 foreach(var t in recent) {
-                    RecentTransactions.Add(new TransactionModel {
+                    RecentTransactions.Add(new TransactionData {
                         Title = t.Description ?? "Giao dịch",
                         Category = t.Category?.CategoryName ?? "Khác",
                         Amount = t.Amount,
@@ -124,7 +124,7 @@ namespace WPF.Features.Dashboard
                 var budgets = await _budgetService.GetBudgetProgressesAsync(userId, month, year);
                 BudgetProgresses.Clear();
                 foreach(var b in budgets.Take(5)) {
-                    BudgetProgresses.Add(new BudgetModel {
+                    BudgetProgresses.Add(new BudgetData {
                         CategoryName = b.CategoryName,
                         Icon = "🏷️",
                         SpentAmount = b.SpentAmount,

@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
 
-namespace WPF.Models
+namespace WPF.UIData
 {
-    public class DashboardSummaryModel : INotifyPropertyChanged
+    public class DashboardSummaryData : INotifyPropertyChanged
     {
         public string Title { get; set; } = string.Empty;
         public string Subtext { get; set; } = string.Empty;
@@ -27,9 +27,9 @@ namespace WPF.Models
         {
             get
             {
-                if (CurrentAmount >= 1_000_000) return (CurrentAmount / 1_000_000).ToString("0.#") + "M₫";
-                if (CurrentAmount >= 1_000) return (CurrentAmount / 1_000).ToString("0") + "K₫";
-                return CurrentAmount.ToString("0") + "₫";
+                if (CurrentAmount >= 1_000_000) return (CurrentAmount / 1_000_000).ToString("0.#") + "Mđ";
+                if (CurrentAmount >= 1_000) return (CurrentAmount / 1_000).ToString("0") + "Kđ";
+                return CurrentAmount.ToString("0") + "đ";
             }
         }
 
@@ -54,7 +54,7 @@ namespace WPF.Models
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public class TransactionModel : INotifyPropertyChanged
+    public class TransactionData : INotifyPropertyChanged
     {
         public string Title { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
@@ -73,9 +73,9 @@ namespace WPF.Models
             get
             {
                 string prefix = IsExpense ? "-" : "+";
-                if (Amount >= 1_000_000) return prefix + (Amount / 1_000_000).ToString("0.#") + "M₫";
-                if (Amount >= 1_000) return prefix + (Amount / 1_000).ToString("0") + "K₫";
-                return prefix + Amount.ToString("0") + "₫";
+                if (Amount >= 1_000_000) return prefix + (Amount / 1_000_000).ToString("0.#") + "Mđ";
+                if (Amount >= 1_000) return prefix + (Amount / 1_000).ToString("0") + "Kđ";
+                return prefix + Amount.ToString("0") + "đ";
             }
         }
 
@@ -86,7 +86,7 @@ namespace WPF.Models
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public class BudgetModel : INotifyPropertyChanged
+    public class BudgetData : INotifyPropertyChanged
     {
         public string CategoryName { get; set; } = string.Empty;
         public string Icon { get; set; } = string.Empty;
@@ -103,8 +103,8 @@ namespace WPF.Models
         {
             get
             {
-                if (TotalAmount >= 1_000_000) return (TotalAmount / 1_000_000).ToString("0.#") + "M₫";
-                return (TotalAmount / 1_000).ToString("0") + "K₫";
+                if (TotalAmount >= 1_000_000) return (TotalAmount / 1_000_000).ToString("0.#") + "Mđ";
+                return (TotalAmount / 1_000).ToString("0") + "Kđ";
             }
         }
 
@@ -112,8 +112,8 @@ namespace WPF.Models
         {
             get
             {
-                if (SpentAmount >= 1_000_000) return (SpentAmount / 1_000_000).ToString("0.#") + "M₫";
-                return (SpentAmount / 1_000).ToString("0") + "K₫";
+                if (SpentAmount >= 1_000_000) return (SpentAmount / 1_000_000).ToString("0.#") + "Mđ";
+                return (SpentAmount / 1_000).ToString("0") + "Kđ";
             }
         }
 
@@ -135,6 +135,29 @@ namespace WPF.Models
                 if (tick >= steps) { SpentAmount = target; timer.Stop(); }
             };
             timer.Start();
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public class WalletData : INotifyPropertyChanged
+    {
+        public string WalletName { get; set; } = string.Empty;
+        public string IconText { get; set; } = string.Empty;
+        public string IconBackground { get; set; } = "#ffffff";
+        public string IconForeground { get; set; } = "#cf202f";
+        public string Subtext { get; set; } = string.Empty;
+        public string Status { get; set; } = "Active";
+        public decimal Balance { get; set; }
+        public string FormattedBalance 
+        {
+            get 
+            {
+                if (Balance >= 1_000_000) return (Balance / 1_000_000).ToString("0.##") + "Mđ";
+                if (Balance >= 1_000) return (Balance / 1_000).ToString("0.##") + "Kđ";
+                return Balance.ToString("0") + "đ";
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
