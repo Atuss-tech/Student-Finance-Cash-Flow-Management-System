@@ -214,7 +214,6 @@
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="200"/>
                                                 <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
 
                                             <!-- Icon -->
@@ -252,29 +251,6 @@
                                                     </ProgressBar.Resources>
                                                 </ProgressBar>
                                             </StackPanel>
-
-                                            <!-- Menu 3 chấm -->
-                                            <Button Grid.Column="3"
-                                                    Content="⋮"
-                                                    Background="Transparent" BorderThickness="0"
-                                                    Foreground="{StaticResource TextSecondary}"
-                                                    FontSize="20" FontWeight="Bold" Cursor="Hand"
-                                                    VerticalAlignment="Center" Width="32" Height="32"
-                                                    Click="MenuButton_Click"
-                                                    Tag="{Binding}">
-                                                <Button.ContextMenu>
-                                                    <ContextMenu Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                                                        <MenuItem Header="✏️  Sửa danh mục"
-                                                                  Click="EditCategory_Click"
-                                                                  Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-                                                        <Separator/>
-                                                        <MenuItem Header="🗑️  Xóa danh mục"
-                                                                  Click="DeleteCategory_Click"
-                                                                  Tag="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                                                  Foreground="#cf202f"/>
-                                                    </ContextMenu>
-                                                </Button.ContextMenu>
-                                            </Button>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>

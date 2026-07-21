@@ -17,6 +17,7 @@ using WPF.UIData;
 using Services;
 using Repositories;
 using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace WPF.Features.Reports
 {
@@ -71,6 +72,48 @@ namespace WPF.Features.Reports
         }
     }
 
+    public class SpendingGroupLegendItem
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Icon { get; set; } = string.Empty;
+
+        private string _colorHex = "#6b7280";
+        public string ColorHex
+        {
+            get => _colorHex;
+            set
+            {
+                _colorHex = value;
+                try { ColorBrush = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(value)); }
+                catch { ColorBrush = System.Windows.Media.Brushes.Gray; }
+            }
+        }
+
+        private string _lightBackground = "#f3f4f6";
+        public string LightBackground
+        {
+            get => _lightBackground;
+            set
+            {
+                _lightBackground = value;
+                try { LightBrush = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(value)); }
+                catch { LightBrush = System.Windows.Media.Brushes.WhiteSmoke; }
+            }
+        }
+
+        public System.Windows.Media.SolidColorBrush ColorBrush { get; private set; } = System.Windows.Media.Brushes.Gray;
+        public System.Windows.Media.SolidColorBrush LightBrush { get; private set; } = System.Windows.Media.Brushes.WhiteSmoke;
+
+        public decimal Amount { get; set; }
+        public string FormattedAmount =>
+            Amount >= 1_000_000
+                ? (Amount / 1_000_000).ToString("0.#") + "Mđ"
+                : (Amount / 1_000).ToString("0") + "Kđ";
+        public string Percentage { get; set; } = "0%";
+        /// <summary>Width for mini progress bar (max 60px)</summary>
+        public double BarWidth { get; set; }
+    }
+
     public partial class ReportsView : UserControl, INotifyPropertyChanged
     {
         public ReportStatCardModel TotalIncomeReport { get; } = new() { Title = "TỔNG THU", BorderAccentBrush = "#10d9a0", Icon = "💵", Subtext = "Tháng hiện tại" };
@@ -81,6 +124,16 @@ namespace WPF.Features.Reports
 
         private ISeries[] _expenseAllocationSeries = Array.Empty<ISeries>();
         public ISeries[] ExpenseAllocationSeries { get => _expenseAllocationSeries; set { _expenseAllocationSeries = value; OnPropertyChanged(); } }
+
+        private ISeries[] _spendingGroupSeries = Array.Empty<ISeries>();
+        public ISeries[] SpendingGroupSeries { get => _spendingGroupSeries; set { _spendingGroupSeries = value; OnPropertyChanged(); } }
+
+        private ObservableCollection<SpendingGroupLegendItem> _spendingGroupLegend = new();
+        public ObservableCollection<SpendingGroupLegendItem> SpendingGroupLegend
+        {
+            get => _spendingGroupLegend;
+            set { _spendingGroupLegend = value; OnPropertyChanged(); }
+        }
 
         private ISeries[] _cashFlowTrendSeries = Array.Empty<ISeries>();
         public ISeries[] CashFlowTrendSeries { get => _cashFlowTrendSeries; set { _cashFlowTrendSeries = value; OnPropertyChanged(); } }
@@ -210,6 +263,61 @@ namespace WPF.Features.Reports
                         Rx = 6, Ry = 6
                     }
                 };
+
+                // 4. Cơ cấu chi tiêu theo 4 nhóm
+                var spendingGroups = await _reportService.GetExpenseBySpendingGroupAsync(userId, month, year);
+
+                // Mầu sắc, icon và background cho 4 nhóm
+                // Key = tên đầy đủ (dùng để tra cứu), Name hiển thị = không có emoji
+                var groupMeta = new Dictionary<string, (string Color, string Icon, string Light, string DisplayName)>
+                {
+                    ["🏠 Nhu cầu thiết yếu"] = ("#f43f5e", "🏠", "#fff1f2", "Nhu cầu thiết yếu"),
+                    ["🎮 Sở thích cá nhân"]   = ("#f59e0b", "🎮", "#fffbeb", "Sở thích cá nhân"),
+                    ["💰 Tích lũy"]             = ("#10d9a0", "💰", "#ecfdf5", "Tích lũy"),
+                    ["🎓 Tương lai"]             = ("#7c6df8", "🎓", "#f5f3ff", "Tương lai"),
+                };
+
+                var totalGroupExpense = spendingGroups.Values.Sum();
+                var groupPieSeries = new List<PieSeries<double>>();
+                var legendItems = new ObservableCollection<SpendingGroupLegendItem>();
+
+                // Mảng key theo thứ tự ưu tiên hiển thị
+                var orderedKeys = new[]
+                {
+                    "🏠 Nhu cầu thiết yếu",
+                    "🎮 Sở thích cá nhân",
+                    "💰 Tích lũy",
+                    "🎓 Tương lai"
+                };
+
+                foreach (var key in orderedKeys)
+                {
+                    decimal amount = spendingGroups.ContainsKey(key) ? spendingGroups[key] : 0;
+                    var (color, icon, light, displayName) = groupMeta[key];
+                    double pct = totalGroupExpense > 0 ? (double)(amount / totalGroupExpense) * 100 : 0;
+
+                    groupPieSeries.Add(new PieSeries<double>
+                    {
+                        Values = new double[] { (double)amount > 0 ? (double)amount : 0.001 },
+                        Name = displayName,
+                        InnerRadius = 60,
+                        Fill = new SolidColorPaint(SKColor.Parse(color))
+                    });
+
+                    legendItems.Add(new SpendingGroupLegendItem
+                    {
+                        Name = displayName,
+                        Icon = icon,
+                        ColorHex = color,
+                        LightBackground = light,
+                        Amount = amount,
+                        Percentage = $"{pct:0.#}% tổng chi",
+                        BarWidth = pct * 0.6  // max 60px
+                    });
+                }
+
+                SpendingGroupSeries = groupPieSeries.ToArray();
+                SpendingGroupLegend = legendItems;
 
                 await ShowTransactionsForCategoryAsync("Tất cả chi tiêu", userId, month, year);
             }

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="WPF.Features.Reports.ReportsView"
+<UserControl x:Class="WPF.Features.Reports.ReportsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:uc="clr-namespace:WPF.Features.Reports"
@@ -146,7 +146,7 @@
                                 <TextBlock Text="Nhấn vào biểu đồ để xem chi tiết" FontSize="13" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,16"/>
                             </StackPanel>
                             <lvc:PieChart Grid.Row="1" Series="{Binding ExpenseAllocationSeries}" AnimationsSpeed="00:00:01.0"
-                                          LegendPosition="Bottom" LegendTextPaint="{Binding ChartLegendTextPaint}" Height="280"
+                                          LegendPosition="Hidden" Height="280"
                                           TooltipPosition="Top"/>
                         </Grid>
                     </Border>
@@ -168,7 +168,117 @@
                     </Border>
                 </Grid>
 
-                <!-- ── Drill Down: Detailed Transactions ── -->
+                <!-- ── Cơ cấu chi tiêu: 4 nhóm ── -->
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Donut: Spending Group -->
+                    <Border Grid.Column="0" Style="{StaticResource StitchCard}" Margin="0,0,10,0" Padding="20">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0">
+                                <TextBlock Text="Cơ cấu chi tiêu" FontWeight="Bold" FontSize="16" Foreground="{StaticResource TextPrimary}"/>
+                                <TextBlock Text="Phân bổ theo 4 nhóm mục đích" FontSize="13" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,16"/>
+                            </StackPanel>
+                            <lvc:PieChart Grid.Row="1" x:Name="SpendingGroupChart"
+                                          Series="{Binding SpendingGroupSeries}"
+                                          AnimationsSpeed="00:00:01.0"
+                                          LegendPosition="Hidden"
+                                          TooltipPosition="Top" Height="260"/>
+
+                            <!-- Custom Legend -->
+                            <ItemsControl Grid.Row="2" ItemsSource="{Binding SpendingGroupLegend}" Margin="0,12,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,6,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="60"/>
+                                            </Grid.ColumnDefinitions>
+                                            <!-- Color dot -->
+                                            <Border Grid.Column="0" Width="12" Height="12" CornerRadius="6"
+                                                    Background="{Binding ColorBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                            <!-- Name -->
+                                            <TextBlock Grid.Column="1" Text="{Binding Name}" FontSize="13"
+                                                       Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center"
+                                                       TextWrapping="Wrap"/>
+                                            <!-- Amount -->
+                                            <TextBlock Grid.Column="2" Text="{Binding FormattedAmount}" FontSize="13"
+                                                       Foreground="{StaticResource TextSecondary}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                            <!-- Percent bar -->
+                                            <Grid Grid.Column="3" Height="6" VerticalAlignment="Center">
+                                                <Border CornerRadius="3" Background="#e5e7eb"/>
+                                                <Border CornerRadius="3" Background="{Binding ColorBrush}"
+                                                        HorizontalAlignment="Left"
+                                                        Width="{Binding BarWidth}"/>
+                                            </Grid>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </Border>
+
+                    <!-- Stats: Spending Group Summary -->
+                    <Border Grid.Column="1" Style="{StaticResource StitchCard}" Margin="10,0,0,0" Padding="20">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0">
+                                <TextBlock Text="Phân tích chi tiêu" FontWeight="Bold" FontSize="16" Foreground="{StaticResource TextPrimary}"/>
+                                <TextBlock Text="Tỷ lệ và số tiền từng nhóm" FontSize="13" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,16"/>
+                            </StackPanel>
+                            <ItemsControl Grid.Row="1" ItemsSource="{Binding SpendingGroupLegend}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="0,0,0,12" Padding="16,14" CornerRadius="10"
+                                                Background="{Binding LightBrush}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <!-- Icon -->
+                                                <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20"
+                                                        Background="{Binding ColorBrush}" Margin="0,0,14,0">
+                                                    <TextBlock Text="{Binding Icon}" FontSize="18"
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                               FontFamily="Segoe UI Emoji"/>
+                                                </Border>
+                                                <!-- Info -->
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14"
+                                                               Foreground="{StaticResource TextPrimary}"
+                                                               TextWrapping="Wrap"/>
+                                                    <TextBlock Text="{Binding Percentage}" FontSize="12"
+                                                               Foreground="{StaticResource TextSecondary}"/>
+                                                </StackPanel>
+                                                <!-- Amount -->
+                                                <TextBlock Grid.Column="2" Text="{Binding FormattedAmount}" 
+                                                           FontWeight="Bold" FontSize="15" VerticalAlignment="Center"
+                                                           Foreground="{Binding ColorBrush}"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+
                 <Border Style="{StaticResource StitchCard}" Margin="0,0,0,20" Padding="24">
                     <Grid>
                         <Grid.RowDefinitions>
