@@ -97,16 +97,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <Border Grid.Row="0" Margin="0,0,0,24">
-            <Grid>
-                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <TextBlock Text="Danh mục" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
-                    <TextBlock Text="Quản lý và phân loại các khoản thu chi của bạn" FontSize="14" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,0"/>
-                </StackPanel>
-            </Grid>
-        </Border>
-
         <!-- Summary Bento Box -->
         <Grid Grid.Row="1" Margin="0,0,0,24">
             <Grid.ColumnDefinitions>

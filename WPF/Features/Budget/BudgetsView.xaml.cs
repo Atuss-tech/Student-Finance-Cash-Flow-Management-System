@@ -118,20 +118,6 @@ namespace WPF.Features.Budget
             set { _alertMessage = value; OnPropertyChanged(); }
         }
 
-        private bool _isEditModalOpen;
-        public bool IsEditModalOpen
-        {
-            get => _isEditModalOpen;
-            set { _isEditModalOpen = value; OnPropertyChanged(); }
-        }
-
-        private BudgetData? _editingBudget;
-        public BudgetData? EditingBudget
-        {
-            get => _editingBudget;
-            set { _editingBudget = value; OnPropertyChanged(); IsEditModalOpen = value != null; }
-        }
-
         private readonly IBudgetService _budgetService;
 
         public BudgetsView()
@@ -281,26 +267,6 @@ namespace WPF.Features.Budget
             OnPropertyChanged(nameof(BarChartSeries));
             OnPropertyChanged(nameof(DonutSeries));
             OnPropertyChanged(nameof(AreaChartSeries));
-        }
-
-        private void OpenEdit_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button btn && btn.DataContext is BudgetData b)
-            {
-                EditingBudget = b;
-            }
-        }
-
-        private void CloseEdit_Click(object sender, RoutedEventArgs e)
-        {
-            EditingBudget = null;
-        }
-
-        private void SaveEdit_Click(object sender, RoutedEventArgs e)
-        {
-            EditingBudget = null;
-            CalculateStats();
-            SetupCharts();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

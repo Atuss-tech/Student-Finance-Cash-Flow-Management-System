@@ -92,9 +92,6 @@
                                 <TextBlock Text="{Binding TotalIncomeReport.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryLightGreen}" Margin="0,6,0,4"/>
                                 <TextBlock Text="{Binding TotalIncomeReport.Subtext}" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                             </StackPanel>
-                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Width="44" Height="44" CornerRadius="24" Background="#e6f0ff">
-                                <TextBlock Text="{Binding TotalIncomeReport.Icon}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
                         </Grid>
                     </Border>
                     
@@ -106,9 +103,6 @@
                                 <TextBlock Text="{Binding TotalExpenseReport.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource ExpenseRed}" Margin="0,6,0,4"/>
                                 <TextBlock Text="{Binding TotalExpenseReport.Subtext}" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                             </StackPanel>
-                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Width="44" Height="44" CornerRadius="24" Background="#e6f0ff">
-                                <TextBlock Text="{Binding TotalExpenseReport.Icon}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
                         </Grid>
                     </Border>
                     
@@ -120,9 +114,6 @@
                                 <TextBlock Text="{Binding NetCashFlowReport.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource IncomePurple}" Margin="0,6,0,4"/>
                                 <TextBlock Text="{Binding NetCashFlowReport.Subtext}" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                             </StackPanel>
-                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Width="44" Height="44" CornerRadius="24" Background="#e6f0ff">
-                                <TextBlock Text="{Binding NetCashFlowReport.Icon}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
                         </Grid>
                     </Border>
                 </Grid>

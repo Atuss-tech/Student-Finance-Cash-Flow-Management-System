@@ -41,16 +41,6 @@
             <RowDefinition Height="300"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <Border Grid.Row="0" Margin="0,0,0,24">
-            <Grid>
-                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <TextBlock Text="Ví" FontSize="30" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
-                    <TextBlock Text="Quản lý các tài khoản và nguồn tiền của bạn" FontSize="14" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,0"/>
-                </StackPanel>
-            </Grid>
-        </Border>
-
         <!-- Summary Box -->
         <Border Grid.Row="1" Style="{StaticResource StitchCard}" Margin="0,0,0,24" Padding="24">
             <Grid>

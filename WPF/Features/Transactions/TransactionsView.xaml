@@ -61,9 +61,6 @@
                                 <TextBlock Text="{Binding CardTotal.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,6,0,4"/>
                                 <TextBlock Text="Tháng 7/2026" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                             </StackPanel>
-                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Width="44" Height="44" CornerRadius="24" Background="#e6f0ff">
-                                <TextBlock Text="{Binding CardTotal.Icon}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
                         </Grid>
                     </Border>
 
@@ -76,9 +73,6 @@
                                 <TextBlock Text="{Binding CardIncome.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryLightGreen}" Margin="0,6,0,4"/>
                                 <TextBlock Text="Tháng 7/2026" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                             </StackPanel>
-                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Width="44" Height="44" CornerRadius="24" Background="#e6f0ff">
-                                <TextBlock Text="{Binding CardIncome.Icon}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
                         </Grid>
                     </Border>
 
@@ -91,9 +85,6 @@
                                 <TextBlock Text="{Binding CardExpense.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource ExpenseRed}" Margin="0,6,0,4"/>
                                 <TextBlock Text="Tháng 7/2026" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                             </StackPanel>
-                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Width="44" Height="44" CornerRadius="24" Background="#e6f0ff">
-                                <TextBlock Text="{Binding CardExpense.Icon}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
                         </Grid>
                     </Border>
                 </Grid>
@@ -140,14 +131,6 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-
-                    <!-- Search box -->
-                    <Border Grid.Column="0" Background="#ffffff" BorderThickness="0" CornerRadius="24" Width="200" Padding="12,8">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🔍" Foreground="{StaticResource TextSecondary}" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextPrimary}" Width="150" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Border>
 
                     <!-- Category Pills -->
                     <ItemsControl Grid.Column="1" ItemsSource="{Binding CategoryPills}" Margin="16,0,0,0" VerticalAlignment="Center">
@@ -242,11 +225,11 @@
                 <Border Style="{StaticResource StitchCard}" Padding="20,16" Margin="0,0,0,24">
                     <Grid>
                         <Border HorizontalAlignment="Left" Background="#e6f0ff" CornerRadius="100" Padding="16,8" Cursor="Hand">
-                            <TextBlock Text="← Trước" Foreground="{StaticResource TextPrimary}" FontWeight="SemiBold" FontSize="14"/>
+                            <TextBlock Text="Trước" Foreground="{StaticResource TextPrimary}" FontWeight="SemiBold" FontSize="14"/>
                         </Border>
                         <TextBlock Text="{Binding PageLabel}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextSecondary}"/>
                         <Border HorizontalAlignment="Right" Background="#e6f0ff" CornerRadius="100" Padding="16,8" Cursor="Hand">
-                            <TextBlock Text="Sau →" Foreground="{StaticResource TextPrimary}" FontWeight="SemiBold" FontSize="14"/>
+                            <TextBlock Text="Sau" Foreground="{StaticResource TextPrimary}" FontWeight="SemiBold" FontSize="14"/>
                         </Border>
                     </Grid>
                 </Border>

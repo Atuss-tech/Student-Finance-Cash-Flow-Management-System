@@ -279,7 +279,7 @@
                                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                                                     <TextBlock Text="{Binding FormattedSpent}" Foreground="{StaticResource TextPrimary}"
                                                                FontSize="14" FontWeight="Bold"/>
-                                                    <TextBlock Text=" / " Foreground="{StaticResource TextSecondary}" FontSize="14"/>
+                                                    <TextBlock Foreground="{StaticResource TextSecondary}" FontSize="14"/>
                                                     <TextBlock Text="{Binding FormattedTotal}" Foreground="{StaticResource TextSecondary}"
                                                                FontSize="14"/>
                                                 </StackPanel>
@@ -305,8 +305,6 @@
                                                            Foreground="{StaticResource TextSecondary}"
                                                            HorizontalAlignment="Left"/>
                                                 <TextBlock HorizontalAlignment="Right" FontSize="12" Foreground="{StaticResource TextPrimary}" FontWeight="SemiBold">
-                                                    <Run Text="{Binding ProgressPercentage, Mode=OneWay, StringFormat={}{0:0}}"/>
-                                                    <Run Text="%"/>
                                                 </TextBlock>
                                             </Grid>
                                         </Grid>
