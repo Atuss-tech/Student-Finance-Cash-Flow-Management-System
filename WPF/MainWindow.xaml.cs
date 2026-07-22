@@ -58,6 +58,11 @@ namespace Student_Finance___Cash_Flow_Management_System
                     {
                         await catView.LoadDataAsync();
                     }
+                    else if (_currentContext == "Wallets" &&
+                        MainContentControl?.Content is WPF.Features.Wallets.WalletsView walletView)
+                    {
+                        walletView.LoadWallets();
+                    }
                 }
             }
         }

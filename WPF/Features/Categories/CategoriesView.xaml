@@ -204,36 +204,35 @@
                         <!-- Search and Filter placeholders -->
                     </Grid>
 
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
                         <ItemsControl ItemsSource="{Binding Categories}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Style="{StaticResource CategoryListCard}">
+                                    <Border Style="{StaticResource CategoryListCard}" MouseLeftButtonDown="CategoryCard_Click">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="200"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <!-- Icon -->
-                                            <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Margin="0,0,16,0" Background="#e6f0ff">
-                                                <TextBlock Text="{Binding Icon}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
-                                            </Border>
-
-                                            <!-- Info -->
-                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
-                                                <TextBlock Text="{Binding Type}" FontSize="13" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,0"/>
+                                            <!-- Icon + Info -->
+                                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Border Width="48" Height="48" CornerRadius="24" Margin="0,0,16,0" Background="#e6f0ff">
+                                                    <TextBlock Text="{Binding Icon}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                                                </Border>
+                                                <StackPanel VerticalAlignment="Center" MinWidth="160">
+                                                    <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+                                                    <TextBlock Text="{Binding Type}" FontSize="13" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,0"/>
+                                                </StackPanel>
                                             </StackPanel>
 
                                             <!-- Progress Bar (Only show if BudgetLimit > 0) -->
-                                            <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="16,0">
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="24,0">
                                                 <StackPanel.Style>
                                                     <Style TargetType="StackPanel">
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding BudgetLimit}" Value="0">
-                                                                <Setter Property="Visibility" Value="Hidden"/>
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
@@ -242,7 +241,6 @@
                                                     <TextBlock Text="{Binding CurrentSpendingText}" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" HorizontalAlignment="Left"/>
                                                     <TextBlock Text="{Binding BudgetLimitText}" FontSize="13" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right"/>
                                                 </Grid>
-                                                <!-- The foreground should bind to ColorHex with a converter, using PrimaryAccentBrush as fallback -->
                                                 <ProgressBar Value="{Binding ProgressPercentage, Mode=OneWay}" Maximum="100" Height="6" BorderThickness="0" Background="#e6f0ff" Foreground="{StaticResource PrimaryLightGreen}">
                                                     <ProgressBar.Resources>
                                                         <Style TargetType="Border">

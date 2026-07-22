@@ -33,59 +33,18 @@
         </Style>
     </UserControl.Resources>
     
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="300"/>
-        </Grid.RowDefinitions>
-
-        <!-- Header -->
-        <Border Grid.Row="0" Margin="0,0,0,24">
-            <Grid>
-                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <TextBlock Text="Ví" FontSize="30" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
-                    <TextBlock Text="Quản lý các tài khoản và nguồn tiền của bạn" FontSize="14" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,0"/>
-                </StackPanel>
-            </Grid>
-        </Border>
-
-        <!-- Summary Box -->
-        <Border Grid.Row="1" Style="{StaticResource StitchCard}" Margin="0,0,0,24" Padding="24">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="1"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                
-                <StackPanel Grid.Column="0">
+    <ScrollViewer VerticalScrollBarVisibility="Hidden" PanningMode="VerticalOnly">
+        <StackPanel Margin="0,0,0,24">
+            <!-- Summary Box -->
+            <Border Style="{StaticResource StitchCard}" Margin="0,0,0,24" Padding="24">
+                <StackPanel>
                     <TextBlock Text="TỔNG SỐ DƯ" Foreground="{StaticResource TextSecondary}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
-                        <TextBlock Text="342.500.000 đ" Foreground="{StaticResource PrimaryBlue}" FontSize="32" FontWeight="Bold"/>
-                    </StackPanel>
+                    <TextBlock Text="{Binding FormattedTotalBalance}" Foreground="{StaticResource PrimaryBlue}" FontSize="32" FontWeight="Bold"/>
                 </StackPanel>
-                
-                <StackPanel Grid.Column="2" Margin="0,0,24,0" HorizontalAlignment="Right">
-                    <TextBlock Text="TỔNG THU (Tháng này)" Foreground="{StaticResource TextSecondary}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,8" HorizontalAlignment="Right"/>
-                    <TextBlock Text="45.000.000 đ" Foreground="{StaticResource TextPrimary}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Right"/>
-                </StackPanel>
-                
-                <Border Grid.Column="3" Background="{StaticResource BorderColor}" Margin="0,5,0,5" Width="1"/>
+            </Border>
 
-                <StackPanel Grid.Column="4" Margin="24,0,0,0" HorizontalAlignment="Right">
-                    <TextBlock Text="TỔNG CHI (Tháng này)" Foreground="{StaticResource TextSecondary}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,8" HorizontalAlignment="Right"/>
-                    <TextBlock Text="12.500.000 đ" Foreground="{StaticResource ExpenseColor}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Right"/>
-                </StackPanel>
-            </Grid>
-        </Border>
-
-        <!-- Wallets Grid -->
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalOnly" Margin="0,0,0,24">
-            <ItemsControl ItemsSource="{Binding Wallets}">
+            <!-- Wallets Grid -->
+            <ItemsControl ItemsSource="{Binding Wallets}" Margin="0,0,0,24">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Orientation="Horizontal"/>
@@ -93,7 +52,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Style="{StaticResource StitchCard}" Width="320" Margin="0,0,24,24" Padding="20">
+                        <Border Style="{StaticResource StitchCard}" Width="320" Margin="0,0,24,24" Padding="20" Cursor="Hand" MouseLeftButtonDown="WalletCard_Click">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
@@ -106,8 +65,8 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Width="40" Height="40" CornerRadius="100" Background="{Binding IconBackground}" Margin="0,0,12,0">
-                                        <TextBlock Text="{Binding IconText}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontWeight="Bold" Foreground="{Binding IconForeground}"/>
+                                    <Border Grid.Column="0" Width="40" Height="40" CornerRadius="100" Background="{Binding IconBackgroundBrush}" Margin="0,0,12,0">
+                                        <TextBlock Text="{Binding IconText}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontWeight="Bold" Foreground="{Binding IconForegroundBrush}"/>
                                     </Border>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                         <TextBlock Text="{Binding WalletName}" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" TextWrapping="Wrap"/>
@@ -127,41 +86,41 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        </ScrollViewer>
 
-        <!-- Analytics Split Layout -->
-        <Grid Grid.Row="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="24"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
+            <!-- Analytics Split Layout -->
+            <Grid Height="350">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="24"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
 
-            <!-- Bar Chart -->
-            <Border Grid.Column="0" Style="{StaticResource StitchCard}" Padding="24">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Text="Dòng tiền theo ví (Dữ liệu tĩnh)" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
-                    <lvc:CartesianChart Grid.Row="1" Series="{Binding CashFlowByWalletSeries}" XAxes="{Binding CashFlowXAxes}" TooltipPosition="Hidden" />
-                </Grid>
-            </Border>
+                <!-- Bar Chart -->
+                <Border Grid.Column="0" Style="{StaticResource StitchCard}" Padding="24">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Số dư theo ví" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
+                        <lvc:CartesianChart Grid.Row="1" Series="{Binding CashFlowByWalletSeries}" XAxes="{Binding CashFlowXAxes}" TooltipPosition="Hidden" />
+                    </Grid>
+                </Border>
 
-            <!-- Pie Chart -->
-            <Border Grid.Column="2" Style="{StaticResource StitchCard}" Padding="24">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Text="Phân bổ nguồn tiền" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
-                    <lvc:PieChart Grid.Row="1" Series="{Binding WalletAllocationSeries}" LegendPosition="Right" LegendTextPaint="{Binding LegendTextPaint}"/>
-                </Grid>
-            </Border>
-        </Grid>
+                <!-- Pie Chart -->
+                <Border Grid.Column="2" Style="{StaticResource StitchCard}" Padding="24">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Phân bổ nguồn tiền" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
+                        <lvc:PieChart Grid.Row="1" Series="{Binding WalletAllocationSeries}" LegendPosition="Right" LegendTextPaint="{Binding LegendTextPaint}"/>
+                    </Grid>
+                </Border>
+            </Grid>
 
-    </Grid>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>
 

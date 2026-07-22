@@ -82,11 +82,13 @@
                 </Border>
             </StackPanel>
 
-            <!-- Buttons -->
-            <Grid Grid.Row="4">
+            <!-- Buttons: Hủy bỏ, Xóa, Lưu thay đổi -->
+            <Grid Grid.Row="4" Margin="0,8,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="12"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
@@ -101,7 +103,18 @@
                     </Button.Resources>
                 </Button>
 
-                <Button Grid.Column="2" Content="Lưu thay đổi" Height="44"
+                <Button Grid.Column="2" Content="Xóa" Height="44"
+                        Background="#ffe6e6" Foreground="{StaticResource PrimaryRed}"
+                        FontWeight="Bold" BorderThickness="0"
+                        Cursor="Hand" Click="DeleteButton_Click">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="22"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <Button Grid.Column="4" Content="Lưu thay đổi" Height="44"
                         Background="{StaticResource PrimaryBlue}" Foreground="White"
                         FontWeight="Bold" BorderThickness="0"
                         Cursor="Hand" Click="SaveButton_Click">

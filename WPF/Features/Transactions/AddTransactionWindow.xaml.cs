@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using Services;
+using WPF.UIData;
 
 namespace WPF.Features.Transactions
 {
@@ -11,6 +12,7 @@ namespace WPF.Features.Transactions
         private readonly ITransactionService _transactionService;
         private readonly IWalletService _walletService;
         private readonly ICategoryService _categoryService;
+        private readonly TransactionData? _transactionToEdit;
 
         public AddTransactionWindow()
         {
@@ -22,6 +24,59 @@ namespace WPF.Features.Transactions
             TransactionDatePicker.SelectedDate = DateTime.Now;
 
             LoadDropdownData();
+        }
+
+        public AddTransactionWindow(TransactionData transactionToEdit)
+        {
+            InitializeComponent();
+            _transactionService = new TransactionService();
+            _walletService = new WalletService();
+            _categoryService = new CategoryService();
+            _transactionToEdit = transactionToEdit;
+
+            LoadDropdownData();
+            PopulateEditData();
+        }
+
+        private void PopulateEditData()
+        {
+            if (_transactionToEdit == null) return;
+
+            TitleTextBlock.Text = "Sửa Giao dịch";
+            SaveButton.Content = "Cập nhật Giao dịch";
+
+            AmountTextBox.Text = _transactionToEdit.Amount.ToString("0");
+            ExpenseRadio.IsChecked = _transactionToEdit.IsExpense;
+            IncomeRadio.IsChecked = !_transactionToEdit.IsExpense;
+            
+            FilterCategories();
+
+            if (_transactionToEdit.WalletId > 0)
+            {
+                WalletComboBox.SelectedValue = _transactionToEdit.WalletId;
+            }
+            if (_transactionToEdit.CategoryId > 0)
+            {
+                CategoryComboBox.SelectedValue = _transactionToEdit.CategoryId;
+            }
+            else if (!string.IsNullOrEmpty(_transactionToEdit.Category))
+            {
+                var catList = CategoryComboBox.ItemsSource as System.Collections.IEnumerable;
+                if (catList != null)
+                {
+                    foreach (BusinessObjects.Models.Category c in catList)
+                    {
+                        if (c.CategoryName == _transactionToEdit.Category)
+                        {
+                            CategoryComboBox.SelectedItem = c;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            TransactionDatePicker.SelectedDate = _transactionToEdit.Date;
+            NoteTextBox.Text = string.IsNullOrEmpty(_transactionToEdit.Note) ? _transactionToEdit.Title : _transactionToEdit.Note;
         }
 
         private void LoadDropdownData()
@@ -116,15 +171,23 @@ namespace WPF.Features.Transactions
             try
             {
                 int userId = 1;
-                _transactionService.AddTransaction(userId, walletId, categoryId, type, amount, date, note);
+                if (_transactionToEdit != null)
+                {
+                    _transactionService.UpdateTransaction(userId, _transactionToEdit.TransactionId, walletId, categoryId, type, amount, date, note);
+                    MessageBox.Show("Cập nhật giao dịch thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    _transactionService.AddTransaction(userId, walletId, categoryId, type, amount, date, note);
+                    MessageBox.Show("Thêm giao dịch thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
                 
-                MessageBox.Show("Thêm giao dịch thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                 this.DialogResult = true;
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi khi thêm giao dịch: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Lỗi khi lưu giao dịch: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

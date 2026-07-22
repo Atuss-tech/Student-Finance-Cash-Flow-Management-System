@@ -137,20 +137,25 @@
                 <Grid Margin="0,0,0,20">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
                     <!-- Search box -->
-                    <Border Grid.Column="0" Background="#ffffff" BorderThickness="0" CornerRadius="24" Width="200" Padding="12,8">
+                    <Border Grid.Column="0" Background="#ffffff" BorderThickness="0" CornerRadius="24" Width="180" Padding="12,8" Margin="0,0,12,0">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="🔍" Foreground="{StaticResource TextSecondary}" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextPrimary}" Width="150" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextPrimary}" Width="130" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
 
+                    <!-- Wallet Filter Dropdown -->
+                    <Border Grid.Column="1" Background="#ffffff" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" CornerRadius="24" Padding="12,4" Margin="0,0,16,0" VerticalAlignment="Center">
+                        <ComboBox ItemsSource="{Binding WalletFilterList}" SelectedItem="{Binding SelectedWalletFilter, Mode=TwoWay}" Background="Transparent" BorderThickness="0" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center"/>
+                    </Border>
+
                     <!-- Category Pills -->
-                    <ItemsControl Grid.Column="1" ItemsSource="{Binding CategoryPills}" Margin="16,0,0,0" VerticalAlignment="Center">
+                    <ItemsControl Grid.Column="2" ItemsSource="{Binding CategoryPills}" VerticalAlignment="Center">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel VerticalAlignment="Center"/>
@@ -158,7 +163,7 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Background="{Binding PillBackground, FallbackValue=#ffffff}" CornerRadius="24" Padding="16,8" Margin="0,0,8,0" Cursor="Hand">
+                                <Border Background="{Binding PillBackground, FallbackValue=#ffffff}" CornerRadius="24" Padding="16,8" Margin="0,0,8,0" Cursor="Hand" MouseLeftButtonDown="Pill_Click">
                                     <TextBlock Text="{Binding Name}" Foreground="{Binding PillForeground, FallbackValue=#ffffff}" FontWeight="SemiBold" FontSize="13"/>
                                 </Border>
                             </DataTemplate>
@@ -224,7 +229,7 @@
                                                                 <TextBlock Text="{Binding Status}" FontSize="12" FontWeight="SemiBold" Foreground="{Binding StatusForeground}"/>
                                                             </Border>
 
-                                                            <TextBlock Grid.Column="3" Text="{Binding Category}" FontSize="14" Foreground="{StaticResource TextSecondary}" VerticalAlignment="Center"/>
+                                                            <TextBlock Grid.Column="3" Text="{Binding WalletName}" FontSize="14" Foreground="{StaticResource TextSecondary}" VerticalAlignment="Center"/>
 
                                                             <TextBlock Grid.Column="4" Text="{Binding FormattedAmount}" FontSize="15" FontWeight="Bold" Foreground="{Binding AmountColorBrush, FallbackValue=#ffffff}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                                         </Grid>

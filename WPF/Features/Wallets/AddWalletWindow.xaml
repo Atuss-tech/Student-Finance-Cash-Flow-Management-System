@@ -30,9 +30,12 @@
             </Grid.RowDefinitions>
 
             <!-- Title -->
-            <Grid Grid.Row="0" Margin="0,0,0,32">
-                <TextBlock Text="Thêm Ví mới" FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center"/>
-                <Button Content="✕" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextSecondary}" FontSize="20" Cursor="Hand" Click="CancelButton_Click"/>
+            <Grid Grid.Row="0" Margin="0,0,0,24">
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock x:Name="TitleTextBlock" Text="Thêm Ví mới" FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+                    <TextBlock x:Name="SubtitleBlock" FontSize="13" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,0" Visibility="Collapsed"/>
+                </StackPanel>
+                <Button Content="✕" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextSecondary}" FontSize="20" Cursor="Hand" Click="CancelButton_Click"/>
             </Grid>
 
             <!-- Tên ví -->
@@ -57,7 +60,7 @@
 
             <!-- Số dư ban đầu -->
             <StackPanel Grid.Row="3" Margin="0,0,0,16">
-                <TextBlock Text="Số dư ban đầu (VNĐ)" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
+                <TextBlock x:Name="BalanceLabelBlock" Text="Số dư ban đầu (VNĐ)" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
                 <Border CornerRadius="8" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Background="#ffffff" Height="40">
                     <TextBox x:Name="BalanceTextBox" FontSize="16" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="12,0"/>
                 </Border>
@@ -71,11 +74,13 @@
                 </Border>
             </StackPanel>
 
-            <!-- Buttons -->
+            <!-- Buttons: Hủy bỏ, Xóa, Lưu Ví / Lưu thay đổi -->
             <Grid Grid.Row="6" Margin="0,16,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="12"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
@@ -87,7 +92,15 @@
                     </Button.Resources>
                 </Button>
 
-                <Button Grid.Column="2" Content="Lưu Ví" Height="44" Background="{StaticResource PrimaryBlue}" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="SaveButton_Click">
+                <Button x:Name="DeleteButton" Grid.Column="2" Content="Xóa" Height="44" Background="#ffe6e6" Foreground="#cf202f" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Visibility="Collapsed" Click="DeleteButton_Click">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="22"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <Button x:Name="SaveButton" Grid.Column="4" Content="Lưu Ví" Height="44" Background="{StaticResource PrimaryBlue}" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="SaveButton_Click">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="22"/>

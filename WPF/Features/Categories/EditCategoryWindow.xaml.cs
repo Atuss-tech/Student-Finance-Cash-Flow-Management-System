@@ -39,6 +39,30 @@ namespace WPF.Features.Categories
             this.Close();
         }
 
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show(
+                $"Bạn có chắc muốn xóa danh mục \"{CategoryNameTextBox.Text.Trim()}\" không?\nĐiều này không thể hoàn tác.",
+                "Xác nhận xóa danh mục",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    _categoryService.DeleteCategory(_userId, _categoryId);
+                    this.DialogResult = true;
+                    this.Close();
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi xóa danh mục: " + ex.Message, "Lỗi",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             string newName = CategoryNameTextBox.Text.Trim();

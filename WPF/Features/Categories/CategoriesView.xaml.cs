@@ -240,6 +240,56 @@ namespace WPF.Features.Categories
         }
 
         // ── Helpers ──────────────────────────────────────────────────────
+        private async void CategoryCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (sender is FrameworkElement fe && fe.DataContext is CategoryItemData item)
+            {
+                var window = new EditCategoryWindow(item.CategoryId, item.UserId, item.Name, item.Type, item.Description);
+                window.Owner = Window.GetWindow(this);
+                if (window.ShowDialog() == true)
+                    await LoadDataAsync();
+            }
+        }
+
+        private async void EditCategoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            if (sender is FrameworkElement fe && fe.DataContext is CategoryItemData item)
+            {
+                var window = new EditCategoryWindow(item.CategoryId, item.UserId, item.Name, item.Type, item.Description);
+                window.Owner = Window.GetWindow(this);
+                if (window.ShowDialog() == true)
+                    await LoadDataAsync();
+            }
+        }
+
+        private async void DeleteCategoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            if (sender is FrameworkElement fe && fe.DataContext is CategoryItemData item)
+            {
+                var result = MessageBox.Show(
+                    $"Bạn có chắc muốn xóa danh mục \"{item.Name}\" không?\nĐiều này không thể hoàn tác.",
+                    "Xác nhận xóa",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        _categoryService.DeleteCategory(item.UserId, item.CategoryId);
+                        await LoadDataAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi khi xóa danh mục: " + ex.Message, "Lỗi",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+        }
+
         private static string FormatAmount(decimal amount)
         {
             if (amount >= 1_000_000) return (amount / 1_000_000).ToString("0.#") + "Mđ";

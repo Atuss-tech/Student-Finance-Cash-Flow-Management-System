@@ -191,7 +191,7 @@
                                           Series="{Binding SpendingGroupSeries}"
                                           AnimationsSpeed="00:00:01.0"
                                           LegendPosition="Hidden"
-                                          TooltipPosition="Top" Height="260"/>
+                                          TooltipPosition="Top" Height="160"/>
 
                             <!-- Custom Legend -->
                             <ItemsControl Grid.Row="2" ItemsSource="{Binding SpendingGroupLegend}" Margin="0,12,0,0">

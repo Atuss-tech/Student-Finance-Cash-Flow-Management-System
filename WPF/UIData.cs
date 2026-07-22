@@ -56,6 +56,10 @@ namespace WPF.UIData
 
     public class TransactionData : INotifyPropertyChanged
     {
+        public int TransactionId { get; set; }
+        public int WalletId { get; set; }
+        public string WalletName { get; set; } = string.Empty;
+        public int CategoryId { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
         public decimal Amount { get; set; }
@@ -64,6 +68,7 @@ namespace WPF.UIData
         public string Status { get; set; } = "Hoàn thành";
         public string Icon { get; set; } = string.Empty;
         public string IconBackground { get; set; } = "#4510d9a0";
+        public string Note { get; set; } = string.Empty;
 
         public string StatusForeground => Status == "Hoàn thành" ? "#10b981" : "#f59e0b";
         public string StatusBackground => Status == "Hoàn thành" ? "#1A10b981" : "#1Af59e0b";
@@ -143,10 +148,44 @@ namespace WPF.UIData
 
     public class WalletData : INotifyPropertyChanged
     {
+        public int WalletId { get; set; }
+        public int UserId { get; set; }
         public string WalletName { get; set; } = string.Empty;
+        public string WalletType { get; set; } = "Cash";
+        public string Note { get; set; } = string.Empty;
         public string IconText { get; set; } = string.Empty;
-        public string IconBackground { get; set; } = "#ffffff";
-        public string IconForeground { get; set; } = "#cf202f";
+
+        private string _iconBackground = "#ffffff";
+        public string IconBackground
+        {
+            get => _iconBackground;
+            set
+            {
+                _iconBackground = value;
+                try { IconBackgroundBrush = new System.Windows.Media.SolidColorBrush(
+                    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(value)); }
+                catch { IconBackgroundBrush = System.Windows.Media.Brushes.White; }
+            }
+        }
+
+        private string _iconForeground = "#cf202f";
+        public string IconForeground
+        {
+            get => _iconForeground;
+            set
+            {
+                _iconForeground = value;
+                try { IconForegroundBrush = new System.Windows.Media.SolidColorBrush(
+                    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(value)); }
+                catch { IconForegroundBrush = System.Windows.Media.Brushes.Black; }
+            }
+        }
+
+        public System.Windows.Media.SolidColorBrush IconBackgroundBrush { get; private set; }
+            = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.White);
+        public System.Windows.Media.SolidColorBrush IconForegroundBrush { get; private set; }
+            = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0xcf, 0x20, 0x2f));
+
         public string Subtext { get; set; } = string.Empty;
         public string Status { get; set; } = "Active";
         public decimal Balance { get; set; }

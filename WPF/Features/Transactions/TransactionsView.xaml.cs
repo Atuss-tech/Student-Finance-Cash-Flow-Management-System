@@ -117,6 +117,8 @@ namespace WPF.Features.Transactions
     public partial class TransactionsView : UserControl, INotifyPropertyChanged
     {
         private readonly ITransactionService _transactionService;
+        private readonly ICategoryService _categoryService;
+        private readonly IWalletService _walletService;
         private List<TransactionData> _allRaw = new();
 
         public TxStatCardModel CardTotal   { get; } = new() { Label = "Tổng giao dịch", Icon = "🔢", AccentColor = "#7c6df8" };
@@ -137,6 +139,20 @@ namespace WPF.Features.Transactions
         {
             get => _searchText;
             set { _searchText = value; OnPropertyChanged(); PageIndex = 0; ApplyFilters(); }
+        }
+
+        private ObservableCollection<string> _walletFilterList = new();
+        public ObservableCollection<string> WalletFilterList
+        {
+            get => _walletFilterList;
+            set { _walletFilterList = value; OnPropertyChanged(); }
+        }
+
+        private string _selectedWalletFilter = "Tất cả ví";
+        public string SelectedWalletFilter
+        {
+            get => _selectedWalletFilter;
+            set { _selectedWalletFilter = value; OnPropertyChanged(); PageIndex = 0; ApplyFilters(); }
         }
 
         private string _typeFilter = "Tất cả";
@@ -192,13 +208,10 @@ namespace WPF.Features.Transactions
             this.DataContext = this;
 
             _transactionService = new TransactionService(new TransactionRepository());
+            _categoryService = new CategoryService();
+            _walletService = new WalletService();
 
             CategoryPills = new ObservableCollection<CategoryPillModel>();
-            var cats = new[] { "Tất cả", "Ăn uống", "Nhà ở", "Di chuyển", "Tiện ích", "Mua sắm", "Giải trí", "Sức khỏe", "Giáo dục" };
-            foreach (var c in cats)
-            {
-                CategoryPills.Add(new CategoryPillModel { Name = c, IsSelected = (c == "Tất cả") });
-            }
 
             ChartXAxes = new Axis[]
             {
@@ -225,17 +238,54 @@ namespace WPF.Features.Transactions
         {
             try
             {
-                var transactionsDb = await _transactionService.GetTransactionsByYearAsync(1, DateTime.Now.Year);
+                int userId = 1;
+
+                // Load Wallets into Filter List
+                var walletsDb = _walletService.GetAllWalletsByUser(userId);
+                var currentWallet = SelectedWalletFilter;
+                WalletFilterList.Clear();
+                WalletFilterList.Add("Tất cả ví");
+                foreach (var w in walletsDb.Where(w => w.IsActive))
+                {
+                    WalletFilterList.Add(w.WalletName);
+                }
+                SelectedWalletFilter = WalletFilterList.Contains(currentWallet) ? currentWallet : "Tất cả ví";
+
+                // Load Categories into Category Pills
+                var categoriesDb = _categoryService.GetCategoriesByUserId(userId);
+                var selectedCatNames = CategoryPills.Where(p => p.IsSelected).Select(p => p.Name).ToList();
+                CategoryPills.Clear();
+                CategoryPills.Add(new CategoryPillModel { Name = "Tất cả", IsSelected = selectedCatNames.Contains("Tất cả") || selectedCatNames.Count == 0 });
+                foreach (var c in categoriesDb.Where(c => c.IsActive))
+                {
+                    CategoryPills.Add(new CategoryPillModel
+                    {
+                        Name = c.CategoryName,
+                        IsSelected = selectedCatNames.Contains(c.CategoryName)
+                    });
+                }
+                if (!CategoryPills.Any(p => p.IsSelected))
+                {
+                    CategoryPills[0].IsSelected = true;
+                }
+
+                // Load Transactions
+                var transactionsDb = await _transactionService.GetTransactionsByYearAsync(userId, DateTime.Now.Year);
                 _allRaw = transactionsDb.Select(t => new TransactionData
                 {
-                    Title = t.Description ?? "Giao dịch",
+                    TransactionId = t.TransactionId,
+                    WalletId = t.WalletId,
+                    WalletName = t.Wallet?.WalletName ?? "Ví",
+                    CategoryId = t.CategoryId,
+                    Title = string.IsNullOrEmpty(t.Description) ? (t.Category?.CategoryName ?? "Giao dịch") : t.Description,
                     Category = t.Category?.CategoryName ?? "Khác",
                     Amount = t.Amount,
                     Date = t.TransactionDate.ToDateTime(TimeOnly.MinValue),
                     IsExpense = t.TransactionType == "Expense",
                     Status = "Hoàn thành",
                     Icon = t.TransactionType == "Expense" ? "🔥" : "💵",
-                    IconBackground = t.TransactionType == "Expense" ? "#1Affb4ab" : "#1A10b981"
+                    IconBackground = t.TransactionType == "Expense" ? "#1Affb4ab" : "#1A10b981",
+                    Note = t.Description ?? string.Empty
                 }).ToList();
 
                 RefreshChart();
@@ -249,7 +299,11 @@ namespace WPF.Features.Transactions
 
         private void Pill_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.DataContext is CategoryPillModel pill)
+            CategoryPillModel? pill = null;
+            if (sender is Button btn && btn.DataContext is CategoryPillModel p1) pill = p1;
+            else if (sender is FrameworkElement fe && fe.DataContext is CategoryPillModel p2) pill = p2;
+
+            if (pill != null)
             {
                 if (pill.Name == "Tất cả")
                 {
@@ -284,7 +338,7 @@ namespace WPF.Features.Transactions
             var window = new AddTransactionWindow();
             if (window.ShowDialog() == true)
             {
-                // Reload transactions if needed
+                TransactionsView_Loaded(sender, e);
             }
         }
 
@@ -298,16 +352,40 @@ namespace WPF.Features.Transactions
 
         private void EditTransaction_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Edit transaction logic
+            if (SelectedTransaction != null)
+            {
+                var window = new AddTransactionWindow(SelectedTransaction);
+                if (window.ShowDialog() == true)
+                {
+                    SelectedTransaction = null;
+                    TransactionsView_Loaded(sender, e);
+                }
+            }
         }
 
         private void DeleteTransaction_Click(object sender, RoutedEventArgs e)
         {
             if (SelectedTransaction != null)
             {
-                _allRaw.Remove(SelectedTransaction);
-                ApplyFilters();
-                SelectedTransaction = null;
+                var result = MessageBox.Show($"Bạn có chắc chắn muốn xóa giao dịch '{SelectedTransaction.Title}'?", "Xác nhận xóa", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                if (result == MessageBoxResult.OK)
+                {
+                    try
+                    {
+                        if (SelectedTransaction.TransactionId > 0)
+                        {
+                            _transactionService.DeleteTransaction(1, SelectedTransaction.TransactionId);
+                        }
+                        _allRaw.Remove(SelectedTransaction);
+                        ApplyFilters();
+                        SelectedTransaction = null;
+                        MessageBox.Show("Xóa giao dịch thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi khi xóa giao dịch: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
             }
         }
 
@@ -315,9 +393,9 @@ namespace WPF.Features.Transactions
         {
             var dlg = new SaveFileDialog { Filter = "CSV|*.csv", FileName = "giao_dich.csv" };
             if (dlg.ShowDialog() != true) return;
-            var sb = new StringBuilder("Ngày,Tên,Danh mục,Loại,Số tiền\n");
+            var sb = new StringBuilder("Ngày,Tên,Danh mục,Loại,Ví,Số tiền\n");
             foreach (var t in _allRaw.OrderByDescending(x => x.Date))
-                sb.AppendLine($"{t.Date:dd/MM/yyyy},{t.Title},{t.Category},{(t.IsExpense?"Chi tiêu":"Thu nhập")},{t.Amount}");
+                sb.AppendLine($"{t.Date:dd/MM/yyyy},{t.Title},{t.Category},{(t.IsExpense?"Chi tiêu":"Thu nhập")},{t.WalletName},{t.Amount}");
             System.IO.File.WriteAllText(dlg.FileName, sb.ToString(), Encoding.UTF8);
         }
 
@@ -328,6 +406,11 @@ namespace WPF.Features.Transactions
             if (TypeFilter == "Thu nhập")  filtered = filtered.Where(t => !t.IsExpense);
             if (TypeFilter == "Chi tiêu")  filtered = filtered.Where(t =>  t.IsExpense);
 
+            if (!string.IsNullOrEmpty(SelectedWalletFilter) && SelectedWalletFilter != "Tất cả ví")
+            {
+                filtered = filtered.Where(t => t.WalletName == SelectedWalletFilter);
+            }
+
             var selectedCats = CategoryPills.Skip(1).Where(p => p.IsSelected).Select(p => p.Name).ToList();
             if (selectedCats.Count > 0)
                 filtered = filtered.Where(t => selectedCats.Contains(t.Category));
@@ -337,7 +420,8 @@ namespace WPF.Features.Transactions
                 var q = SearchText.Trim().ToLower();
                 filtered = filtered.Where(t =>
                     t.Title.ToLower().Contains(q) ||
-                    t.Category.ToLower().Contains(q));
+                    t.Category.ToLower().Contains(q) ||
+                    t.WalletName.ToLower().Contains(q));
             }
 
             var list = filtered.OrderByDescending(t => t.Date).ToList();
