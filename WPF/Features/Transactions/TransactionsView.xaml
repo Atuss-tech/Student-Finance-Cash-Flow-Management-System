@@ -61,9 +61,6 @@
                                 <TextBlock Text="{Binding CardTotal.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,6,0,4"/>
                                 <TextBlock Text="Tháng 7/2026" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                             </StackPanel>
-                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Width="44" Height="44" CornerRadius="24" Background="#e6f0ff">
-                                <TextBlock Text="{Binding CardTotal.Icon}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
                         </Grid>
                     </Border>
 
@@ -76,9 +73,6 @@
                                 <TextBlock Text="{Binding CardIncome.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryLightGreen}" Margin="0,6,0,4"/>
                                 <TextBlock Text="Tháng 7/2026" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                             </StackPanel>
-                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Width="44" Height="44" CornerRadius="24" Background="#e6f0ff">
-                                <TextBlock Text="{Binding CardIncome.Icon}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
                         </Grid>
                     </Border>
 
@@ -91,9 +85,6 @@
                                 <TextBlock Text="{Binding CardExpense.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource ExpenseRed}" Margin="0,6,0,4"/>
                                 <TextBlock Text="Tháng 7/2026" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                             </StackPanel>
-                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Width="44" Height="44" CornerRadius="24" Background="#e6f0ff">
-                                <TextBlock Text="{Binding CardExpense.Icon}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
                         </Grid>
                     </Border>
                 </Grid>
@@ -103,7 +94,7 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="250"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0" Margin="0,0,0,20">
@@ -113,19 +104,19 @@
                             </StackPanel>
                             <!-- Range buttons -->
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                <Border Background="#e6f0ff" CornerRadius="6" Padding="12,6" Margin="0,0,8,0" Cursor="Hand">
-                                    <TextBlock Text="7 ngày" Foreground="{StaticResource TextPrimary}" FontWeight="SemiBold" FontSize="13"/>
+                                <Border Background="{Binding Range7Bg}" CornerRadius="6" Padding="12,6" Margin="0,0,8,0" Cursor="Hand" MouseLeftButtonDown="SetRange7_Click">
+                                    <TextBlock Text="7 ngày" Foreground="{Binding Range7Fg}" FontWeight="SemiBold" FontSize="13"/>
                                 </Border>
-                                <Border Background="{StaticResource PrimaryLightGreen}" CornerRadius="6" Padding="12,6" Margin="0,0,8,0" Cursor="Hand">
-                                    <TextBlock Text="30 ngày" Foreground="{StaticResource TextPrimary}" FontWeight="Bold" FontSize="13"/>
+                                <Border Background="{Binding Range30Bg}" CornerRadius="6" Padding="12,6" Margin="0,0,8,0" Cursor="Hand" MouseLeftButtonDown="SetRange30_Click">
+                                    <TextBlock Text="30 ngày" Foreground="{Binding Range30Fg}" FontWeight="Bold" FontSize="13"/>
                                 </Border>
-                                <Border Background="#e6f0ff" CornerRadius="6" Padding="12,6" Cursor="Hand">
-                                    <TextBlock Text="3 tháng" Foreground="{StaticResource TextPrimary}" FontWeight="SemiBold" FontSize="13"/>
+                                <Border Background="{Binding Range90Bg}" CornerRadius="6" Padding="12,6" Cursor="Hand" MouseLeftButtonDown="SetRange90_Click">
+                                    <TextBlock Text="3 tháng" Foreground="{Binding Range90Fg}" FontWeight="SemiBold" FontSize="13"/>
                                 </Border>
                             </StackPanel>
                         </Grid>
 
-                        <lvc:CartesianChart Grid.Row="1" Series="{Binding ChartSeries}"
+                        <lvc:CartesianChart Grid.Row="1" Series="{Binding ChartSeries}" Height="250"
                                             XAxes="{Binding ChartXAxes}" YAxes="{Binding ChartYAxes}"
                                             TooltipPosition="Top" AnimationsSpeed="00:00:00.5"
                                             LegendPosition="Right"
@@ -153,7 +144,6 @@
                     <Border Grid.Column="1" Background="#ffffff" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" CornerRadius="24" Padding="12,4" Margin="0,0,16,0" VerticalAlignment="Center">
                         <ComboBox ItemsSource="{Binding WalletFilterList}" SelectedItem="{Binding SelectedWalletFilter, Mode=TwoWay}" Background="Transparent" BorderThickness="0" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center"/>
                     </Border>
-
                     <!-- Category Pills -->
                     <ItemsControl Grid.Column="2" ItemsSource="{Binding CategoryPills}" VerticalAlignment="Center">
                         <ItemsControl.ItemsPanel>
@@ -246,12 +236,12 @@
                 <!-- ── Pagination ── -->
                 <Border Style="{StaticResource StitchCard}" Padding="20,16" Margin="0,0,0,24">
                     <Grid>
-                        <Border HorizontalAlignment="Left" Background="#e6f0ff" CornerRadius="100" Padding="16,8" Cursor="Hand">
-                            <TextBlock Text="← Trước" Foreground="{StaticResource TextPrimary}" FontWeight="SemiBold" FontSize="14"/>
+                        <Border HorizontalAlignment="Left" Background="Transparent" Padding="16,8" Cursor="Hand">
+                            <TextBlock Text="Trước" Foreground="{StaticResource TextPrimary}" FontWeight="SemiBold" FontSize="14"/>
                         </Border>
                         <TextBlock Text="{Binding PageLabel}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextSecondary}"/>
-                        <Border HorizontalAlignment="Right" Background="#e6f0ff" CornerRadius="100" Padding="16,8" Cursor="Hand">
-                            <TextBlock Text="Sau →" Foreground="{StaticResource TextPrimary}" FontWeight="SemiBold" FontSize="14"/>
+                        <Border HorizontalAlignment="Right" Background="Transparent" Padding="16,8" Cursor="Hand">
+                            <TextBlock Text="Sau" Foreground="{StaticResource TextPrimary}" FontWeight="SemiBold" FontSize="14"/>
                         </Border>
                     </Grid>
                 </Border>

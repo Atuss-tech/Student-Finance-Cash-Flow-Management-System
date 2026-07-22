@@ -32,7 +32,7 @@ namespace WPF.Features.Wallets
 
             foreach (ComboBoxItem item in WalletTypeComboBox.Items)
             {
-                if (item.Tag?.ToString() == walletToEdit.WalletType)
+                if (string.Equals(item.Tag?.ToString(), walletToEdit.WalletType, StringComparison.OrdinalIgnoreCase))
                 {
                     WalletTypeComboBox.SelectedItem = item;
                     break;
@@ -42,7 +42,7 @@ namespace WPF.Features.Wallets
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
+            if (e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Pressed)
                 this.DragMove();
         }
 
@@ -98,7 +98,11 @@ namespace WPF.Features.Wallets
                 }
                 else
                 {
-                    string amountText = BalanceTextBox.Text.Replace(".", "").Replace(",", "");
+                    string amountText = BalanceTextBox.Text.Replace(".", "").Replace(",", "").Trim();
+                    if (string.IsNullOrWhiteSpace(amountText))
+                    {
+                        amountText = "0";
+                    }
                     if (!decimal.TryParse(amountText, out decimal balance))
                     {
                         MessageBox.Show("Số dư ban đầu không hợp lệ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);

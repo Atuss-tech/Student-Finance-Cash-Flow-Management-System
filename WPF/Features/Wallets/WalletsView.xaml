@@ -72,8 +72,8 @@
                                         <TextBlock Text="{Binding WalletName}" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" TextWrapping="Wrap"/>
                                         <TextBlock Text="{Binding Subtext}" FontSize="12" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,0" TextWrapping="Wrap"/>
                                     </StackPanel>
-                                    <Border Grid.Column="2" Background="#0d0052ff" BorderBrush="#330052ff" BorderThickness="1" CornerRadius="100" Padding="8,4" VerticalAlignment="Top">
-                                        <TextBlock Text="{Binding Status}" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBlue}"/>
+                                    <Border Grid.Column="2" Background="{Binding StatusBackgroundBrush}" BorderBrush="{Binding StatusBorderBrush}" BorderThickness="1" CornerRadius="100" Padding="8,4" VerticalAlignment="Top">
+                                        <TextBlock Text="{Binding Status}" FontSize="11" FontWeight="SemiBold" Foreground="{Binding StatusForegroundBrush}"/>
                                     </Border>
                                 </Grid>
                                 <!-- Card Body -->
@@ -102,8 +102,13 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="Số dư theo ví" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
-                        <lvc:CartesianChart Grid.Row="1" Series="{Binding CashFlowByWalletSeries}" XAxes="{Binding CashFlowXAxes}" TooltipPosition="Hidden" />
+                        <Grid Grid.Row="0" Margin="0,0,0,16">
+                            <StackPanel HorizontalAlignment="Left">
+                                <TextBlock Text="Dòng tiền theo ví" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}"/>
+                                <TextBlock Text="Thu nhập vs Chi tiêu từng ví" FontSize="13" Foreground="{StaticResource TextSecondary}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                        <lvc:CartesianChart Grid.Row="1" Series="{Binding CashFlowByWalletSeries}" XAxes="{Binding CashFlowXAxes}" YAxes="{Binding CashFlowYAxes}" TooltipPosition="Top" AnimationsSpeed="00:00:00.8" LegendPosition="Top" LegendTextPaint="{Binding LegendTextPaint}"/>
                     </Grid>
                 </Border>
 
@@ -114,8 +119,13 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="Phân bổ nguồn tiền" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
-                        <lvc:PieChart Grid.Row="1" Series="{Binding WalletAllocationSeries}" LegendPosition="Right" LegendTextPaint="{Binding LegendTextPaint}"/>
+                        <Grid Grid.Row="0" Margin="0,0,0,16">
+                            <StackPanel HorizontalAlignment="Left">
+                                <TextBlock Text="Phân bổ nguồn tiền" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}"/>
+                                <TextBlock Text="Tỷ trọng số dư các ví" FontSize="13" Foreground="{StaticResource TextSecondary}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                        <lvc:PieChart Grid.Row="1" Series="{Binding WalletAllocationSeries}" LegendPosition="Bottom" LegendTextPaint="{Binding LegendTextPaint}" TooltipPosition="Top" AnimationsSpeed="00:00:01.0"/>
                     </Grid>
                 </Border>
             </Grid>

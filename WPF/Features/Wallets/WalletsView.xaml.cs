@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using BusinessObjects.Models;
 using Services;
@@ -55,6 +56,13 @@ namespace WPF.Features.Wallets
             set { _cashFlowXAxes = value; OnPropertyChanged(); }
         }
 
+        private Axis[] _cashFlowYAxes = Array.Empty<Axis>();
+        public Axis[] CashFlowYAxes
+        {
+            get => _cashFlowYAxes;
+            set { _cashFlowYAxes = value; OnPropertyChanged(); }
+        }
+
         private ISeries[] _walletAllocationSeries = Array.Empty<ISeries>();
         public ISeries[] WalletAllocationSeries
         {
@@ -69,10 +77,15 @@ namespace WPF.Features.Wallets
             InitializeComponent();
             _walletService = new WalletService();
             this.DataContext = this;
-            LoadWallets();
+            this.Loaded += async (s, e) => await LoadWalletsAsync();
         }
 
         public void LoadWallets()
+        {
+            _ = LoadWalletsAsync();
+        }
+
+        public async Task LoadWalletsAsync()
         {
             Wallets.Clear();
             var backendWallets = _walletService.GetAllWalletsByUser(1); // Hardcoded UserId = 1 for now
@@ -96,19 +109,19 @@ namespace WPF.Features.Wallets
                     WalletType = w.WalletType,
                     Note = w.Note ?? string.Empty,
                     Balance = w.Balance,
-                    Status = w.IsActive ? "Active" : "Locked",
+                    Status = w.IsActive ? "Hoạt động" : "Đã khóa",
                     Subtext = string.IsNullOrEmpty(w.Note) ? "Ví cá nhân" : w.Note
                 };
 
-                if (w.WalletType == "Cash")
+                if (string.Equals(w.WalletType, "Cash", StringComparison.OrdinalIgnoreCase))
                 {
                     wd.IconText = "đ";
                     wd.IconBackground = "#e5e7eb"; // BorderColor
                     wd.IconForeground = "#111827"; // TextPrimary
                 }
-                else if (w.WalletType == "EWallet")
+                else if (string.Equals(w.WalletType, "EWallet", StringComparison.OrdinalIgnoreCase))
                 {
-                    wd.IconText = w.WalletName.Length > 0 ? w.WalletName.Substring(0,1).ToUpper() : "E";
+                    wd.IconText = w.WalletName.Length > 0 ? w.WalletName.Substring(0, 1).ToUpper() : "E";
                     wd.IconBackground = "#a50064"; // Momo color etc
                     wd.IconForeground = "#ffffff";
                 }
@@ -124,9 +137,38 @@ namespace WPF.Features.Wallets
 
             TotalBalance = activeTotal;
 
-            // Load data into Column Chart (Số dư theo ví) & Pie Chart (Phân bổ nguồn tiền)
+            // Load data into Column Chart (Dòng tiền theo ví: Thu nhập vs Chi tiêu) & Pie Chart (Phân bổ nguồn tiền)
             var walletNames = activeWallets.Select(w => w.WalletName).ToArray();
-            var walletBalances = activeWallets.Select(w => (double)w.Balance).ToArray();
+            var incomeVals = new double[activeWallets.Count];
+            var expenseVals = new double[activeWallets.Count];
+
+            try
+            {
+                var transactionRepo = new Repositories.TransactionRepository();
+                var txService = new TransactionService(transactionRepo);
+                var allTx = await txService.GetTransactionsByYearAsync(1, DateTime.Now.Year);
+
+                for (int i = 0; i < activeWallets.Count; i++)
+                {
+                    var w = activeWallets[i];
+                    var wTx = allTx.Where(t => t.WalletId == w.WalletId).ToList();
+                    incomeVals[i]  = (double)wTx.Where(t => t.TransactionType == "Income").Sum(t => t.Amount);
+                    expenseVals[i] = (double)wTx.Where(t => t.TransactionType == "Expense").Sum(t => t.Amount);
+
+                    // Nếu chưa có giao dịch thu/chi, đặt mặc định theo số dư hiện tại
+                    if (incomeVals[i] == 0 && expenseVals[i] == 0 && (double)w.Balance > 0)
+                    {
+                        incomeVals[i] = (double)w.Balance;
+                    }
+                }
+            }
+            catch
+            {
+                for (int i = 0; i < activeWallets.Count; i++)
+                {
+                    incomeVals[i] = Math.Max(0, (double)activeWallets[i].Balance);
+                }
+            }
 
             CashFlowXAxes = new Axis[]
             {
@@ -137,15 +179,32 @@ namespace WPF.Features.Wallets
                 }
             };
 
+            CashFlowYAxes = new Axis[]
+            {
+                new Axis
+                {
+                    LabelsPaint = new SolidColorPaint(SKColor.Parse("#4a5568")),
+                    Labeler = v => v >= 1_000_000 ? (v / 1_000_000).ToString("0.#") + "M" : (v / 1_000).ToString("0") + "K"
+                }
+            };
+
             CashFlowByWalletSeries = new ISeries[]
             {
                 new ColumnSeries<double>
                 {
-                    Values = walletBalances,
-                    Name = "Số dư",
-                    Fill = new SolidColorPaint(SKColor.Parse("#0052ff")),
-                    MaxBarWidth = 35,
-                    Rx = 8, Ry = 8
+                    Values = incomeVals,
+                    Name = "Thu nhập",
+                    Fill = new SolidColorPaint(SKColor.Parse("#10b981")),
+                    MaxBarWidth = 18,
+                    Rx = 4, Ry = 4
+                },
+                new ColumnSeries<double>
+                {
+                    Values = expenseVals,
+                    Name = "Chi tiêu",
+                    Fill = new SolidColorPaint(SKColor.Parse("#818cf8")),
+                    MaxBarWidth = 18,
+                    Rx = 4, Ry = 4
                 }
             };
 
@@ -157,9 +216,9 @@ namespace WPF.Features.Wallets
             {
                 pieSeriesList.Add(new PieSeries<double>
                 {
-                    Values = new double[] { (double)w.Balance },
+                    Values = new double[] { Math.Max(0, (double)w.Balance) },
                     Name = w.WalletName,
-                    InnerRadius = 50,
+                    InnerRadius = 55,
                     Fill = new SolidColorPaint(SKColor.Parse(palette[colorIndex % palette.Length]))
                 });
                 colorIndex++;
@@ -168,24 +227,25 @@ namespace WPF.Features.Wallets
             WalletAllocationSeries = pieSeriesList.ToArray();
         }
 
-        private void AddWallet_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void AddWallet_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             var window = new AddWalletWindow();
             if (window.ShowDialog() == true)
             {
-                LoadWallets();
+                await LoadWalletsAsync();
             }
         }
 
-        private void WalletCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private async void WalletCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (sender is System.Windows.FrameworkElement fe && fe.DataContext is WalletData wallet)
             {
                 var window = new AddWalletWindow(wallet);
-                window.Owner = System.Windows.Window.GetWindow(this);
+                var parentWindow = System.Windows.Window.GetWindow(this);
+                if (parentWindow != null) window.Owner = parentWindow;
                 if (window.ShowDialog() == true)
                 {
-                    LoadWallets();
+                    await LoadWalletsAsync();
                 }
             }
         }

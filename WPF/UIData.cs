@@ -93,6 +93,8 @@ namespace WPF.UIData
 
     public class BudgetData : INotifyPropertyChanged
     {
+        public int BudgetId { get; set; }
+        public int CategoryId { get; set; }
         public string CategoryName { get; set; } = string.Empty;
         public string Icon { get; set; } = string.Empty;
         public decimal TotalAmount { get; set; }
@@ -101,7 +103,7 @@ namespace WPF.UIData
         public decimal SpentAmount
         {
             get => _spentAmount;
-            set { _spentAmount = value; OnPropertyChanged(); OnPropertyChanged(nameof(SpentFormatted)); OnPropertyChanged(nameof(ProgressValue)); }
+            set { _spentAmount = value; OnPropertyChanged(); OnPropertyChanged(nameof(SpentFormatted)); OnPropertyChanged(nameof(ProgressValue)); OnPropertyChanged(nameof(AnimatedProgress)); OnPropertyChanged(nameof(ProgressPercentage)); OnPropertyChanged(nameof(StatusText)); OnPropertyChanged(nameof(ProgressBrush)); }
         }
 
         public string TotalFormatted
@@ -121,6 +123,28 @@ namespace WPF.UIData
                 return (SpentAmount / 1_000).ToString("0") + "Kđ";
             }
         }
+        public double AnimatedProgress => ProgressValue;
+        public double ProgressPercentage => ProgressValue;
+        
+        public string StatusText 
+        { 
+            get 
+            {
+                if (ProgressValue >= 100) return "Vượt ngân sách";
+                if (ProgressValue >= 80) return "Sắp hết";
+                return "An toàn";
+            }
+        }
+        
+        public string ProgressBrush 
+        { 
+            get 
+            {
+                if (ProgressValue >= 100) return "#f43f5e";
+                if (ProgressValue >= 80) return "#f59e0b";
+                return "#10d9a0";
+            }
+        }
 
         public double ProgressValue => TotalAmount == 0 ? 0 : (double)(SpentAmount / TotalAmount * 100);
 
@@ -130,13 +154,14 @@ namespace WPF.UIData
             SpentAmount = 0;
             int steps = 30;
             int tick = 0;
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(30) };
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(30) };
             timer.Tick += (s, e) =>
             {
                 tick++;
                 double t = (double)tick / steps;
                 double eased = 1 - Math.Pow(1 - t, 3);
                 SpentAmount = (decimal)(eased * (double)target);
+                OnPropertyChanged(nameof(AnimatedProgress));
                 if (tick >= steps) { SpentAmount = target; timer.Stop(); }
             };
             timer.Start();
@@ -187,15 +212,42 @@ namespace WPF.UIData
             = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0xcf, 0x20, 0x2f));
 
         public string Subtext { get; set; } = string.Empty;
-        public string Status { get; set; } = "Active";
+
+        private string _status = "Hoạt động";
+        public string Status
+        {
+            get => _status;
+            set
+            {
+                _status = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(StatusBackgroundBrush));
+                OnPropertyChanged(nameof(StatusBorderBrush));
+                OnPropertyChanged(nameof(StatusForegroundBrush));
+            }
+        }
+
+        public System.Windows.Media.SolidColorBrush StatusBackgroundBrush =>
+            Status == "Hoạt động" || Status == "Active"
+                ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(0x1A, 0x00, 0x52, 0xFF))
+                : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(0x1A, 0xCF, 0x20, 0x2F));
+
+        public System.Windows.Media.SolidColorBrush StatusBorderBrush =>
+            Status == "Hoạt động" || Status == "Active"
+                ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(0x33, 0x00, 0x52, 0xFF))
+                : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(0x33, 0xCF, 0x20, 0x2F));
+
+        public System.Windows.Media.SolidColorBrush StatusForegroundBrush =>
+            Status == "Hoạt động" || Status == "Active"
+                ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0x00, 0x52, 0xFF))
+                : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0xCF, 0x20, 0x2F));
+
         public decimal Balance { get; set; }
         public string FormattedBalance 
         {
             get 
             {
-                if (Balance >= 1_000_000) return (Balance / 1_000_000).ToString("0.##") + "Mđ";
-                if (Balance >= 1_000) return (Balance / 1_000).ToString("0.##") + "Kđ";
-                return Balance.ToString("0") + "đ";
+                return Balance.ToString("#,##0", new System.Globalization.CultureInfo("vi-VN")) + " đ";
             }
         }
 

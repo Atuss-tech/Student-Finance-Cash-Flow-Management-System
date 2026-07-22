@@ -53,15 +53,29 @@ namespace Student_Finance___Cash_Flow_Management_System
                 if (window.ShowDialog() == true)
                 {
                     // Auto-refresh view sau khi thêm thành công
-                    if (_currentContext == "Categories" &&
-                        MainContentControl?.Content is WPF.Features.Categories.CategoriesView catView)
+                    if (MainContentControl?.Content is WPF.Features.Transactions.TransactionsView txView)
+                    {
+                        await txView.LoadDataAsync();
+                    }
+                    else if (MainContentControl?.Content is WPF.Features.Dashboard.DashboardHomeView dashView)
+                    {
+                        await dashView.LoadDashboardDataAsync();
+                    }
+                    else if (MainContentControl?.Content is WPF.Features.Reports.ReportsView repView)
+                    {
+                        await repView.GenerateReportsAsync();
+                    }
+                    else if (MainContentControl?.Content is WPF.Features.Categories.CategoriesView catView)
                     {
                         await catView.LoadDataAsync();
                     }
-                    else if (_currentContext == "Wallets" &&
-                        MainContentControl?.Content is WPF.Features.Wallets.WalletsView walletView)
+                    else if (MainContentControl?.Content is WPF.Features.Wallets.WalletsView walletView)
                     {
-                        walletView.LoadWallets();
+                        await walletView.LoadWalletsAsync();
+                    }
+                    else if (MainContentControl?.Content is WPF.Features.Budget.BudgetsView budgetView)
+                    {
+                        await budgetView.LoadBudgetDataAsync();
                     }
                 }
             }
@@ -113,6 +127,14 @@ namespace Student_Finance___Cash_Flow_Management_System
         private void Nav_Categories_Checked(object sender, RoutedEventArgs e)
         {
             SetView(new CategoriesView(), "Quản lý danh mục", "Categories", "Thêm Danh mục");
+        }
+
+        public void NavigateToBudgets()
+        {
+            if (NavBudgetsBtn != null)
+            {
+                NavBudgetsBtn.IsChecked = true;
+            }
         }
     }
 }

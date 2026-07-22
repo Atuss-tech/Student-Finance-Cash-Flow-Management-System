@@ -94,7 +94,7 @@
                 <StackPanel Grid.Row="1" Margin="10,0,10,0">
                     <RadioButton Content="Tổng quan" Style="{StaticResource SidebarItemStyle}" IsChecked="True" GroupName="Menu" Checked="Nav_Dashboard_Checked"/>
                     <RadioButton Content="Giao dịch" Style="{StaticResource SidebarItemStyle}" GroupName="Menu" Checked="Nav_Transactions_Checked"/>
-                    <RadioButton Content="Ngân sách" Style="{StaticResource SidebarItemStyle}" GroupName="Menu" Checked="Nav_Budgets_Checked"/>
+                    <RadioButton x:Name="NavBudgetsBtn" Content="Ngân sách" Style="{StaticResource SidebarItemStyle}" GroupName="Menu" Checked="Nav_Budgets_Checked"/>
                     <RadioButton Content="Báo cáo" Style="{StaticResource SidebarItemStyle}" GroupName="Menu" Checked="Nav_Reports_Checked"/>
                     <RadioButton Content="Ví" Style="{StaticResource SidebarItemStyle}" GroupName="Menu" Checked="Nav_Wallets_Checked"/>
                     <RadioButton Content="Danh mục" Style="{StaticResource SidebarItemStyle}" GroupName="Menu" Checked="Nav_Categories_Checked"/>
@@ -134,17 +134,13 @@
                 
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock x:Name="PageTitle" Text="Tổng quan tài chính" Foreground="{StaticResource TextPrimary}" FontWeight="Bold" FontSize="26" Margin="0,0,0,4"/>
-                    <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="8" Height="8" Fill="{StaticResource PrimaryBlue}" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                        <TextBlock Text="Cập nhật theo thời gian thực - Thứ Sáu, 10 tháng 7, 2026" Foreground="{StaticResource TextSecondary}" FontSize="13"/>
-                    </StackPanel>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                     <!-- Search Box -->
                     <Border Background="{StaticResource SurfaceColor}" CornerRadius="20" Width="260" Height="44" Margin="0,0,20,0" Padding="16,0,16,0">
                         <Grid>
-                            <TextBlock Text="🔍" Foreground="{StaticResource TextSecondary}" VerticalAlignment="Center"/>
+                            <TextBlock Foreground="{StaticResource TextSecondary}" VerticalAlignment="Center"/>
                             <TextBox Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center" Margin="24,0,0,0" FontSize="14" VerticalContentAlignment="Center" Text="Tìm kiếm..."/>
                         </Grid>
                     </Border>

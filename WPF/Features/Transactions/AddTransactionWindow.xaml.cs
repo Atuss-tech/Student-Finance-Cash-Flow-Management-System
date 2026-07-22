@@ -85,8 +85,9 @@ namespace WPF.Features.Transactions
             {
                 int userId = 1;
                 var wallets = _walletService.GetAllWalletsByUser(userId);
-                WalletComboBox.ItemsSource = wallets;
-                if (wallets.Any())
+                var selectableWallets = wallets.Where(w => w.IsActive || (_transactionToEdit != null && w.WalletId == _transactionToEdit.WalletId)).ToList();
+                WalletComboBox.ItemsSource = selectableWallets;
+                if (selectableWallets.Any())
                 {
                     WalletComboBox.SelectedIndex = 0;
                 }

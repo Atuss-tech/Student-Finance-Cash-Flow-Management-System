@@ -5,10 +5,24 @@ namespace WPF.Features.Budget
 {
     public partial class AddBudgetWindow : Window
     {
-        public AddBudgetWindow()
+        private int _editBudgetId = 0;
+        private UIData.BudgetData? _editBudget = null;
+
+        public AddBudgetWindow(UIData.BudgetData? editBudget = null)
         {
             InitializeComponent();
             LoadCategories();
+
+            if (editBudget != null)
+            {
+                _editBudget = editBudget;
+                _editBudgetId = editBudget.BudgetId;
+                TitleBlock.Text = "Cập nhật Ngân sách";
+                AmountTextBox.Text = editBudget.TotalAmount.ToString("0");
+                CategoryComboBox.SelectedValue = editBudget.CategoryId;
+                CategoryComboBox.IsEnabled = false; // Disable changing category for existing budget
+                MonthComboBox.IsEnabled = false; // Disable changing month for existing budget
+            }
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -68,7 +82,15 @@ namespace WPF.Features.Budget
             var budgetService = new Services.BudgetService(new Repositories.BudgetRepository(), new Repositories.TransactionRepository());
             try
             {
-                await budgetService.AddBudgetAsync(budget);
+                if (_editBudget != null)
+                {
+                    budget.BudgetId = _editBudgetId;
+                    await budgetService.UpdateBudgetAsync(budget);
+                }
+                else
+                {
+                    await budgetService.AddBudgetAsync(budget);
+                }
                 this.DialogResult = true;
                 this.Close();
             }

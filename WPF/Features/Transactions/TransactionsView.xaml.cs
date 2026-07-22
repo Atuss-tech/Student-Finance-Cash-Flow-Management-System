@@ -132,7 +132,30 @@ namespace WPF.Features.Transactions
         public SolidColorPaint ChartLegendTextPaint { get; } = new SolidColorPaint(SKColor.Parse("#6b7280"));
 
         private int _selectedRange = 30;
-        public int SelectedRange { get => _selectedRange; set { _selectedRange = value; OnPropertyChanged(); RefreshChart(); } }
+        public int SelectedRange
+        {
+            get => _selectedRange;
+            set
+            {
+                _selectedRange = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Range7Bg));
+                OnPropertyChanged(nameof(Range30Bg));
+                OnPropertyChanged(nameof(Range90Bg));
+                OnPropertyChanged(nameof(Range7Fg));
+                OnPropertyChanged(nameof(Range30Fg));
+                OnPropertyChanged(nameof(Range90Fg));
+                RefreshChart();
+            }
+        }
+
+        public string Range7Bg  => SelectedRange == 7  ? "#05b169" : "#e6f0ff";
+        public string Range30Bg => SelectedRange == 30 ? "#05b169" : "#e6f0ff";
+        public string Range90Bg => SelectedRange == 90 ? "#05b169" : "#e6f0ff";
+
+        public string Range7Fg  => SelectedRange == 7  ? "#ffffff" : "#111827";
+        public string Range30Fg => SelectedRange == 30 ? "#ffffff" : "#111827";
+        public string Range90Fg => SelectedRange == 90 ? "#ffffff" : "#111827";
 
         private string _searchText = string.Empty;
         public string SearchText
@@ -236,6 +259,11 @@ namespace WPF.Features.Transactions
 
         private async void TransactionsView_Loaded(object sender, RoutedEventArgs e)
         {
+            await LoadDataAsync();
+        }
+
+        public async System.Threading.Tasks.Task LoadDataAsync()
+        {
             try
             {
                 int userId = 1;
@@ -333,12 +361,12 @@ namespace WPF.Features.Transactions
         private void PrevPage_Click(object sender, RoutedEventArgs e) { if (CanPrev) PageIndex--; }
         private void NextPage_Click(object sender, RoutedEventArgs e) { if (CanNext) PageIndex++; }
 
-        private void AddTransaction_Click(object sender, RoutedEventArgs e)
+        private async void AddTransaction_Click(object sender, RoutedEventArgs e)
         {
             var window = new AddTransactionWindow();
             if (window.ShowDialog() == true)
             {
-                TransactionsView_Loaded(sender, e);
+                await LoadDataAsync();
             }
         }
 
@@ -350,7 +378,7 @@ namespace WPF.Features.Transactions
 
         private void CloseDetail_Click(object sender, RoutedEventArgs e) => SelectedTransaction = null;
 
-        private void EditTransaction_Click(object sender, RoutedEventArgs e)
+        private async void EditTransaction_Click(object sender, RoutedEventArgs e)
         {
             if (SelectedTransaction != null)
             {
@@ -358,7 +386,7 @@ namespace WPF.Features.Transactions
                 if (window.ShowDialog() == true)
                 {
                     SelectedTransaction = null;
-                    TransactionsView_Loaded(sender, e);
+                    await LoadDataAsync();
                 }
             }
         }
@@ -464,6 +492,8 @@ namespace WPF.Features.Transactions
 
         private void RefreshChart()
         {
+            if (ChartXAxes == null || ChartXAxes.Length == 0) return;
+
             var days = SelectedRange;
             var incomeVals = new double[days];
             var expenseVals = new double[days];
@@ -475,10 +505,24 @@ namespace WPF.Features.Transactions
                 var txDay = _allRaw.Where(t => t.Date.Date == day.Date).ToList();
                 incomeVals[i]  = (double)txDay.Where(t => !t.IsExpense).Sum(t => t.Amount);
                 expenseVals[i] = (double)txDay.Where(t =>  t.IsExpense).Sum(t => t.Amount);
-                labels[i] = days <= 7 ? day.ToString("ddd") : (i % 5 == 0 ? day.ToString("dd/MM") : "");
+
+                if (days <= 7)
+                {
+                    labels[i] = day.ToString("dd/MM");
+                }
+                else if (days <= 30)
+                {
+                    labels[i] = (i % 5 == 0 || i == days - 1) ? day.ToString("dd/MM") : "";
+                }
+                else // 90 days (3 tháng)
+                {
+                    labels[i] = (i % 15 == 0 || i == days - 1) ? day.ToString("dd/MM") : "";
+                }
             }
 
             ChartXAxes[0].Labels = labels;
+            double barWidth = days <= 7 ? 22 : (days <= 30 ? 10 : 4);
+
             ChartSeries = new ISeries[]
             {
                 new ColumnSeries<double>
@@ -486,16 +530,16 @@ namespace WPF.Features.Transactions
                     Values = incomeVals,
                     Name = "Thu nhập",
                     Fill = new SolidColorPaint(SKColor.Parse("#10b981")),
-                    MaxBarWidth = 10,
-                    Rx = 2, Ry = 2
+                    MaxBarWidth = barWidth,
+                    Rx = 3, Ry = 3
                 },
                 new ColumnSeries<double>
                 {
                     Values = expenseVals,
                     Name = "Chi tiêu",
                     Fill = new SolidColorPaint(SKColor.Parse("#818cf8")),
-                    MaxBarWidth = 10,
-                    Rx = 2, Ry = 2
+                    MaxBarWidth = barWidth,
+                    Rx = 3, Ry = 3
                 }
             };
         }

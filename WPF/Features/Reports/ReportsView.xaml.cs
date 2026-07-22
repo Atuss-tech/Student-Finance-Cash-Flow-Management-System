@@ -189,7 +189,7 @@ namespace WPF.Features.Reports
         private void SetRange90_Click(object sender, RoutedEventArgs e) { /* Bỏ qua */ }
         private void SetRange180_Click(object sender, RoutedEventArgs e) { /* Bỏ qua */ }
 
-        private async System.Threading.Tasks.Task GenerateReportsAsync()
+        public async System.Threading.Tasks.Task GenerateReportsAsync()
         {
             int userId = 1;
             int month = DateTime.Now.Month;

@@ -83,6 +83,11 @@ namespace WPF.Features.Dashboard
         /// </summary>
         private async void DashboardHomeView_Loaded(object sender, RoutedEventArgs e)
         {
+            await LoadDashboardDataAsync();
+        }
+
+        public async System.Threading.Tasks.Task LoadDashboardDataAsync()
+        {
             int userId = 1;
             int month = DateTime.Now.Month;
             int year = DateTime.Now.Year;
@@ -234,6 +239,18 @@ namespace WPF.Features.Dashboard
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void ShowAllTransactions_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new WPF.Features.Transactions.AllTransactionsWindow();
+            window.ShowDialog();
+        }
+
+        private void BudgetAdd_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var mainWindow = Window.GetWindow(this) as Student_Finance___Cash_Flow_Management_System.MainWindow;
+            mainWindow?.NavigateToBudgets();
         }
     }
 }

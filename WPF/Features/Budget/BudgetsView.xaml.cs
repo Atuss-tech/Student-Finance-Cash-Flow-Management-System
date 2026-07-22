@@ -118,20 +118,6 @@ namespace WPF.Features.Budget
             set { _alertMessage = value; OnPropertyChanged(); }
         }
 
-        private bool _isEditModalOpen;
-        public bool IsEditModalOpen
-        {
-            get => _isEditModalOpen;
-            set { _isEditModalOpen = value; OnPropertyChanged(); }
-        }
-
-        private BudgetData? _editingBudget;
-        public BudgetData? EditingBudget
-        {
-            get => _editingBudget;
-            set { _editingBudget = value; OnPropertyChanged(); IsEditModalOpen = value != null; }
-        }
-
         private readonly IBudgetService _budgetService;
 
         public BudgetsView()
@@ -157,7 +143,11 @@ namespace WPF.Features.Budget
             await LoadBudgetDataAsync();
         }
 
-        private async System.Threading.Tasks.Task LoadBudgetDataAsync()
+        private double[] _trendBudgets = new double[6];
+        private double[] _trendSpents = new double[6];
+        private string[] _trendLabels = new string[6];
+
+        public async System.Threading.Tasks.Task LoadBudgetDataAsync()
         {
             int currentUserId = 1; // Giả định user hiện tại là 1
             int currentMonth = DateTime.Now.Month;
@@ -165,6 +155,16 @@ namespace WPF.Features.Budget
 
             try
             {
+                // Fetch 6-month trend data
+                for (int i = 5; i >= 0; i--)
+                {
+                    var dt = DateTime.Now.AddMonths(-i);
+                    _trendLabels[5 - i] = $"Th {dt.Month}";
+                    var history = await _budgetService.GetBudgetProgressesAsync(currentUserId, dt.Month, dt.Year);
+                    _trendBudgets[5 - i] = (double)history.Sum(p => p.AmountLimit);
+                    _trendSpents[5 - i] = (double)history.Sum(p => p.SpentAmount);
+                }
+
                 var budgetProgresses = await _budgetService.GetBudgetProgressesAsync(currentUserId, currentMonth, currentYear);
 
                 AllBudgets.Clear();
@@ -172,6 +172,8 @@ namespace WPF.Features.Budget
                 {
                     AllBudgets.Add(new BudgetData
                     {
+                        BudgetId = progress.BudgetId,
+                        CategoryId = progress.CategoryId,
                         CategoryName = progress.CategoryName,
                         Icon = "🏷️", // Default icon
                         SpentAmount = progress.SpentAmount,
@@ -244,24 +246,35 @@ namespace WPF.Features.Budget
                 }
             };
 
-            double spentPct = (double)(CardSpent.TargetValue / (CardTotalBudget.TargetValue == 0 ? 1 : CardTotalBudget.TargetValue));
-            double remainPct = Math.Max(0, 1.0 - spentPct);
+            double spent = (double)CardSpent.TargetValue;
+            double total = (double)CardTotalBudget.TargetValue;
+            double remain = Math.Max(0, total - spent);
             
-            DonutSeries = new ISeries[]
+            if (total == 0)
             {
-                new PieSeries<double> { Values = new double[] { spentPct }, Name = "Đã chi", Fill = new SolidColorPaint(SKColor.Parse(spentPct > 1 ? "#f43f5e" : "#10d9a0")), InnerRadius = 60 },
-                new PieSeries<double> { Values = new double[] { remainPct }, Name = "Còn lại", Fill = new SolidColorPaint(SKColor.Parse("#e5e7eb")), InnerRadius = 60 }
-            };
+                DonutSeries = new ISeries[]
+                {
+                    new PieSeries<double> { Values = new double[] { 1 }, Name = "Chưa có dữ liệu", Fill = new SolidColorPaint(SKColor.Parse("#e5e7eb")), InnerRadius = 60 }
+                };
+            }
+            else
+            {
+                DonutSeries = new ISeries[]
+                {
+                    new PieSeries<double> { Values = new double[] { spent }, Name = "Đã chi", Fill = new SolidColorPaint(SKColor.Parse(spent > total ? "#f43f5e" : "#10d9a0")), InnerRadius = 60 },
+                    new PieSeries<double> { Values = new double[] { remain }, Name = "Còn lại", Fill = new SolidColorPaint(SKColor.Parse("#e5e7eb")), InnerRadius = 60 }
+                };
+            }
 
-            AreaChartXAxes = new Axis[] { new Axis { Labels = new[] { "Th 2", "Th 3", "Th 4", "Th 5", "Th 6", "Th 7" }, LabelsPaint = new SolidColorPaint(SKColor.Parse("#4a5568")) } };
+            AreaChartXAxes = new Axis[] { new Axis { Labels = _trendLabels, LabelsPaint = new SolidColorPaint(SKColor.Parse("#4a5568")) } };
             AreaChartYAxes = new Axis[] { new Axis { LabelsPaint = new SolidColorPaint(SKColor.Parse("#4a5568")), Labeler = v => (v / 1_000_000).ToString("0.#") + "M" } };
             
             AreaChartSeries = new ISeries[]
             {
                 new LineSeries<double>
                 {
-                    Name = "Ngân sách đặt ra",
-                    Values = new double[] { 18_000_000, 18_000_000, 19_000_000, 20_000_000, 20_000_000, 21_200_000 },
+                    Name = "Ngân sách",
+                    Values = _trendBudgets,
                     GeometrySize = 0,
                     Fill = null,
                     Stroke = new SolidColorPaint(SKColor.Parse("#7c6df8")) { StrokeThickness = 2, PathEffect = new LiveChartsCore.SkiaSharpView.Painting.Effects.DashEffect(new float[] { 10, 10 }) }
@@ -269,7 +282,7 @@ namespace WPF.Features.Budget
                 new LineSeries<double>
                 {
                     Name = "Thực chi",
-                    Values = new double[] { 15_500_000, 16_200_000, 17_800_000, 22_100_000, 18_900_000, (double)CardSpent.TargetValue },
+                    Values = _trendSpents,
                     Fill = new SolidColorPaint(SKColor.Parse("#2010d9a0")),
                     Stroke = new SolidColorPaint(SKColor.Parse("#10d9a0")) { StrokeThickness = 3 },
                     GeometrySize = 8,
@@ -283,24 +296,39 @@ namespace WPF.Features.Budget
             OnPropertyChanged(nameof(AreaChartSeries));
         }
 
-        private void OpenEdit_Click(object sender, RoutedEventArgs e)
+        private async void EditBudget_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.DataContext is BudgetData b)
+            if (sender is Button btn && btn.DataContext is BudgetData budgetData)
             {
-                EditingBudget = b;
+                var window = new AddBudgetWindow(budgetData);
+                window.Owner = Window.GetWindow(this);
+                if (window.ShowDialog() == true)
+                {
+                    await LoadBudgetDataAsync();
+                }
             }
         }
 
-        private void CloseEdit_Click(object sender, RoutedEventArgs e)
+        private async void DeleteBudget_Click(object sender, RoutedEventArgs e)
         {
-            EditingBudget = null;
-        }
-
-        private void SaveEdit_Click(object sender, RoutedEventArgs e)
-        {
-            EditingBudget = null;
-            CalculateStats();
-            SetupCharts();
+            if (sender is Button btn && btn.DataContext is BudgetData budgetData)
+            {
+                var result = MessageBox.Show($"Bạn có chắc muốn xóa ngân sách cho danh mục '{budgetData.CategoryName}'?", 
+                    "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                
+                if (result == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        await _budgetService.DeleteBudgetAsync(budgetData.BudgetId);
+                        await LoadBudgetDataAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi khi xóa ngân sách: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

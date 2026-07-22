@@ -92,9 +92,6 @@
                                 <TextBlock Text="{Binding TotalIncomeReport.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryLightGreen}" Margin="0,6,0,4"/>
                                 <TextBlock Text="{Binding TotalIncomeReport.Subtext}" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                             </StackPanel>
-                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Width="44" Height="44" CornerRadius="24" Background="#e6f0ff">
-                                <TextBlock Text="{Binding TotalIncomeReport.Icon}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
                         </Grid>
                     </Border>
                     
@@ -106,9 +103,6 @@
                                 <TextBlock Text="{Binding TotalExpenseReport.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource ExpenseRed}" Margin="0,6,0,4"/>
                                 <TextBlock Text="{Binding TotalExpenseReport.Subtext}" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                             </StackPanel>
-                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Width="44" Height="44" CornerRadius="24" Background="#e6f0ff">
-                                <TextBlock Text="{Binding TotalExpenseReport.Icon}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
                         </Grid>
                     </Border>
                     
@@ -120,9 +114,6 @@
                                 <TextBlock Text="{Binding NetCashFlowReport.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource IncomePurple}" Margin="0,6,0,4"/>
                                 <TextBlock Text="{Binding NetCashFlowReport.Subtext}" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                             </StackPanel>
-                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Width="44" Height="44" CornerRadius="24" Background="#e6f0ff">
-                                <TextBlock Text="{Binding NetCashFlowReport.Icon}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
                         </Grid>
                     </Border>
                 </Grid>
@@ -145,8 +136,8 @@
                                 <TextBlock Text="Tỷ trọng chi tiêu" FontWeight="Bold" FontSize="16" Foreground="{StaticResource TextPrimary}"/>
                                 <TextBlock Text="Nhấn vào biểu đồ để xem chi tiết" FontSize="13" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,16"/>
                             </StackPanel>
-                            <lvc:PieChart Grid.Row="1" Series="{Binding ExpenseAllocationSeries}" AnimationsSpeed="00:00:01.0"
-                                          LegendPosition="Hidden" Height="280"
+                            <lvc:PieChart Grid.Row="1" Series="{Binding ExpenseAllocationSeries}" AnimationsSpeed="00:00:01.0" Height="250"
+                                          LegendPosition="Hidden"
                                           TooltipPosition="Top"/>
                         </Grid>
                     </Border>
@@ -162,8 +153,8 @@
                                 <TextBlock Text="Xu hướng dòng tiền" FontWeight="Bold" FontSize="16" Foreground="{StaticResource TextPrimary}"/>
                                 <TextBlock Text="So sánh TỔNG THU vs TỔNG CHI" FontSize="13" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,16"/>
                             </StackPanel>
-                            <lvc:CartesianChart Grid.Row="1" Series="{Binding CashFlowTrendSeries}" XAxes="{Binding CashFlowXAxes}" YAxes="{Binding CashFlowYAxes}"
-                                                TooltipPosition="Top" AnimationsSpeed="00:00:00.5" LegendPosition="Bottom" LegendTextPaint="{Binding ChartLegendTextPaint}" Height="280"/>
+                            <lvc:CartesianChart Grid.Row="1" Series="{Binding CashFlowTrendSeries}" XAxes="{Binding CashFlowXAxes}" YAxes="{Binding CashFlowYAxes}" Height="250"
+                                                TooltipPosition="Top" AnimationsSpeed="00:00:00.5" LegendPosition="Bottom" LegendTextPaint="{Binding ChartLegendTextPaint}"/>
                         </Grid>
                     </Border>
                 </Grid>
@@ -180,7 +171,7 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="220"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="0">
@@ -191,7 +182,8 @@
                                           Series="{Binding SpendingGroupSeries}"
                                           AnimationsSpeed="00:00:01.0"
                                           LegendPosition="Hidden"
-                                          TooltipPosition="Top" Height="160"/>
+                                          TooltipPosition="Top" Height="220"
+                                          HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
                             <!-- Custom Legend -->
                             <ItemsControl Grid.Row="2" ItemsSource="{Binding SpendingGroupLegend}" Margin="0,12,0,0">
@@ -294,7 +286,7 @@
                                        Visibility="{Binding HasData, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}"/>
                         </Grid>
 
-                        <Border Grid.Row="1" Background="#f3f4f6" CornerRadius="100" Padding="16,12" Margin="0,0,0,12">
+                        <Border Grid.Row="1" Background="#f3f4f6" CornerRadius="12" Padding="16,12" Margin="0,0,0,12">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
@@ -331,12 +323,16 @@
                                             </Grid.ColumnDefinitions>
                                             
                                             <!-- Title -->
-                                            <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                                <Border Width="36" Height="36" CornerRadius="100" Background="#e6f0ff" Margin="0,0,12,0">
+                                            <Grid Grid.Column="0" Margin="0,0,16,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Grid.Column="0" Width="36" Height="36" CornerRadius="100" Background="#e6f0ff" Margin="0,0,12,0">
                                                     <TextBlock Text="{Binding Icon}" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI Emoji"/>
                                                 </Border>
-                                                <TextBlock Text="{Binding Title}" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="14"/>
-                                            </StackPanel>
+                                                <TextBlock Grid.Column="1" Text="{Binding Title}" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="14" TextTrimming="CharacterEllipsis" ToolTip="{Binding Title}"/>
+                                            </Grid>
                                             
                                             <!-- Category Badge -->
                                             <Border Grid.Column="1" Background="#263b82f6" CornerRadius="6" Padding="8,4" HorizontalAlignment="Left" VerticalAlignment="Center">

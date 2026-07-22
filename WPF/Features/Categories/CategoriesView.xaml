@@ -97,16 +97,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <Border Grid.Row="0" Margin="0,0,0,24">
-            <Grid>
-                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <TextBlock Text="Danh mục" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
-                    <TextBlock Text="Quản lý và phân loại các khoản thu chi của bạn" FontSize="14" Foreground="{StaticResource TextSecondary}" Margin="0,4,0,0"/>
-                </StackPanel>
-            </Grid>
-        </Border>
-
         <!-- Summary Bento Box -->
         <Grid Grid.Row="1" Margin="0,0,0,24">
             <Grid.ColumnDefinitions>
@@ -259,7 +249,8 @@
             </Border>
 
             <!-- Right Column: Cơ cấu chi tiêu & Action -->
-            <Grid Grid.Column="2">
+            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Hidden">
+                <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="16"/>
@@ -271,16 +262,17 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="300"/>
+                            <RowDefinition Height="250"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="Cơ cấu chi tiêu" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,12"/>
-                        <!-- LegendPosition=Hidden vì 23 mục sẽ bị tràn -->
                         <lvc:PieChart Grid.Row="1"
                                       Series="{Binding CategoryBreakdownSeries}"
                                       LegendPosition="Hidden"
                                       AnimationsSpeed="00:00:00.5"
                                       TooltipPosition="Top"
-                                      MinHeight="280"/>
+                                      Height="250"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"/>
                     </Grid>
                 </Border>
 
@@ -297,7 +289,8 @@
                         <Button Content="Thiết lập ngân sách" Style="{StaticResource ButtonSecondaryDark}"/>
                     </StackPanel>
                 </Border>
-            </Grid>
+                </Grid>
+            </ScrollViewer>
         </Grid>
 
     </Grid>
