@@ -94,7 +94,7 @@
                 <StackPanel Grid.Row="1" Margin="10,0,10,0">
                     <RadioButton Content="Tổng quan" Style="{StaticResource SidebarItemStyle}" IsChecked="True" GroupName="Menu" Checked="Nav_Dashboard_Checked"/>
                     <RadioButton Content="Giao dịch" Style="{StaticResource SidebarItemStyle}" GroupName="Menu" Checked="Nav_Transactions_Checked"/>
-                    <RadioButton Content="Ngân sách" Style="{StaticResource SidebarItemStyle}" GroupName="Menu" Checked="Nav_Budgets_Checked"/>
+                    <RadioButton x:Name="NavBudgetsBtn" Content="Ngân sách" Style="{StaticResource SidebarItemStyle}" GroupName="Menu" Checked="Nav_Budgets_Checked"/>
                     <RadioButton Content="Báo cáo" Style="{StaticResource SidebarItemStyle}" GroupName="Menu" Checked="Nav_Reports_Checked"/>
                     <RadioButton Content="Ví" Style="{StaticResource SidebarItemStyle}" GroupName="Menu" Checked="Nav_Wallets_Checked"/>
                     <RadioButton Content="Danh mục" Style="{StaticResource SidebarItemStyle}" GroupName="Menu" Checked="Nav_Categories_Checked"/>

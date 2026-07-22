@@ -235,5 +235,17 @@ namespace WPF.Features.Dashboard
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        private void ShowAllTransactions_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new WPF.Features.Transactions.AllTransactionsWindow();
+            window.ShowDialog();
+        }
+
+        private void BudgetAdd_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var mainWindow = Window.GetWindow(this) as Student_Finance___Cash_Flow_Management_System.MainWindow;
+            mainWindow?.NavigateToBudgets();
+        }
     }
 }

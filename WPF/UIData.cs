@@ -88,6 +88,8 @@ namespace WPF.UIData
 
     public class BudgetData : INotifyPropertyChanged
     {
+        public int BudgetId { get; set; }
+        public int CategoryId { get; set; }
         public string CategoryName { get; set; } = string.Empty;
         public string Icon { get; set; } = string.Empty;
         public decimal TotalAmount { get; set; }
@@ -96,7 +98,7 @@ namespace WPF.UIData
         public decimal SpentAmount
         {
             get => _spentAmount;
-            set { _spentAmount = value; OnPropertyChanged(); OnPropertyChanged(nameof(SpentFormatted)); OnPropertyChanged(nameof(ProgressValue)); }
+            set { _spentAmount = value; OnPropertyChanged(); OnPropertyChanged(nameof(SpentFormatted)); OnPropertyChanged(nameof(ProgressValue)); OnPropertyChanged(nameof(AnimatedProgress)); OnPropertyChanged(nameof(ProgressPercentage)); OnPropertyChanged(nameof(StatusText)); OnPropertyChanged(nameof(ProgressBrush)); }
         }
 
         public string TotalFormatted
@@ -116,6 +118,28 @@ namespace WPF.UIData
                 return (SpentAmount / 1_000).ToString("0") + "Kđ";
             }
         }
+        public double AnimatedProgress => ProgressValue;
+        public double ProgressPercentage => ProgressValue;
+        
+        public string StatusText 
+        { 
+            get 
+            {
+                if (ProgressValue >= 100) return "Vượt ngân sách";
+                if (ProgressValue >= 80) return "Sắp hết";
+                return "An toàn";
+            }
+        }
+        
+        public string ProgressBrush 
+        { 
+            get 
+            {
+                if (ProgressValue >= 100) return "#f43f5e";
+                if (ProgressValue >= 80) return "#f59e0b";
+                return "#10d9a0";
+            }
+        }
 
         public double ProgressValue => TotalAmount == 0 ? 0 : (double)(SpentAmount / TotalAmount * 100);
 
@@ -125,13 +149,14 @@ namespace WPF.UIData
             SpentAmount = 0;
             int steps = 30;
             int tick = 0;
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(30) };
+            var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromMilliseconds(30) };
             timer.Tick += (s, e) =>
             {
                 tick++;
                 double t = (double)tick / steps;
                 double eased = 1 - Math.Pow(1 - t, 3);
                 SpentAmount = (decimal)(eased * (double)target);
+                OnPropertyChanged(nameof(AnimatedProgress));
                 if (tick >= steps) { SpentAmount = target; timer.Stop(); }
             };
             timer.Start();

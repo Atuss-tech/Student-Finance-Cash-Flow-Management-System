@@ -31,7 +31,7 @@
 
             <!-- Title -->
             <Grid Grid.Row="0" Margin="0,0,0,32">
-                <TextBlock Text="Thiết lập Ngân sách" FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center"/>
+                <TextBlock x:Name="TitleBlock" Text="Thiết lập Ngân sách" FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center"/>
                 <Button Content="✕" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextSecondary}" FontSize="20" Cursor="Hand" Click="CancelButton_Click"/>
             </Grid>
 

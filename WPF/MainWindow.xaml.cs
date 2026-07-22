@@ -58,6 +58,11 @@ namespace Student_Finance___Cash_Flow_Management_System
                     {
                         await catView.LoadDataAsync();
                     }
+                    else if (_currentContext == "Budgets" &&
+                             MainContentControl?.Content is WPF.Features.Budget.BudgetsView budgetView)
+                    {
+                        await budgetView.LoadBudgetDataAsync();
+                    }
                 }
             }
         }
@@ -108,6 +113,14 @@ namespace Student_Finance___Cash_Flow_Management_System
         private void Nav_Categories_Checked(object sender, RoutedEventArgs e)
         {
             SetView(new CategoriesView(), "Quản lý danh mục", "Categories", "Thêm Danh mục");
+        }
+
+        public void NavigateToBudgets()
+        {
+            if (NavBudgetsBtn != null)
+            {
+                NavBudgetsBtn.IsChecked = true;
+            }
         }
     }
 }

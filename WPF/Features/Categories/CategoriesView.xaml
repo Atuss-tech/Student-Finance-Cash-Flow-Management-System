@@ -194,7 +194,7 @@
                         <!-- Search and Filter placeholders -->
                     </Grid>
 
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
                         <ItemsControl ItemsSource="{Binding Categories}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -251,7 +251,8 @@
             </Border>
 
             <!-- Right Column: Cơ cấu chi tiêu & Action -->
-            <Grid Grid.Column="2">
+            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Hidden">
+                <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="16"/>
@@ -263,7 +264,7 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="300"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="Cơ cấu chi tiêu" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,12"/>
                         <!-- LegendPosition=Hidden vì 23 mục sẽ bị tràn -->
@@ -272,7 +273,8 @@
                                       LegendPosition="Hidden"
                                       AnimationsSpeed="00:00:00.5"
                                       TooltipPosition="Top"
-                                      MinHeight="280"/>
+                                      Height="250"
+                                      HorizontalAlignment="Center"/>
                     </Grid>
                 </Border>
 
@@ -289,7 +291,8 @@
                         <Button Content="Thiết lập ngân sách" Style="{StaticResource ButtonSecondaryDark}"/>
                     </StackPanel>
                 </Border>
-            </Grid>
+                </Grid>
+            </ScrollViewer>
         </Grid>
 
     </Grid>

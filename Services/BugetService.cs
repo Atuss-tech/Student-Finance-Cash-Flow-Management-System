@@ -44,6 +44,27 @@ namespace Services
         }
 
         /// <summary>
+        /// Cập nhật một ngân sách. Đảm bảo số tiền > 0.
+        /// </summary>
+        public async Task UpdateBudgetAsync(Budget budget)
+        {
+            if (budget.AmountLimit <= 0)
+            {
+                throw new Exception("Ngân sách phải lớn hơn 0.");
+            }
+
+            await _budgetRepository.UpdateBudgetAsync(budget);
+        }
+
+        /// <summary>
+        /// Xóa một ngân sách.
+        /// </summary>
+        public async Task DeleteBudgetAsync(int budgetId)
+        {
+            await _budgetRepository.DeleteBudgetAsync(budgetId);
+        }
+
+        /// <summary>
         /// Lấy danh sách ngân sách thô của người dùng trong một tháng cụ thể.
         /// </summary>
         public async Task<List<Budget>> GetBudgetsAsync(int userId, int month, int year)
@@ -56,13 +77,13 @@ namespace Services
         /// Phối hợp dữ liệu từ BudgetRepository và TransactionRepository để ra % tiêu thụ.
         /// Trả về danh sách dạng ValueTuple.
         /// </summary>
-        public async Task<List<(string CategoryName, decimal AmountLimit, decimal SpentAmount, double UsagePercentage, string AlertStatus)>> GetBudgetProgressesAsync(int userId, int month, int year)
+        public async Task<List<(int BudgetId, int CategoryId, string CategoryName, decimal AmountLimit, decimal SpentAmount, double UsagePercentage, string AlertStatus)>> GetBudgetProgressesAsync(int userId, int month, int year)
         {
             var budgets = await _budgetRepository.GetBudgetsAsync(userId, month, year);
             var transactions = await _transactionRepository.GetTransactionsByMonthAsync(userId, month, year);
             var expenses = transactions.Where(t => t.TransactionType == "Expense").ToList();
 
-            var progressList = new List<(string, decimal, decimal, double, string)>();
+            var progressList = new List<(int, int, string, decimal, decimal, double, string)>();
 
             foreach (var budget in budgets)
             {
@@ -74,6 +95,8 @@ namespace Services
                 else if (percentage >= 80) status = "Warning";
 
                 progressList.Add((
+                    budget.BudgetId,
+                    budget.CategoryId,
                     budget.Category?.CategoryName ?? "Unknown",
                     budget.AmountLimit,
                     spent,

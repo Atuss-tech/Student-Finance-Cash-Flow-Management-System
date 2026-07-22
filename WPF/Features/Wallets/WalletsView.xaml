@@ -38,7 +38,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="300"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Summary Box -->
@@ -135,7 +135,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Text="Dòng tiền theo ví (Dữ liệu tĩnh)" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
-                    <lvc:CartesianChart Grid.Row="1" Series="{Binding CashFlowByWalletSeries}" XAxes="{Binding CashFlowXAxes}" TooltipPosition="Hidden" />
+                    <lvc:CartesianChart Grid.Row="1" Series="{Binding CashFlowByWalletSeries}" XAxes="{Binding CashFlowXAxes}" TooltipPosition="Hidden" Height="250"/>
                 </Grid>
             </Border>
 
@@ -147,7 +147,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Text="Phân bổ nguồn tiền" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
-                    <lvc:PieChart Grid.Row="1" Series="{Binding WalletAllocationSeries}" LegendPosition="Right" LegendTextPaint="{Binding LegendTextPaint}"/>
+                    <lvc:PieChart Grid.Row="1" Series="{Binding WalletAllocationSeries}" LegendPosition="Right" LegendTextPaint="{Binding LegendTextPaint}" Height="250"/>
                 </Grid>
             </Border>
         </Grid>

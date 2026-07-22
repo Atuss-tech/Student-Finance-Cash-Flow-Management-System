@@ -94,7 +94,7 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="250"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0" Margin="0,0,0,20">
@@ -116,7 +116,7 @@
                             </StackPanel>
                         </Grid>
 
-                        <lvc:CartesianChart Grid.Row="1" Series="{Binding ChartSeries}"
+                        <lvc:CartesianChart Grid.Row="1" Series="{Binding ChartSeries}" Height="250"
                                             XAxes="{Binding ChartXAxes}" YAxes="{Binding ChartYAxes}"
                                             TooltipPosition="Top" AnimationsSpeed="00:00:00.5"
                                             LegendPosition="Right"
@@ -224,11 +224,11 @@
                 <!-- ── Pagination ── -->
                 <Border Style="{StaticResource StitchCard}" Padding="20,16" Margin="0,0,0,24">
                     <Grid>
-                        <Border HorizontalAlignment="Left" Background="#e6f0ff" CornerRadius="100" Padding="16,8" Cursor="Hand">
+                        <Border HorizontalAlignment="Left" Background="Transparent" Padding="16,8" Cursor="Hand">
                             <TextBlock Text="Trước" Foreground="{StaticResource TextPrimary}" FontWeight="SemiBold" FontSize="14"/>
                         </Border>
                         <TextBlock Text="{Binding PageLabel}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextSecondary}"/>
-                        <Border HorizontalAlignment="Right" Background="#e6f0ff" CornerRadius="100" Padding="16,8" Cursor="Hand">
+                        <Border HorizontalAlignment="Right" Background="Transparent" Padding="16,8" Cursor="Hand">
                             <TextBlock Text="Sau" Foreground="{StaticResource TextPrimary}" FontWeight="SemiBold" FontSize="14"/>
                         </Border>
                     </Grid>
@@ -275,7 +275,7 @@
                                 <TextBlock Text="Danh mục" Foreground="{StaticResource TextSecondary}" FontSize="15"/>
                                 <TextBlock Text="{Binding Category}" Foreground="{StaticResource TextPrimary}" FontSize="15" HorizontalAlignment="Right" FontWeight="SemiBold"/>
                             </Grid>
-                            <Border Height="1" Background="{StaticResource BorderColor}" Margin="0,0,0,16"/>
+                            <Bo rder Height="1" Background="{StaticResource BorderColor}" Margin="0,0,0,16"/>
                             <Grid>
                                 <TextBlock Text="Loại" Foreground="{StaticResource TextSecondary}" FontSize="15"/>
                                 <TextBlock Foreground="{Binding AmountColorBrush, FallbackValue=#ffffff}" FontSize="15" FontWeight="Bold" HorizontalAlignment="Right">

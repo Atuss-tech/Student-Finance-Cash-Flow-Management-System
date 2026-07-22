@@ -126,7 +126,7 @@
                             </Grid.RowDefinitions>
                             <TextBlock Text="Tổng quan" FontWeight="Bold" FontSize="20" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
                             <lvc:PieChart Grid.Row="1" Series="{Binding DonutSeries}" AnimationsSpeed="00:00:01.0"
-                                          LegendPosition="Bottom" LegendTextPaint="{Binding ChartLegendTextPaint}" Height="200"/>
+                                          LegendPosition="Bottom" LegendTextPaint="{Binding ChartLegendTextPaint}" Height="250"/>
                         </Grid>
                     </Border>
 
@@ -139,7 +139,7 @@
                             </Grid.RowDefinitions>
                             <TextBlock Text="Ngân sách vs Thực chi" FontWeight="Bold" FontSize="20" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
                             <lvc:CartesianChart Grid.Row="1" Series="{Binding BarChartSeries}" XAxes="{Binding BarChartXAxes}" YAxes="{Binding BarChartYAxes}"
-                                                TooltipPosition="Top" AnimationsSpeed="00:00:00.5" LegendPosition="Bottom" LegendTextPaint="{Binding ChartLegendTextPaint}" Height="200"/>
+                                                TooltipPosition="Top" AnimationsSpeed="00:00:00.5" LegendPosition="Bottom" LegendTextPaint="{Binding ChartLegendTextPaint}" Height="250"/>
                         </Grid>
                     </Border>
 
@@ -152,7 +152,7 @@
                             </Grid.RowDefinitions>
                             <TextBlock Text="Xu hướng 6 tháng" FontWeight="Bold" FontSize="20" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
                             <lvc:CartesianChart Grid.Row="1" Series="{Binding AreaChartSeries}" XAxes="{Binding AreaChartXAxes}" YAxes="{Binding AreaChartYAxes}"
-                                                TooltipPosition="Top" AnimationsSpeed="00:00:00.5" LegendPosition="Bottom" LegendTextPaint="{Binding ChartLegendTextPaint}" Height="200"/>
+                                                TooltipPosition="Top" AnimationsSpeed="00:00:00.5" LegendPosition="Bottom" LegendTextPaint="{Binding ChartLegendTextPaint}" Height="250"/>
                         </Grid>
                     </Border>
                 </Grid>
@@ -187,11 +187,13 @@
                                                            VerticalAlignment="Center"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding FormattedSpent}" Foreground="{StaticResource TextPrimary}"
+                                                <TextBlock Text="{Binding SpentFormatted}" Foreground="{StaticResource TextPrimary}"
                                                            FontSize="15" FontWeight="Bold"/>
-                                                <TextBlock Foreground="{StaticResource TextSecondary}" FontSize="15"/>
-                                                <TextBlock Text="{Binding FormattedTotal}" Foreground="{StaticResource TextSecondary}"
-                                                           FontSize="15"/>
+                                                <TextBlock Text=" / " Foreground="{StaticResource TextSecondary}" FontSize="15"/>
+                                                <TextBlock Text="{Binding TotalFormatted}" Foreground="{StaticResource TextSecondary}"
+                                                           FontSize="15" Margin="0,0,12,0"/>
+                                                <Button Content="✏" Click="EditBudget_Click" Background="Transparent" BorderThickness="0" Cursor="Hand" Margin="0,0,4,0" ToolTip="Chỉnh sửa"/>
+                                                <Button Content="🗑️" Click="DeleteBudget_Click" Background="Transparent" BorderThickness="0" Cursor="Hand" ToolTip="Xóa"/>
                                             </StackPanel>
                                         </Grid>
 
