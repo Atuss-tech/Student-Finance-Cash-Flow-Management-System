@@ -391,12 +391,21 @@ namespace WPF.Features.Transactions
             }
         }
 
-        private void DeleteTransaction_Click(object sender, RoutedEventArgs e)
+        private async void DeleteTransaction_Click(object sender, RoutedEventArgs e)
         {
             if (SelectedTransaction != null)
             {
-                var result = MessageBox.Show($"Bạn có chắc chắn muốn xóa giao dịch '{SelectedTransaction.Title}'?", "Xác nhận xóa", MessageBoxButton.OKCancel, MessageBoxImage.Question);
-                if (result == MessageBoxResult.OK)
+                bool isConfirmed = Common.CustomMessageBoxWindow.ShowConfirm(
+                    Window.GetWindow(this),
+                    "Xác nhận xóa giao dịch",
+                    $"Bạn có chắc chắn muốn xóa giao dịch \"{SelectedTransaction.Title}\" ({SelectedTransaction.Amount:N0} đ) không?",
+                    "Số tiền trong ví liên quan sẽ được tự động hoàn lại tương ứng.",
+                    "Xóa giao dịch",
+                    "Hủy bỏ",
+                    Common.CustomDialogType.Warning,
+                    "#DC2626");
+
+                if (isConfirmed)
                 {
                     try
                     {
@@ -404,14 +413,13 @@ namespace WPF.Features.Transactions
                         {
                             _transactionService.DeleteTransaction(1, SelectedTransaction.TransactionId);
                         }
-                        _allRaw.Remove(SelectedTransaction);
-                        ApplyFilters();
                         SelectedTransaction = null;
-                        MessageBox.Show("Xóa giao dịch thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                        Common.CustomMessageBoxWindow.ShowInfo(Window.GetWindow(this), "Thành công", "Đã xóa giao dịch và cập nhật lại số dư ví!");
+                        await LoadDataAsync();
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Lỗi khi xóa giao dịch: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        Common.CustomMessageBoxWindow.ShowInfo(Window.GetWindow(this), "Lỗi khi xóa giao dịch", ex.Message);
                     }
                 }
             }

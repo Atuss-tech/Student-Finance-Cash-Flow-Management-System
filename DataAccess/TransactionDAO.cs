@@ -287,32 +287,94 @@ namespace DataAccess
 
         public async Task AddTransactionAsync(FinanceTransaction transaction)
         {
-            using (var db = new StudentFinanceDbContext())
+            using var db = new StudentFinanceDbContext();
+            using var dbTransaction = await db.Database.BeginTransactionAsync();
+            try
             {
+                Wallet wallet = await db.Wallets.FirstAsync(item =>
+                    item.WalletId == transaction.WalletId &&
+                    item.UserId == transaction.UserId);
+
+                ApplyTransactionToWallet(
+                    wallet,
+                    transaction.TransactionType,
+                    transaction.Amount);
+
                 db.FinanceTransactions.Add(transaction);
                 await db.SaveChangesAsync();
+                await dbTransaction.CommitAsync();
+            }
+            catch
+            {
+                await dbTransaction.RollbackAsync();
+                throw;
             }
         }
 
         public async Task UpdateTransactionAsync(FinanceTransaction transaction)
         {
-            using (var db = new StudentFinanceDbContext())
+            using var db = new StudentFinanceDbContext();
+            using var dbTransaction = await db.Database.BeginTransactionAsync();
+            try
             {
-                db.Entry(transaction).State = EntityState.Modified;
+                FinanceTransaction oldTransaction = await db.FinanceTransactions.FirstAsync(t =>
+                    t.TransactionId == transaction.TransactionId &&
+                    t.UserId == transaction.UserId);
+
+                Wallet oldWallet = await db.Wallets.FirstAsync(w =>
+                    w.WalletId == oldTransaction.WalletId &&
+                    w.UserId == transaction.UserId);
+
+                UndoTransactionFromWallet(oldWallet, oldTransaction.TransactionType, oldTransaction.Amount);
+
+                Wallet newWallet = await db.Wallets.FirstAsync(w =>
+                    w.WalletId == transaction.WalletId &&
+                    w.UserId == transaction.UserId);
+
+                ApplyTransactionToWallet(newWallet, transaction.TransactionType, transaction.Amount);
+
+                oldTransaction.WalletId = transaction.WalletId;
+                oldTransaction.CategoryId = transaction.CategoryId;
+                oldTransaction.TransactionType = transaction.TransactionType;
+                oldTransaction.Amount = transaction.Amount;
+                oldTransaction.TransactionDate = transaction.TransactionDate;
+                oldTransaction.Description = transaction.Description;
+                oldTransaction.UpdatedAt = DateTime.Now;
+
                 await db.SaveChangesAsync();
+                await dbTransaction.CommitAsync();
+            }
+            catch
+            {
+                await dbTransaction.RollbackAsync();
+                throw;
             }
         }
 
         public async Task DeleteTransactionAsync(int id)
         {
-            using (var db = new StudentFinanceDbContext())
+            using var db = new StudentFinanceDbContext();
+            using var dbTransaction = await db.Database.BeginTransactionAsync();
+            try
             {
-                var transaction = await db.FinanceTransactions.FindAsync(id);
+                var transaction = await db.FinanceTransactions.FirstOrDefaultAsync(t => t.TransactionId == id);
                 if (transaction != null)
                 {
+                    Wallet wallet = await db.Wallets.FirstAsync(w =>
+                        w.WalletId == transaction.WalletId &&
+                        w.UserId == transaction.UserId);
+
+                    UndoTransactionFromWallet(wallet, transaction.TransactionType, transaction.Amount);
+
                     db.FinanceTransactions.Remove(transaction);
                     await db.SaveChangesAsync();
+                    await dbTransaction.CommitAsync();
                 }
+            }
+            catch
+            {
+                await dbTransaction.RollbackAsync();
+                throw;
             }
         }
     }

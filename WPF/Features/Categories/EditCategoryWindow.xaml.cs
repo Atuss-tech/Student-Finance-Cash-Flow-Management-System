@@ -41,24 +41,71 @@ namespace WPF.Features.Categories
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show(
-                $"Bạn có chắc muốn xóa danh mục \"{CategoryNameTextBox.Text.Trim()}\" không?\nĐiều này không thể hoàn tác.",
-                "Xác nhận xóa danh mục",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
+            string catName = CategoryNameTextBox.Text.Trim();
 
-            if (result == MessageBoxResult.Yes)
+            bool hasRelated = false;
+            try
             {
-                try
+                hasRelated = _categoryService.HasRelatedData(_userId, _categoryId);
+            }
+            catch { /* Bỏ qua lỗi check, tiếp tục xử lý */ }
+
+            if (hasRelated)
+            {
+                // Danh mục đã phát sinh giao dịch/ngân sách → không cho xóa hẳn, chỉ cho ẨN
+                bool isConfirmed = Common.CustomMessageBoxWindow.ShowConfirm(
+                    this,
+                    "Không thể xóa danh mục này",
+                    $"Danh mục \"{catName}\" đã có giao dịch hoặc ngân sách liên kết trong hệ thống nên không thể xóa hoàn toàn.",
+                    "Danh mục sẽ được ẨN: Không xuất hiện khi chọn danh mục mới nhưng vẫn bảo toàn báo cáo và lịch sử giao dịch cũ.",
+                    "Ẩn danh mục ngay",
+                    "Hủy bỏ",
+                    Common.CustomDialogType.Warning,
+                    "#E11D48");
+
+                if (isConfirmed)
                 {
-                    _categoryService.DeleteCategory(_userId, _categoryId);
-                    this.DialogResult = true;
-                    this.Close();
+                    try
+                    {
+                        _categoryService.DeleteCategory(_userId, _categoryId);
+                        Common.CustomMessageBoxWindow.ShowInfo(
+                            this,
+                            "Thành công",
+                            $"Danh mục \"{catName}\" đã được chuyển sang trạng thái ĐÃ ẨN.");
+                        this.DialogResult = true;
+                        this.Close();
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Common.CustomMessageBoxWindow.ShowInfo(this, "Lỗi khi ẩn danh mục", ex.Message);
+                    }
                 }
-                catch (System.Exception ex)
+            }
+            else
+            {
+                // Danh mục chưa phát sinh giao dịch → cho phép xóa hẳn
+                bool isConfirmed = Common.CustomMessageBoxWindow.ShowConfirm(
+                    this,
+                    "Xác nhận xóa danh mục",
+                    $"Bạn có chắc chắn muốn xóa vĩnh viễn danh mục \"{catName}\" không?",
+                    "Hành động này sẽ xóa hoàn toàn danh mục khỏi hệ thống và không thể hoàn tác.",
+                    "Xóa vĩnh viễn",
+                    "Hủy bỏ",
+                    Common.CustomDialogType.Warning,
+                    "#DC2626");
+
+                if (isConfirmed)
                 {
-                    MessageBox.Show("Lỗi khi xóa danh mục: " + ex.Message, "Lỗi",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    try
+                    {
+                        _categoryService.DeleteCategory(_userId, _categoryId);
+                        this.DialogResult = true;
+                        this.Close();
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Common.CustomMessageBoxWindow.ShowInfo(this, "Lỗi khi xóa danh mục", ex.Message);
+                    }
                 }
             }
         }
@@ -68,8 +115,7 @@ namespace WPF.Features.Categories
             string newName = CategoryNameTextBox.Text.Trim();
             if (string.IsNullOrEmpty(newName))
             {
-                MessageBox.Show("Vui lòng nhập tên danh mục.", "Lỗi",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                Common.CustomMessageBoxWindow.ShowInfo(this, "Cảnh báo", "Vui lòng nhập tên danh mục.");
                 return;
             }
 
@@ -84,8 +130,7 @@ namespace WPF.Features.Categories
             }
             catch (System.Exception ex)
             {
-                MessageBox.Show("Lỗi khi cập nhật danh mục: " + ex.Message, "Lỗi",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                Common.CustomMessageBoxWindow.ShowInfo(this, "Lỗi cập nhật", ex.Message);
             }
         }
     }

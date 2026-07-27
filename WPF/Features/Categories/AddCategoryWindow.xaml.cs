@@ -31,7 +31,7 @@ namespace WPF.Features.Categories
             string categoryName = CategoryNameTextBox.Text.Trim();
             if (string.IsNullOrEmpty(categoryName))
             {
-                MessageBox.Show("Vui lòng nhập tên danh mục.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Common.CustomMessageBoxWindow.ShowInfo(this, "Cảnh báo", "Vui lòng nhập tên danh mục.");
                 return;
             }
 
@@ -44,13 +44,13 @@ namespace WPF.Features.Categories
                 int userId = 1;
                 _categoryService.AddCategory(userId, categoryName, type, note);
                 
-                MessageBox.Show("Thêm danh mục thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                Common.CustomMessageBoxWindow.ShowInfo(this, "Thành công", "Thêm danh mục mới thành công!");
                 this.DialogResult = true;
                 this.Close();
             }
             catch (System.Exception ex)
             {
-                MessageBox.Show("Lỗi khi thêm danh mục: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                Common.CustomMessageBoxWindow.ShowInfo(this, "Lỗi thêm danh mục", ex.Message);
             }
         }
     }

@@ -131,11 +131,21 @@ namespace Services
 
             return false;
         }
-        
+
+        // Kiểm tra danh mục đã có giao dịch hoặc ngân sách liên quan chưa.
+        public bool HasRelatedData(int userId, int categoryId)
+        {
+            ValidateUserId(userId);
+
+            if (categoryId <= 0)
+            {
+                throw new ArgumentException("Danh mục không hợp lệ.");
+            }
+
+            return categoryRepository.HasRelatedData(categoryId, userId);
+        }
 
 
-
-        // Cập nhật danh mục.
         public void UpdateCategory(
             int userId,
             int categoryId,

@@ -268,25 +268,7 @@ namespace WPF.Features.Categories
             e.Handled = true;
             if (sender is FrameworkElement fe && fe.DataContext is CategoryItemData item)
             {
-                var result = MessageBox.Show(
-                    $"Bạn có chắc muốn xóa danh mục \"{item.Name}\" không?\nĐiều này không thể hoàn tác.",
-                    "Xác nhận xóa",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    try
-                    {
-                        _categoryService.DeleteCategory(item.UserId, item.CategoryId);
-                        await LoadDataAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Lỗi khi xóa danh mục: " + ex.Message, "Lỗi",
-                            MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
+                await ConfirmAndDeleteCategoryAsync(item);
             }
         }
 
@@ -326,13 +308,64 @@ namespace WPF.Features.Categories
         {
             if (sender is MenuItem menuItem && menuItem.Tag is CategoryItemData item)
             {
-                var result = MessageBox.Show(
-                    $"Bạn có chắc muốn xóa danh mục \"{item.Name}\" không?\nĐiều này không thể hoàn tác.",
-                    "Xác nhận xóa",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);
+                await ConfirmAndDeleteCategoryAsync(item);
+            }
+        }
 
-                if (result == MessageBoxResult.Yes)
+        // ── Helper dùng chung: kiểm tra ràng buộc và xóa danh mục ──────
+        private async System.Threading.Tasks.Task ConfirmAndDeleteCategoryAsync(CategoryItemData item)
+        {
+            bool hasRelated = false;
+            try
+            {
+                hasRelated = _categoryService.HasRelatedData(item.UserId, item.CategoryId);
+            }
+            catch { /* Bỏ qua lỗi kiểm tra, tiếp tục */ }
+
+            if (hasRelated)
+            {
+                // Danh mục đã có giao dịch/ngân sách → không cho xóa hẳn
+                bool isConfirmed = Common.CustomMessageBoxWindow.ShowConfirm(
+                    Window.GetWindow(this),
+                    "Không thể xóa danh mục này",
+                    $"Danh mục \"{item.Name}\" đã có giao dịch hoặc ngân sách liên kết trong hệ thống.",
+                    "Danh mục sẽ được ẨN: Không xuất hiện khi chọn danh mục mới nhưng vẫn bảo toàn báo cáo và lịch sử cũ.",
+                    "Ẩn danh mục ngay",
+                    "Hủy bỏ",
+                    Common.CustomDialogType.Warning,
+                    "#E11D48");
+
+                if (isConfirmed)
+                {
+                    try
+                    {
+                        _categoryService.DeleteCategory(item.UserId, item.CategoryId); // sẽ deactivate
+                        Common.CustomMessageBoxWindow.ShowInfo(
+                            Window.GetWindow(this),
+                            "Thành công",
+                            $"Danh mục \"{item.Name}\" đã được chuyển sang trạng thái ĐÃ ẨN.");
+                        await LoadDataAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        Common.CustomMessageBoxWindow.ShowInfo(Window.GetWindow(this), "Lỗi khi ẩn danh mục", ex.Message);
+                    }
+                }
+            }
+            else
+            {
+                // Danh mục chưa có giao dịch → cho phép xóa hẳn
+                bool isConfirmed = Common.CustomMessageBoxWindow.ShowConfirm(
+                    Window.GetWindow(this),
+                    "Xác nhận xóa danh mục",
+                    $"Bạn có chắc chắn muốn xóa vĩnh viễn danh mục \"{item.Name}\" không?",
+                    "Hành động này sẽ xóa hoàn toàn danh mục khỏi hệ thống và không thể hoàn tác.",
+                    "Xóa vĩnh viễn",
+                    "Hủy bỏ",
+                    Common.CustomDialogType.Warning,
+                    "#DC2626");
+
+                if (isConfirmed)
                 {
                     try
                     {
@@ -341,8 +374,7 @@ namespace WPF.Features.Categories
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Lỗi khi xóa: " + ex.Message, "Lỗi",
-                            MessageBoxButton.OK, MessageBoxImage.Error);
+                        Common.CustomMessageBoxWindow.ShowInfo(Window.GetWindow(this), "Lỗi khi xóa danh mục", ex.Message);
                     }
                 }
             }

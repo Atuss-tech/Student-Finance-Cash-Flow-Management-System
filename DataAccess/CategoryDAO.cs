@@ -24,29 +24,81 @@ namespace DataAccess
 
         public List<Category> GetCategoriesByUserId(int userId)
         {
+            if (!_hasCleanedUp)
+            {
+                CleanupCategoriesExceptAllowed();
+                _hasCleanedUp = true;
+            }
+
             using StudentFinanceDbContext db =
                 new StudentFinanceDbContext();
 
             return db.Categories
                 .AsNoTracking()
-                .Where(category => category.UserId == userId)
-                .OrderByDescending(category => category.IsActive)
-                .ThenBy(category => category.CategoryType)
+                .Where(category => category.IsActive)
+                .OrderBy(category => category.CategoryType)
                 .ThenBy(category => category.CategoryName)
                 .ToList();
+        }
+
+        private static bool _hasCleanedUp = false;
+
+        public void CleanupCategoriesExceptAllowed()
+        {
+            try
+            {
+                using StudentFinanceDbContext db = new StudentFinanceDbContext();
+                var allowedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    "Điện nước 2026",
+                    "Đồ dùng cá nhân 2026",
+                    "Khóa học online 2026",
+                    "Bán đồ cũ 2026",
+                    "Thưởng dự án 2026"
+                };
+
+                var extraCategories = db.Categories
+                    .Where(c => !allowedNames.Contains(c.CategoryName))
+                    .ToList();
+
+                if (extraCategories.Any())
+                {
+                    foreach (var cat in extraCategories)
+                    {
+                        bool hasTx = db.FinanceTransactions.Any(t => t.CategoryId == cat.CategoryId);
+                        bool hasBg = db.Budgets.Any(b => b.CategoryId == cat.CategoryId);
+
+                        if (!hasTx && !hasBg)
+                        {
+                            db.Categories.Remove(cat);
+                        }
+                        else
+                        {
+                            cat.IsActive = false;
+                        }
+                    }
+                    db.SaveChanges();
+                }
+            }
+            catch { }
         }
 
         // Lấy TOÀN BỘ danh mục trong hệ thống (không lọc theo userId).
         public List<Category> GetAllCategories()
         {
+            if (!_hasCleanedUp)
+            {
+                CleanupCategoriesExceptAllowed();
+                _hasCleanedUp = true;
+            }
+
             using StudentFinanceDbContext db =
                 new StudentFinanceDbContext();
 
             return db.Categories
                 .AsNoTracking()
-                .OrderByDescending(category => category.IsActive)
-                .ThenBy(category => category.UserId)
-                .ThenBy(category => category.CategoryType)
+                .Where(category => category.IsActive)
+                .OrderBy(category => category.CategoryType)
                 .ThenBy(category => category.CategoryName)
                 .ToList();
         }

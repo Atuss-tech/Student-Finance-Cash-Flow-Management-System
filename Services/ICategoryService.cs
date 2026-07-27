@@ -36,5 +36,10 @@ namespace Services
         bool DeleteCategory(
             int userId,
             int categoryId);
+
+        // Kiểm tra danh mục đã có giao dịch hoặc ngân sách liên quan chưa.
+        bool HasRelatedData(
+            int userId,
+            int categoryId);
     }
 }

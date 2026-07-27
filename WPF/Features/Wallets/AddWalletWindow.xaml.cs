@@ -55,24 +55,73 @@ namespace WPF.Features.Wallets
         {
             if (_editingWallet == null) return;
 
-            var result = MessageBox.Show(
-                $"Bạn có chắc muốn xóa ví \"{_editingWallet.WalletName}\" không?\nĐiều này không thể hoàn tác.",
-                "Xác nhận xóa ví",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
+            int userId = _editingWallet.UserId > 0 ? _editingWallet.UserId : 1;
 
-            if (result == MessageBoxResult.Yes)
+            // Kiểm tra xem ví đã có giao dịch chưa để cảnh báo trước
+            bool hasTransactions = false;
+            try
             {
-                try
+                hasTransactions = new Repositories.WalletRepository()
+                    .HasTransactions(_editingWallet.WalletId, userId);
+            }
+            catch { /* Bỏ qua lỗi check, tiếp tục xử lý */ }
+
+            if (hasTransactions)
+            {
+                // Ví đã có giao dịch → không cho xóa hẳn, chỉ cho khóa
+                bool isConfirmed = Common.CustomMessageBoxWindow.ShowConfirm(
+                    this,
+                    "Không thể xóa ví này",
+                    $"Ví \"{_editingWallet.WalletName}\" đã phát sinh giao dịch trong hệ thống nên không thể xóa hoàn toàn.",
+                    "Ví sẽ được KHÓA: Không xuất hiện khi tạo giao dịch mới nhưng lịch sử thu chi cũ vẫn được bảo toàn.",
+                    "Khóa ví ngay",
+                    "Hủy bỏ",
+                    Common.CustomDialogType.Warning,
+                    "#E11D48");
+
+                if (isConfirmed)
                 {
-                    int userId = _editingWallet.UserId > 0 ? _editingWallet.UserId : 1;
-                    _walletService.RemoveOrDeactivateWallet(userId, _editingWallet.WalletId);
-                    this.DialogResult = true;
-                    this.Close();
+                    try
+                    {
+                        _walletService.RemoveOrDeactivateWallet(userId, _editingWallet.WalletId);
+                        Common.CustomMessageBoxWindow.ShowInfo(
+                            this,
+                            "Thành công",
+                            $"Ví \"{_editingWallet.WalletName}\" đã được chuyển sang trạng thái ĐÃ KHÓA.");
+                        this.DialogResult = true;
+                        this.Close();
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Common.CustomMessageBoxWindow.ShowInfo(this, "Lỗi khi khóa ví", ex.Message);
+                    }
                 }
-                catch (System.Exception ex)
+            }
+            else
+            {
+                // Ví chưa có giao dịch → cho phép xóa hẳn
+                bool isConfirmed = Common.CustomMessageBoxWindow.ShowConfirm(
+                    this,
+                    "Xác nhận xóa ví",
+                    $"Bạn có chắc chắn muốn xóa vĩnh viễn ví \"{_editingWallet.WalletName}\" không?",
+                    "Hành động này sẽ xóa hoàn toàn ví khỏi hệ thống và không thể hoàn tác.",
+                    "Xóa vĩnh viễn",
+                    "Hủy bỏ",
+                    Common.CustomDialogType.Warning,
+                    "#DC2626");
+
+                if (isConfirmed)
                 {
-                    MessageBox.Show("Lỗi khi xóa ví: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    try
+                    {
+                        _walletService.RemoveOrDeactivateWallet(userId, _editingWallet.WalletId);
+                        this.DialogResult = true;
+                        this.Close();
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Common.CustomMessageBoxWindow.ShowInfo(this, "Lỗi khi xóa ví", ex.Message);
+                    }
                 }
             }
         }

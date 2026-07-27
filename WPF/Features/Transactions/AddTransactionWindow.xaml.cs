@@ -104,10 +104,12 @@ namespace WPF.Features.Transactions
         {
             try
             {
-                int userId = 1;
                 string selectedType = ExpenseRadio.IsChecked == true ? "Expense" : "Income";
-                var allCategories = _categoryService.GetCategoriesByUserId(userId);
-                var filteredCategories = allCategories.Where(c => c.CategoryType == selectedType).ToList();
+                var allCategories = _categoryService.GetAllCategories();
+                var filteredCategories = allCategories
+                    .Where(c => (c.IsActive || (_transactionToEdit != null && c.CategoryId == _transactionToEdit.CategoryId)) &&
+                                string.Equals(c.CategoryType, selectedType, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
                 CategoryComboBox.ItemsSource = filteredCategories;
                 if (filteredCategories.Any())
                 {
@@ -141,25 +143,25 @@ namespace WPF.Features.Transactions
             string amountText = AmountTextBox.Text.Replace(".", "").Replace(",", "");
             if (!decimal.TryParse(amountText, out decimal amount) || amount <= 0)
             {
-                MessageBox.Show("Số tiền không hợp lệ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Common.CustomMessageBoxWindow.ShowInfo(this, "Cảnh báo", "Số tiền không hợp lệ.");
                 return;
             }
 
             if (WalletComboBox.SelectedValue == null)
             {
-                MessageBox.Show("Vui lòng chọn ví.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Common.CustomMessageBoxWindow.ShowInfo(this, "Cảnh báo", "Vui lòng chọn ví.");
                 return;
             }
 
             if (CategoryComboBox.SelectedValue == null)
             {
-                MessageBox.Show("Vui lòng chọn danh mục.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Common.CustomMessageBoxWindow.ShowInfo(this, "Cảnh báo", "Vui lòng chọn danh mục.");
                 return;
             }
 
             if (TransactionDatePicker.SelectedDate == null)
             {
-                MessageBox.Show("Vui lòng chọn ngày giao dịch.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Common.CustomMessageBoxWindow.ShowInfo(this, "Cảnh báo", "Vui lòng chọn ngày giao dịch.");
                 return;
             }
 
@@ -175,12 +177,12 @@ namespace WPF.Features.Transactions
                 if (_transactionToEdit != null)
                 {
                     _transactionService.UpdateTransaction(userId, _transactionToEdit.TransactionId, walletId, categoryId, type, amount, date, note);
-                    MessageBox.Show("Cập nhật giao dịch thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Common.CustomMessageBoxWindow.ShowInfo(this, "Thành công", "Cập nhật giao dịch và số dư ví thành công!");
                 }
                 else
                 {
                     _transactionService.AddTransaction(userId, walletId, categoryId, type, amount, date, note);
-                    MessageBox.Show("Thêm giao dịch thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Common.CustomMessageBoxWindow.ShowInfo(this, "Thành công", "Thêm giao dịch thành công! Số dư ví đã được tự động cập nhật.");
                 }
                 
                 this.DialogResult = true;
@@ -188,7 +190,7 @@ namespace WPF.Features.Transactions
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi khi lưu giao dịch: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                Common.CustomMessageBoxWindow.ShowInfo(this, "Lỗi lưu giao dịch", ex.Message);
             }
         }
     }
