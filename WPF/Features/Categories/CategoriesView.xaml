@@ -286,7 +286,7 @@
                         </Grid>
                         <TextBlock Text="Quản lý Danh mục" FontSize="16" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
                         <TextBlock Text="Phân bổ ngân sách hợp lý giúp bạn đạt được mục tiêu tài chính nhanh hơn." FontSize="14" Foreground="{StaticResource TextSecondary}" TextWrapping="Wrap" Margin="0,0,0,24"/>
-                        <Button Content="Thiết lập ngân sách" Style="{StaticResource ButtonSecondaryDark}"/>
+                        <Button Content="Thiết lập ngân sách" Style="{StaticResource ButtonSecondaryDark}" Click="SetupBudget_Click"/>
                     </StackPanel>
                 </Border>
                 </Grid>

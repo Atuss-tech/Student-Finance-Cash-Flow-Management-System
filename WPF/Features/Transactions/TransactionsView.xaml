@@ -126,26 +126,8 @@
 
                 <!-- ── Filters Row ── -->
                 <Grid Margin="0,0,0,20">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Search box -->
-                    <Border Grid.Column="0" Background="#ffffff" BorderThickness="0" CornerRadius="24" Width="180" Padding="12,8" Margin="0,0,12,0">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🔍" Foreground="{StaticResource TextSecondary}" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextPrimary}" Width="130" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Border>
-
-                    <!-- Wallet Filter Dropdown -->
-                    <Border Grid.Column="1" Background="#ffffff" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" CornerRadius="24" Padding="12,4" Margin="0,0,16,0" VerticalAlignment="Center">
-                        <ComboBox ItemsSource="{Binding WalletFilterList}" SelectedItem="{Binding SelectedWalletFilter, Mode=TwoWay}" Background="Transparent" BorderThickness="0" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center"/>
-                    </Border>
                     <!-- Category Pills -->
-                    <ItemsControl Grid.Column="2" ItemsSource="{Binding CategoryPills}" VerticalAlignment="Center">
+                    <ItemsControl ItemsSource="{Binding CategoryPills}" VerticalAlignment="Center">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel VerticalAlignment="Center"/>
@@ -159,7 +141,6 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-
                 </Grid>
 
                 <!-- ── Transaction List Grouped by Date ── -->

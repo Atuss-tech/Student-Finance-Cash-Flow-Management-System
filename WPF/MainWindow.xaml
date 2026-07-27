@@ -137,18 +137,7 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <!-- Search Box -->
-                    <Border Background="{StaticResource SurfaceColor}" CornerRadius="20" Width="260" Height="44" Margin="0,0,20,0" Padding="16,0,16,0">
-                        <Grid>
-                            <TextBlock Foreground="{StaticResource TextSecondary}" VerticalAlignment="Center"/>
-                            <TextBox Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center" Margin="24,0,0,0" FontSize="14" VerticalContentAlignment="Center" Text="Tìm kiếm..."/>
-                        </Grid>
-                    </Border>
-                    
-                    <!-- Notification Bell -->
-                    <Border Width="44" Height="44" CornerRadius="22" Background="{StaticResource SurfaceColor}" Margin="0,0,20,0">
-                        <TextBlock Text="🔔" Foreground="{StaticResource TextPrimary}" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
+
                     
                     <!-- Global Add Button -->
                     <Button x:Name="GlobalAddButton" Height="44" Padding="24,0,24,0" Background="{StaticResource PrimaryBlue}" BorderThickness="0" Cursor="Hand" Click="GlobalAddButton_Click" Foreground="White" FontWeight="SemiBold" FontSize="15">

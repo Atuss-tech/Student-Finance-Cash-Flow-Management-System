@@ -353,6 +353,15 @@ namespace WPF.Features.Categories
         private void SetIncome_Click(object sender, RoutedEventArgs e) { /* TODO */ }
         private void SetExpense_Click(object sender, RoutedEventArgs e){ /* TODO */ }
 
+        // ── Navigate to Budget page ───────────────────────────────────────
+        private void SetupBudget_Click(object sender, RoutedEventArgs e)
+        {
+            if (Window.GetWindow(this) is Student_Finance___Cash_Flow_Management_System.MainWindow mainWindow)
+            {
+                mainWindow.NavigateToBudgets();
+            }
+        }
+
         // ── Add category ─────────────────────────────────────────────────
         private async void AddCategory_Click(object sender, RoutedEventArgs e)
         {

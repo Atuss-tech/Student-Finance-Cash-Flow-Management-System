@@ -92,15 +92,29 @@ namespace WPF.Features.Budget
 
         public ObservableCollection<BudgetData> AllBudgets { get; set; }
 
-        public ISeries[] BarChartSeries { get; set; }
-        public Axis[] BarChartXAxes { get; set; }
-        public Axis[] BarChartYAxes { get; set; }
+        public ISeries[] BarChartSeries { get; set; } = Array.Empty<ISeries>();
+        public Axis[] BarChartXAxes { get; set; } = Array.Empty<Axis>();
+        public Axis[] BarChartYAxes { get; set; } = Array.Empty<Axis>();
 
-        public ISeries[] DonutSeries { get; set; }
+        public ISeries[] DonutSeries { get; set; } = Array.Empty<ISeries>();
+
+        private string _donutCenterPercent = "0%";
+        public string DonutCenterPercent
+        {
+            get => _donutCenterPercent;
+            set { _donutCenterPercent = value; OnPropertyChanged(); }
+        }
+
+        private string _donutCenterLabel = "Đã chi";
+        public string DonutCenterLabel
+        {
+            get => _donutCenterLabel;
+            set { _donutCenterLabel = value; OnPropertyChanged(); }
+        }
         
-        public ISeries[] AreaChartSeries { get; set; }
-        public Axis[] AreaChartXAxes { get; set; }
-        public Axis[] AreaChartYAxes { get; set; }
+        public ISeries[] AreaChartSeries { get; set; } = Array.Empty<ISeries>();
+        public Axis[] AreaChartXAxes { get; set; } = Array.Empty<Axis>();
+        public Axis[] AreaChartYAxes { get; set; } = Array.Empty<Axis>();
 
         public SolidColorPaint ChartLegendTextPaint { get; } = new SolidColorPaint(SKColor.Parse("#6b7280")) { SKTypeface = SKTypeface.FromFamilyName("Segoe UI") };
 
@@ -223,8 +237,17 @@ namespace WPF.Features.Budget
         {
             var top5 = AllBudgets.OrderByDescending(b => b.TotalAmount).Take(5).ToList();
             
-            BarChartXAxes = new Axis[] { new Axis { Labels = top5.Select(b => b.CategoryName).ToArray(), LabelsPaint = new SolidColorPaint(SKColor.Parse("#4a5568")) } };
-            BarChartYAxes = new Axis[] { new Axis { LabelsPaint = new SolidColorPaint(SKColor.Parse("#4a5568")), Labeler = v => (v / 1_000_000).ToString("0.#") + "M" } };
+            BarChartXAxes = new Axis[]
+            {
+                new Axis
+                {
+                    Labels         = top5.Select(b => b.CategoryName).ToArray(),
+                    LabelsPaint    = new SolidColorPaint(SKColor.Parse("#4a5568")) { SKTypeface = SKTypeface.FromFamilyName("Segoe UI") },
+                    TextSize       = 11,
+                    LabelsRotation = 0,
+                }
+            };
+            BarChartYAxes = new Axis[] { new Axis { LabelsPaint = new SolidColorPaint(SKColor.Parse("#4a5568")), Labeler = v => v >= 1_000_000 ? (v / 1_000_000).ToString("0.#") + "M" : (v / 1_000).ToString("0") + "K" } };
             
             BarChartSeries = new ISeries[]
             {
@@ -232,16 +255,16 @@ namespace WPF.Features.Budget
                 {
                     Name = "Ngân sách",
                     Values = top5.Select(b => (double)b.TotalAmount).ToArray(),
-                    Fill = new SolidColorPaint(SKColor.Parse("#7c6df8")),
-                    MaxBarWidth = 15,
+                    Fill = new SolidColorPaint(SKColor.Parse("#3b82f6")),
+                    MaxBarWidth = 18,
                     Rx = 4, Ry = 4
                 },
                 new ColumnSeries<double>
                 {
                     Name = "Thực chi",
                     Values = top5.Select(b => (double)b.SpentAmount).ToArray(),
-                    Fill = new SolidColorPaint(SKColor.Parse("#10d9a0")),
-                    MaxBarWidth = 15,
+                    Fill = new SolidColorPaint(SKColor.Parse("#f43f5e")),
+                    MaxBarWidth = 18,
                     Rx = 4, Ry = 4
                 }
             };
@@ -254,20 +277,65 @@ namespace WPF.Features.Budget
             {
                 DonutSeries = new ISeries[]
                 {
-                    new PieSeries<double> { Values = new double[] { 1 }, Name = "Chưa có dữ liệu", Fill = new SolidColorPaint(SKColor.Parse("#e5e7eb")), InnerRadius = 60 }
+                    new PieSeries<double>
+                    {
+                        Values = new double[] { 1 },
+                        Name = "Chưa có ngân sách",
+                        Fill = new SolidColorPaint(SKColor.Parse("#cbd5e1")),
+                        InnerRadius = 65,
+                        ToolTipLabelFormatter = p => "Chưa thiết lập ngân sách"
+                    }
                 };
+                DonutCenterPercent = "0%";
+                DonutCenterLabel = "Chưa có NS";
             }
             else
             {
-                DonutSeries = new ISeries[]
+                double pctSpent = total > 0 ? (spent / total) * 100 : 0;
+                DonutCenterPercent = $"{pctSpent:0.#}%";
+
+                if (spent > total)
                 {
-                    new PieSeries<double> { Values = new double[] { spent }, Name = "Đã chi", Fill = new SolidColorPaint(SKColor.Parse(spent > total ? "#f43f5e" : "#10d9a0")), InnerRadius = 60 },
-                    new PieSeries<double> { Values = new double[] { remain }, Name = "Còn lại", Fill = new SolidColorPaint(SKColor.Parse("#e5e7eb")), InnerRadius = 60 }
-                };
+                    DonutCenterLabel = "Vượt NS!";
+                    DonutSeries = new ISeries[]
+                    {
+                        new PieSeries<double>
+                        {
+                            Values = new double[] { spent },
+                            Name = "Đã chi (Vượt)",
+                            Fill = new SolidColorPaint(SKColor.Parse("#cf202f")),
+                            InnerRadius = 65,
+                            ToolTipLabelFormatter = p => $"Đã chi: {(p.Coordinate.PrimaryValue >= 1_000_000 ? (p.Coordinate.PrimaryValue / 1_000_000).ToString("0.##") + "Mđ" : (p.Coordinate.PrimaryValue / 1_000).ToString("0") + "Kđ")}"
+                        }
+                    };
+                }
+                else
+                {
+                    DonutCenterLabel = "Đã sử dụng";
+                    DonutSeries = new ISeries[]
+                    {
+                        new PieSeries<double>
+                        {
+                            Values = new double[] { spent },
+                            Name = "Đã chi",
+                            Fill = new SolidColorPaint(SKColor.Parse("#f43f5e")),
+                            InnerRadius = 65,
+                            ToolTipLabelFormatter = p => $"Đã chi: {(p.Coordinate.PrimaryValue >= 1_000_000 ? (p.Coordinate.PrimaryValue / 1_000_000).ToString("0.##") + "Mđ" : (p.Coordinate.PrimaryValue / 1_000).ToString("0") + "Kđ")}"
+                        },
+                        new PieSeries<double>
+                        {
+                            Values = new double[] { remain },
+                            Name = "Còn lại",
+                            Fill = new SolidColorPaint(SKColor.Parse("#10d9a0")),
+                            InnerRadius = 65,
+                            ToolTipLabelFormatter = p => $"Còn lại: {(p.Coordinate.PrimaryValue >= 1_000_000 ? (p.Coordinate.PrimaryValue / 1_000_000).ToString("0.##") + "Mđ" : (p.Coordinate.PrimaryValue / 1_000).ToString("0") + "Kđ")}"
+                        }
+                    };
+                }
             }
 
             AreaChartXAxes = new Axis[] { new Axis { Labels = _trendLabels, LabelsPaint = new SolidColorPaint(SKColor.Parse("#4a5568")) } };
-            AreaChartYAxes = new Axis[] { new Axis { LabelsPaint = new SolidColorPaint(SKColor.Parse("#4a5568")), Labeler = v => (v / 1_000_000).ToString("0.#") + "M" } };
+            AreaChartYAxes = new Axis[] { new Axis { LabelsPaint = new SolidColorPaint(SKColor.Parse("#4a5568")), Labeler = v => v >= 1_000_000 ? (v / 1_000_000).ToString("0.#") + "M" : (v / 1_000).ToString("0") + "K" } };
             
             AreaChartSeries = new ISeries[]
             {
@@ -277,7 +345,7 @@ namespace WPF.Features.Budget
                     Values = _trendBudgets,
                     GeometrySize = 0,
                     Fill = null,
-                    Stroke = new SolidColorPaint(SKColor.Parse("#7c6df8")) { StrokeThickness = 2, PathEffect = new LiveChartsCore.SkiaSharpView.Painting.Effects.DashEffect(new float[] { 10, 10 }) }
+                    Stroke = new SolidColorPaint(SKColor.Parse("#7c6df8")) { StrokeThickness = 2, PathEffect = new LiveChartsCore.SkiaSharpView.Painting.Effects.DashEffect(new float[] { 8, 8 }) }
                 },
                 new LineSeries<double>
                 {
@@ -292,8 +360,12 @@ namespace WPF.Features.Budget
             };
 
             OnPropertyChanged(nameof(BarChartSeries));
+            OnPropertyChanged(nameof(BarChartXAxes));
+            OnPropertyChanged(nameof(BarChartYAxes));
             OnPropertyChanged(nameof(DonutSeries));
             OnPropertyChanged(nameof(AreaChartSeries));
+            OnPropertyChanged(nameof(AreaChartXAxes));
+            OnPropertyChanged(nameof(AreaChartYAxes));
         }
 
         private async void EditBudget_Click(object sender, RoutedEventArgs e)
