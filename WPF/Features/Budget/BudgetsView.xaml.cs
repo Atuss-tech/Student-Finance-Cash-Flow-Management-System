@@ -187,11 +187,15 @@ namespace WPF.Features.Budget
                     AllBudgets.Add(new BudgetData
                     {
                         BudgetId = progress.BudgetId,
+                        UserId = currentUserId,
                         CategoryId = progress.CategoryId,
                         CategoryName = progress.CategoryName,
-                        Icon = "🏷️", // Default icon
+                        Icon = CategoryIconHelper.GetIcon(progress.CategoryName),
                         SpentAmount = progress.SpentAmount,
-                        TotalAmount = progress.AmountLimit
+                        TotalAmount = progress.AmountLimit,
+                        Note = progress.Note,
+                        Month = progress.Month,
+                        Year = progress.Year
                     });
                 }
 

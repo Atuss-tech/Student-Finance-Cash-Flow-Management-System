@@ -94,9 +94,13 @@ namespace WPF.UIData
     public class BudgetData : INotifyPropertyChanged
     {
         public int BudgetId { get; set; }
+        public int UserId { get; set; } = 1;
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = string.Empty;
         public string Icon { get; set; } = string.Empty;
+        public int Month { get; set; }
+        public int Year { get; set; }
+        public string Note { get; set; } = string.Empty;
         public decimal TotalAmount { get; set; }
 
         private decimal _spentAmount;
@@ -254,4 +258,39 @@ namespace WPF.UIData
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+
+    public static class CategoryIconHelper
+    {
+        private static readonly Dictionary<string, string> IconMap = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Ăn uống"]       = "🍜",  ["Food"]          = "🍜",
+            ["Di chuyển"]     = "🚗",  ["Transport"]     = "🚗",
+            ["Mua sắm"]       = "🛍️",  ["Shopping"]      = "🛍️",
+            ["Giải trí"]      = "🎮",  ["Entertainment"] = "🎮",
+            ["Sức khỏe"]      = "💊",  ["Health"]        = "💊",
+            ["Giáo dục"]      = "📚",  ["Education"]     = "📚",
+            ["Điện nước"]     = "💡",  ["Utilities"]     = "💡",
+            ["Tiết kiệm"]     = "🏦",  ["Savings"]       = "🏦",
+            ["Lương"]         = "💵",  ["Salary"]        = "💵",
+            ["Đầu tư"]        = "📈",  ["Investment"]    = "📈",
+            ["Nhà ở"]         = "🏠",  ["Housing"]       = "🏠",
+            ["Bảo hiểm"]      = "🛡️",  ["Insurance"]     = "🛡️",
+            ["Du lịch"]       = "✈️",  ["Travel"]        = "✈️",
+            ["Thể thao"]      = "🏋️",  ["Fitness"]       = "🏋️",
+            ["Quà tặng"]      = "🎁",  ["Gifts"]         = "🎁",
+            ["Gia đình"]      = "👨‍👩‍👧", ["Family"]        = "👨‍👩‍👧",
+            ["Thu nhập khác"] = "💰",  ["Other Income"]  = "💰",
+            ["Chi khác"]      = "📦",  ["Other"]         = "📦",
+            ["Ăn sáng"]       = "🍳",
+            ["Học bổng FPT"]  = "🎓",
+        };
+
+        public static string GetIcon(string? categoryName, string categoryType = "Expense")
+        {
+            if (string.IsNullOrWhiteSpace(categoryName)) return categoryType == "Income" ? "💰" : "📦";
+            if (IconMap.TryGetValue(categoryName.Trim(), out var icon)) return icon;
+            return categoryType == "Income" ? "💰" : "📦";
+        }
+    }
 }
+

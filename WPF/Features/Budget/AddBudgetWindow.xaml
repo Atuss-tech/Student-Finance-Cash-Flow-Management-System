@@ -39,10 +39,8 @@
             <StackPanel Grid.Row="1" Margin="0,0,0,16">
                 <TextBlock Text="Tháng áp dụng" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
                 <Border CornerRadius="8" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Background="#ffffff" Height="40">
-                    <ComboBox x:Name="MonthComboBox" FontSize="14" SelectedIndex="0" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="8,0">
-                        <ComboBoxItem Content="Tháng 7, 2026"/>
-                        <ComboBoxItem Content="Tháng 8, 2026"/>
-                        <ComboBoxItem Content="Tháng 9, 2026"/>
+                    <ComboBox x:Name="MonthComboBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="8,0"
+                              DisplayMemberPath="DisplayText" SelectedValuePath="MonthYearKey">
                     </ComboBox>
                 </Border>
             </StackPanel>

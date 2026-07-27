@@ -131,7 +131,7 @@ namespace WPF.Features.Dashboard
                 foreach(var b in budgets.Take(5)) {
                     BudgetProgresses.Add(new BudgetData {
                         CategoryName = b.CategoryName,
-                        Icon = "🏷️",
+                        Icon = CategoryIconHelper.GetIcon(b.CategoryName),
                         SpentAmount = b.SpentAmount,
                         TotalAmount = b.AmountLimit
                     });

@@ -77,13 +77,13 @@ namespace Services
         /// Phối hợp dữ liệu từ BudgetRepository và TransactionRepository để ra % tiêu thụ.
         /// Trả về danh sách dạng ValueTuple.
         /// </summary>
-        public async Task<List<(int BudgetId, int CategoryId, string CategoryName, decimal AmountLimit, decimal SpentAmount, double UsagePercentage, string AlertStatus)>> GetBudgetProgressesAsync(int userId, int month, int year)
+        public async Task<List<(int BudgetId, int CategoryId, string CategoryName, decimal AmountLimit, decimal SpentAmount, double UsagePercentage, string AlertStatus, string Note, int Month, int Year)>> GetBudgetProgressesAsync(int userId, int month, int year)
         {
             var budgets = await _budgetRepository.GetBudgetsAsync(userId, month, year);
             var transactions = await _transactionRepository.GetTransactionsByMonthAsync(userId, month, year);
             var expenses = transactions.Where(t => t.TransactionType == "Expense").ToList();
 
-            var progressList = new List<(int, int, string, decimal, decimal, double, string)>();
+            var progressList = new List<(int, int, string, decimal, decimal, double, string, string, int, int)>();
 
             foreach (var budget in budgets)
             {
@@ -101,7 +101,10 @@ namespace Services
                     budget.AmountLimit,
                     spent,
                     percentage,
-                    status
+                    status,
+                    budget.Note ?? string.Empty,
+                    budget.Month,
+                    budget.Year
                 ));
             }
 

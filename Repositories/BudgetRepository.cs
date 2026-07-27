@@ -1,5 +1,4 @@
 using BusinessObjects.Models;
-using BusinessObjects.Models;
 using DataAccess;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -67,8 +67,13 @@ namespace DataAccess
         {
             using (var db = new StudentFinanceDbContext())
             {
-                db.Entry(budget).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                var existing = await db.Budgets.FindAsync(budget.BudgetId);
+                if (existing != null)
+                {
+                    existing.AmountLimit = budget.AmountLimit;
+                    existing.Note = budget.Note;
+                    await db.SaveChangesAsync();
+                }
             }
         }
 
