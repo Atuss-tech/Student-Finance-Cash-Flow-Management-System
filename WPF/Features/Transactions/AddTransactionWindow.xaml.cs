@@ -100,7 +100,7 @@ namespace WPF.Features.Transactions
         {
             try
             {
-                int userId = 1;
+                int userId = Services.UserSession.CurrentUserId;
                 var wallets = _walletService.GetAllWalletsByUser(userId);
                 var selectableWallets = wallets.Where(w => w.IsActive || (_transactionToEdit != null && w.WalletId == _transactionToEdit.WalletId)).ToList();
                 WalletComboBox.ItemsSource = selectableWallets;
@@ -121,8 +121,9 @@ namespace WPF.Features.Transactions
         {
             try
             {
+                int userId = Services.UserSession.CurrentUserId;
                 string selectedType = ExpenseRadio.IsChecked == true ? "Expense" : "Income";
-                var allCategories = _categoryService.GetAllCategories();
+                var allCategories = _categoryService.GetCategoriesByUserId(userId);
                 var filteredCategories = allCategories
                     .Where(c => (c.IsActive || (_transactionToEdit != null && c.CategoryId == _transactionToEdit.CategoryId)) &&
                                 string.Equals(c.CategoryType, selectedType, StringComparison.OrdinalIgnoreCase))
@@ -219,7 +220,7 @@ namespace WPF.Features.Transactions
 
             try
             {
-                int userId = 1;
+                int userId = Services.UserSession.CurrentUserId;
                 if (_transactionToEdit != null)
                 {
                     _transactionService.UpdateTransaction(userId, _transactionToEdit.TransactionId, walletId, categoryId, type, amount, date, note);

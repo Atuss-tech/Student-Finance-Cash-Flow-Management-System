@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -57,6 +57,13 @@ namespace WPF.Features.Profile
         public ProfileView()
         {
             InitializeComponent();
+            if (Services.UserSession.CurrentUser != null)
+            {
+                FullName = Services.UserSession.FullName;
+                AvatarInitials = Services.UserSession.GetInitials(FullName);
+                Email = Services.UserSession.Email;
+                JoinDate = $"Thành viên từ {Services.UserSession.CurrentUser.CreatedAt:MMMM, yyyy}";
+            }
             this.DataContext = this;
         }
 

@@ -27,7 +27,7 @@ namespace WPF.Features.Transactions
         {
             try
             {
-                int userId = 1; // context hiện tại
+                int userId = Services.UserSession.CurrentUserId;
                 
                 // Lấy toàn bộ giao dịch của người dùng
                 var txList = _transactionService.GetTransactionsByUserId(userId);

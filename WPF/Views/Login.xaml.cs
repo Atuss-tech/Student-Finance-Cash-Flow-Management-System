@@ -51,6 +51,7 @@ namespace Student_Finance___Cash_Flow_Management_System
             var user = userService.AuthenticateUser(email, password);
             if (user != null)
             {
+                UserSession.CurrentUser = user;
                 MessageBox.Show($"Đăng nhập thành công! Chào mừng {user.FullName}", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                 // Open MainWindow and close this
                 MainWindow main = new MainWindow();
@@ -88,18 +89,26 @@ namespace Student_Finance___Cash_Flow_Management_System
                 return;
             }
 
-            bool success = userService.RegisterUser(fullName, email, password);
-            if (success)
+            try
             {
-                MessageBox.Show("Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
-                // Clear fields
-                txtRegisterFullName.Clear();
-                txtRegisterEmail.Clear();
-                txtRegisterPassword.Clear();
+                bool success = userService.RegisterUser(fullName, email, password);
+                if (success)
+                {
+                    MessageBox.Show("Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    // Clear fields
+                    txtRegisterFullName.Clear();
+                    txtRegisterEmail.Clear();
+                    txtRegisterPassword.Clear();
+                }
             }
-            else
+            catch (InvalidOperationException ex) when (ex.Message == "EMAIL_EXISTS")
             {
                 MessageBox.Show("Email này đã được sử dụng. Vui lòng chọn email khác.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                string detail = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                MessageBox.Show($"Đăng ký thất bại do lỗi cơ sở dữ liệu:\n{detail}", "Lỗi Cơ Sở Dữ Liệu", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

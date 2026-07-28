@@ -35,27 +35,28 @@ namespace Services
         // Xử lý logic đăng ký: Kiểm tra email trùng lặp và tạo tài khoản mới.
         public bool RegisterUser(string fullName, string email, string password)
         {
+            string cleanEmail = email.Trim();
+
             // Kiểm tra xem email đã được đăng ký chưa.
-            var user = userRepository.GetUserByEmail(email);
+            var user = userRepository.GetUserByEmail(cleanEmail);
             if (user != null)
             {
-                // Nếu email đã tồn tại, trả về false (đăng ký thất bại).
-                return false;
+                throw new InvalidOperationException("EMAIL_EXISTS");
             }
 
             // Tạo đối tượng User mới với mật khẩu được băm (hash) bằng BCrypt.
             var newUser = new User
             {
-                FullName = fullName,
-                Email = email,
+                FullName = fullName.Trim(),
+                Email = cleanEmail,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
+                CreatedAt = DateTime.Now,
                 IsActive = true
             };
 
             // Gọi repository để lưu vào database.
             userRepository.AddUser(newUser);
 
-            // Trả về true (đăng ký thành công).
             return true;
         }
     }

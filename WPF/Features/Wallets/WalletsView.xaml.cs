@@ -88,7 +88,7 @@ namespace WPF.Features.Wallets
         public async Task LoadWalletsAsync()
         {
             Wallets.Clear();
-            var backendWallets = _walletService.GetAllWalletsByUser(1); // Hardcoded UserId = 1 for now
+            var backendWallets = _walletService.GetAllWalletsByUser(Services.UserSession.CurrentUserId);
 
             decimal activeTotal = 0;
             var activeWallets = new List<Wallet>();
@@ -145,7 +145,7 @@ namespace WPF.Features.Wallets
             {
                 var transactionRepo = new Repositories.TransactionRepository();
                 var txService = new TransactionService(transactionRepo);
-                var allTx = await txService.GetTransactionsByYearAsync(1, DateTime.Now.Year);
+                var allTx = await txService.GetTransactionsByYearAsync(Services.UserSession.CurrentUserId, DateTime.Now.Year);
 
                 for (int i = 0; i < activeWallets.Count; i++)
                 {

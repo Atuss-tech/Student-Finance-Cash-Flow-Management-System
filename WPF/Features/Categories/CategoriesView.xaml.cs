@@ -117,12 +117,12 @@ namespace WPF.Features.Categories
                 int month = DateTime.Now.Month;
                 int year  = DateTime.Now.Year;
 
-                // 1. Lấy TOÀN BỘ danh mục (tất cả userId)
-                var rawCategories = _categoryService.GetAllCategories();
+                // 1. Lấy danh mục của người dùng hiện tại
+                var rawCategories = _categoryService.GetCategoriesByUserId(Services.UserSession.CurrentUserId);
 
                 // 2. Lấy chi tiêu thực theo danh mục cho tháng hiện tại
                 //    (dùng userId=1 — tích hợp multi-user sau nếu cần)
-                var expenseByCategory = await _reportService.GetExpenseByCategoryAsync(1, month, year);
+                var expenseByCategory = await _reportService.GetExpenseByCategoryAsync(Services.UserSession.CurrentUserId, month, year);
 
                 // 3. Icon mapping
                 var iconMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)

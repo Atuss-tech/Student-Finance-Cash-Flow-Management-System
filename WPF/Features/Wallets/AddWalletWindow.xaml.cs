@@ -55,7 +55,7 @@ namespace WPF.Features.Wallets
         {
             if (_editingWallet == null) return;
 
-            int userId = _editingWallet.UserId > 0 ? _editingWallet.UserId : 1;
+            int userId = _editingWallet != null && _editingWallet.UserId > 0 ? _editingWallet.UserId : Services.UserSession.CurrentUserId;
 
             // Kiểm tra xem ví đã có giao dịch chưa để cảnh báo trước
             bool hasTransactions = false;
@@ -150,7 +150,7 @@ namespace WPF.Features.Wallets
                 return;
             }
 
-            int userId = _editingWallet != null && _editingWallet.UserId > 0 ? _editingWallet.UserId : 1;
+            int userId = _editingWallet != null && _editingWallet.UserId > 0 ? _editingWallet.UserId : Services.UserSession.CurrentUserId;
 
             try
             {

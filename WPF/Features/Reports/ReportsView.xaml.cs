@@ -242,7 +242,7 @@ namespace WPF.Features.Reports
 
         public async System.Threading.Tasks.Task GenerateReportsAsync()
         {
-            int userId = 1;
+            int userId = Services.UserSession.CurrentUserId;
 
             try
             {

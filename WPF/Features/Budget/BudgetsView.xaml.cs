@@ -104,7 +104,7 @@ namespace WPF.Features.Budget
 
         public async System.Threading.Tasks.Task LoadBudgetDataAsync()
         {
-            int currentUserId = 1; // Giả định user hiện tại là 1
+            int currentUserId = Services.UserSession.CurrentUserId;
             int currentMonth = DateTime.Now.Month;
             int currentYear = DateTime.Now.Year;
 

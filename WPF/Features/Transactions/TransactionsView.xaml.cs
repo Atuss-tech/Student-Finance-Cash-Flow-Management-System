@@ -276,7 +276,7 @@ namespace WPF.Features.Transactions
         {
             try
             {
-                int userId = 1;
+                int userId = Services.UserSession.CurrentUserId;
 
                 // Load Wallets into Filter List
                 var walletsDb = _walletService.GetAllWalletsByUser(userId);

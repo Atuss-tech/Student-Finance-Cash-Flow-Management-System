@@ -24,11 +24,14 @@ namespace DataAccess
         // Trả về đối tượng User nếu tìm thấy, hoặc null nếu không tồn tại.
         public User? GetUserByEmail(string email)
         {
+            if (string.IsNullOrWhiteSpace(email)) return null;
+
             // Mở kết nối tới cơ sở dữ liệu
             using (var db = new StudentFinanceDbContext())
             {
-                // Lấy User đầu tiên khớp email, dùng Equals cho chuỗi
-                return db.Users.FirstOrDefault(user => user.Email.Equals(email));
+                // Lấy User đầu tiên khớp email (chuẩn hoá chữ thường và trim khoảng trắng)
+                string targetEmail = email.Trim().ToLower();
+                return db.Users.FirstOrDefault(user => user.Email.ToLower() == targetEmail);
             }
         }
 

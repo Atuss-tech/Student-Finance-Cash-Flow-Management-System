@@ -44,9 +44,11 @@ namespace Student_Finance___Cash_Flow_Management_System
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            // Tạm thời fix cứng ở ViewModel cho đến khi có Login Session thật sự
-            UserName = "Nguyễn Thành";
-            UserInitials = "NT";
+            if (Services.UserSession.CurrentUser != null)
+            {
+                UserName = Services.UserSession.FullName;
+                UserInitials = Services.UserSession.GetInitials(UserName);
+            }
         }
 
         private string GetInitials(string fullName)

@@ -52,7 +52,7 @@ namespace WPF.Features.Categories
 
             try
             {
-                int userId = 1;
+                int userId = Services.UserSession.CurrentUserId;
                 _categoryService.AddCategory(userId, categoryName, type, note);
                 
                 Common.CustomMessageBoxWindow.ShowInfo(this, "Thành công", "Thêm danh mục mới thành công!");

@@ -87,7 +87,7 @@ namespace WPF.Features.Budget
         private void LoadCategories()
         {
             var categoryService = new Services.CategoryService();
-            var expenses = Enumerable.ToList(Enumerable.Where(categoryService.GetCategoriesByUserId(1), c => c.CategoryType == "Expense"));
+            var expenses = Enumerable.ToList(Enumerable.Where(categoryService.GetCategoriesByUserId(Services.UserSession.CurrentUserId), c => c.CategoryType == "Expense"));
             CategoryComboBox.ItemsSource = expenses;
             if (expenses.Count > 0) CategoryComboBox.SelectedIndex = 0;
         }
@@ -130,7 +130,7 @@ namespace WPF.Features.Budget
 
             var budget = new BusinessObjects.Models.Budget
             {
-                UserId = 1,
+                UserId = Services.UserSession.CurrentUserId,
                 CategoryId = categoryId,
                 Month = month,
                 Year = year,

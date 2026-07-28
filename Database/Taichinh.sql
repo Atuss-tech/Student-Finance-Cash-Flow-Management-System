@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    PROJECT: STUDENT FINANCE MANAGEMENT SYSTEM
    DATABASE: StudentFinanceDb
    SQL SERVER
@@ -32,7 +32,7 @@ CREATE TABLE Users
 
     Email VARCHAR(150) NOT NULL,
 
-    PasswordHash NVARCHAR(20) NOT NULL,
+    PasswordHash NVARCHAR(255) NOT NULL,
 
     CreatedAt DATETIME2 NOT NULL
         CONSTRAINT DF_Users_CreatedAt
