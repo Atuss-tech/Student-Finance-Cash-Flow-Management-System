@@ -1,13 +1,5 @@
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using WPF.Features.Dashboard;
 using WPF.Features.Transactions;
 using WPF.Features.Budget;
@@ -29,7 +21,7 @@ namespace Student_Finance___Cash_Flow_Management_System
 
         private async void GlobalAddButton_Click(object sender, RoutedEventArgs e)
         {
-            Window window = null;
+            Window? window = null;
             switch (_currentContext)
             {
                 case "Wallets":
@@ -52,7 +44,7 @@ namespace Student_Finance___Cash_Flow_Management_System
                 window.Owner = this;
                 if (window.ShowDialog() == true)
                 {
-                    // Auto-refresh view sau khi thêm thành công
+                    // Auto-refresh view sau khi thêm thành công.
                     if (MainContentControl?.Content is WPF.Features.Transactions.TransactionsView txView)
                     {
                         await txView.LoadDataAsync();

@@ -1,13 +1,9 @@
 using BusinessObjects.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
-    //Các chức năng nghiệp vụ mà giao diện được phép sử dụng 
+    // Các chức năng nghiệp vụ mà giao diện được phép sử dụng.
     public interface IWalletService
     {
         List<Wallet> GetAllWalletsByUser(int userId);

@@ -94,7 +94,7 @@ namespace WPF.UIData
     public class BudgetData : INotifyPropertyChanged
     {
         public int BudgetId { get; set; }
-        public int UserId { get; set; } = 1;
+        public int UserId { get; set; } = 0;
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = string.Empty;
         public string Icon { get; set; } = string.Empty;

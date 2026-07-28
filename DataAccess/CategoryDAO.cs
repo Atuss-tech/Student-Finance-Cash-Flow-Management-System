@@ -1,99 +1,38 @@
 using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess
 {
     // Truy cập trực tiếp dữ liệu bảng Categories.
     public class CategoryDAO
     {
-        private static readonly CategoryDAO instance =
-            new CategoryDAO();
+        private static readonly CategoryDAO instance = new CategoryDAO();
 
         private CategoryDAO()
         {
         }
 
-        public static CategoryDAO Instance = instance;
+        public static CategoryDAO Instance => instance;
 
-        //Lấy danh sách danh mục thuộc 1 người dùng
-
+        // Lấy danh sách danh mục đang hoạt động thuộc 1 người dùng.
         public List<Category> GetCategoriesByUserId(int userId)
         {
-            if (!_hasCleanedUp)
-            {
-                CleanupCategoriesExceptAllowed();
-                _hasCleanedUp = true;
-            }
-
-            using StudentFinanceDbContext db =
-                new StudentFinanceDbContext();
+            using StudentFinanceDbContext db = new StudentFinanceDbContext();
 
             return db.Categories
                 .AsNoTracking()
-                .Where(category => category.IsActive)
+                .Where(category => category.UserId == userId && category.IsActive)
                 .OrderBy(category => category.CategoryType)
                 .ThenBy(category => category.CategoryName)
                 .ToList();
         }
 
-        private static bool _hasCleanedUp = false;
-
-        public void CleanupCategoriesExceptAllowed()
-        {
-            try
-            {
-                using StudentFinanceDbContext db = new StudentFinanceDbContext();
-                var allowedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-                {
-                    "Điện nước 2026",
-                    "Đồ dùng cá nhân 2026",
-                    "Khóa học online 2026",
-                    "Bán đồ cũ 2026",
-                    "Thưởng dự án 2026"
-                };
-
-                var extraCategories = db.Categories
-                    .Where(c => !allowedNames.Contains(c.CategoryName))
-                    .ToList();
-
-                if (extraCategories.Any())
-                {
-                    foreach (var cat in extraCategories)
-                    {
-                        bool hasTx = db.FinanceTransactions.Any(t => t.CategoryId == cat.CategoryId);
-                        bool hasBg = db.Budgets.Any(b => b.CategoryId == cat.CategoryId);
-
-                        if (!hasTx && !hasBg)
-                        {
-                            db.Categories.Remove(cat);
-                        }
-                        else
-                        {
-                            cat.IsActive = false;
-                        }
-                    }
-                    db.SaveChanges();
-                }
-            }
-            catch { }
-        }
-
-        // Lấy TOÀN BỘ danh mục trong hệ thống (không lọc theo userId).
+        // Lấy TOÀN BỘ danh mục đang hoạt động trong hệ thống (không lọc theo userId).
         public List<Category> GetAllCategories()
         {
-            if (!_hasCleanedUp)
-            {
-                CleanupCategoriesExceptAllowed();
-                _hasCleanedUp = true;
-            }
-
-            using StudentFinanceDbContext db =
-                new StudentFinanceDbContext();
+            using StudentFinanceDbContext db = new StudentFinanceDbContext();
 
             return db.Categories
                 .AsNoTracking()
@@ -102,14 +41,14 @@ namespace DataAccess
                 .ThenBy(category => category.CategoryName)
                 .ToList();
         }
-        //Lấy các danh mục đang hoạt động theo loại Income hoặc Expense
-        //Hàm này sử dụng khi làm chức năng giao dịch
+
+        // Lấy các danh mục đang hoạt động theo loại Income hoặc Expense.
+        // Hàm này sử dụng khi làm chức năng giao dịch.
         public List<Category> GetActiveCategoriesByType(
             int userId,
             string categoryType)
         {
-            using StudentFinanceDbContext db =
-                new StudentFinanceDbContext();
+            using StudentFinanceDbContext db = new StudentFinanceDbContext();
 
             return db.Categories
                 .AsNoTracking()
@@ -120,13 +59,13 @@ namespace DataAccess
                 .OrderBy(category => category.CategoryName)
                 .ToList();
         }
+
         // Lấy một danh mục và kiểm tra đúng người sở hữu.
         public Category? GetCategoryById(
             int categoryId,
             int userId)
         {
-            using StudentFinanceDbContext db =
-                new StudentFinanceDbContext();
+            using StudentFinanceDbContext db = new StudentFinanceDbContext();
 
             return db.Categories
                 .AsNoTracking()
@@ -134,20 +73,18 @@ namespace DataAccess
                     category.CategoryId == categoryId &&
                     category.UserId == userId);
         }
+
         // Kiểm tra tên danh mục đã tồn tại hay chưa.
         // Một người dùng có thể có cùng tên nếu khác loại.
-        
         public bool IsCategoryNameExists(
             int userId,
             string categoryName,
             string categoryType,
             int? ignoredCategoryId = null)
         {
-            using StudentFinanceDbContext db =
-                new StudentFinanceDbContext();
+            using StudentFinanceDbContext db = new StudentFinanceDbContext();
 
-            string normalizedName =
-                categoryName.Trim().ToLower();
+            string normalizedName = categoryName.Trim().ToLower();
 
             return db.Categories.Any(category =>
                 category.UserId == userId &&
@@ -158,15 +95,16 @@ namespace DataAccess
                     category.CategoryId != ignoredCategoryId.Value
                 ));
         }
+
         // Thêm danh mục mới.
         public void AddCategory(Category category)
         {
-            using StudentFinanceDbContext db =
-                new StudentFinanceDbContext();
+            using StudentFinanceDbContext db = new StudentFinanceDbContext();
 
             db.Categories.Add(category);
             db.SaveChanges();
         }
+
         // Cập nhật danh mục.
         public void UpdateCategory(
             int categoryId,
@@ -175,8 +113,7 @@ namespace DataAccess
             string categoryType,
             string? description)
         {
-            using StudentFinanceDbContext db =
-                new StudentFinanceDbContext();
+            using StudentFinanceDbContext db = new StudentFinanceDbContext();
 
             Category? category = db.Categories
                 .FirstOrDefault(item =>
@@ -194,14 +131,14 @@ namespace DataAccess
 
             db.SaveChanges();
         }
+
         // Kiểm tra danh mục đã được dùng trong giao dịch
         // hoặc ngân sách hay chưa.
         public bool HasRelatedData(
             int categoryId,
             int userId)
         {
-            using StudentFinanceDbContext db =
-                new StudentFinanceDbContext();
+            using StudentFinanceDbContext db = new StudentFinanceDbContext();
 
             bool hasTransactions =
                 db.FinanceTransactions.Any(transaction =>
@@ -215,13 +152,13 @@ namespace DataAccess
 
             return hasTransactions || hasBudgets;
         }
+
         // Xóa hẳn danh mục chưa được sử dụng.
         public void DeleteCategory(
             int categoryId,
             int userId)
         {
-            using StudentFinanceDbContext db =
-                new StudentFinanceDbContext();
+            using StudentFinanceDbContext db = new StudentFinanceDbContext();
 
             Category? category = db.Categories
                 .FirstOrDefault(item =>
@@ -236,13 +173,13 @@ namespace DataAccess
             db.Categories.Remove(category);
             db.SaveChanges();
         }
+
         // Ngừng sử dụng danh mục đã có giao dịch hoặc ngân sách.
         public void DeactivateCategory(
             int categoryId,
             int userId)
         {
-            using StudentFinanceDbContext db =
-                new StudentFinanceDbContext();
+            using StudentFinanceDbContext db = new StudentFinanceDbContext();
 
             Category? category = db.Categories
                 .FirstOrDefault(item =>
@@ -257,13 +194,5 @@ namespace DataAccess
             category.IsActive = false;
             db.SaveChanges();
         }
-
-
-
-
-
-
-
-
     }
 }

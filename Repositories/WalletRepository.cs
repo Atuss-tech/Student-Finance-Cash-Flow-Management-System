@@ -1,22 +1,19 @@
-﻿using BusinessObjects.Models;
+using BusinessObjects.Models;
 using DataAccess;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repositories
 {
     public class WalletRepository : IWalletRepository
     {
-        //Lấy danh sách ví của người dùng theo userId
+        // Lấy danh sách ví của người dùng theo userId.
         public List<Wallet> GetWalletsByUserId(int userId)
         {
             return WalletDAO.Instance
                 .GetWalletsByUserId(userId);
         }
-        //Lấy ví theo walletId và userId
+
+        // Lấy ví theo walletId và userId.
         public Wallet? GetWalletById(
             int walletId,
             int userId)
@@ -24,7 +21,8 @@ namespace Repositories
             return WalletDAO.Instance
                 .GetWalletById(walletId, userId);
         }
-        //Kiểm tra ví có tồn tại theo tên ví, userId và walletId bị bỏ qua
+
+        // Kiểm tra tên ví có tồn tại không (bỏ qua ví đang sửa).
         public bool IsWalletNameExists(
             int userId,
             string walletName,
@@ -79,7 +77,5 @@ namespace Repositories
                 walletId,
                 userId);
         }
-
-
     }
 }

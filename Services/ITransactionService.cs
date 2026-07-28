@@ -1,8 +1,6 @@
 using BusinessObjects.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Services
@@ -11,7 +9,7 @@ namespace Services
     {
         List<FinanceTransaction> GetTransactionsByUserId(
             int userId);
-        
+
         void AddTransaction(
             int userId,
             int walletId,
@@ -20,7 +18,7 @@ namespace Services
             decimal amount,
             DateTime transactionDate,
             string? description);
-        
+
         void UpdateTransaction(
             int userId,
             int transactionId,

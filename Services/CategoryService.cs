@@ -2,9 +2,6 @@ using BusinessObjects.Models;
 using Repositories;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
@@ -17,7 +14,7 @@ namespace Services
             categoryRepository = new CategoryRepository();
         }
 
-        //Lấy danh sách danh mục thuộc của người dùng
+        // Lấy danh sách danh mục thuộc của người dùng.
         public List<Category> GetCategoriesByUserId(int userId)
         {
             ValidateUserId(userId);
@@ -26,7 +23,7 @@ namespace Services
                 .GetCategoriesByUserId(userId);
         }
 
-        // Lấy toàn bộ danh mục trong hệ thống (không lọc userId)
+        // Lấy toàn bộ danh mục trong hệ thống (không lọc userId).
         public List<Category> GetAllCategories()
         {
             return categoryRepository.GetAllCategories();
@@ -48,6 +45,7 @@ namespace Services
                     userId,
                     normalizedType);
         }
+
         // Thêm danh mục mới.
         public void AddCategory(
             int userId,
@@ -145,7 +143,6 @@ namespace Services
             return categoryRepository.HasRelatedData(categoryId, userId);
         }
 
-
         public void UpdateCategory(
             int userId,
             int categoryId,
@@ -226,6 +223,7 @@ namespace Services
                     "Người dùng không hợp lệ.");
             }
         }
+
         // Kiểm tra và chuẩn hóa tên danh mục.
         private static string ValidateAndNormalizeName(
             string categoryName)
@@ -274,6 +272,7 @@ namespace Services
             throw new ArgumentException(
                 "Loại danh mục chỉ được là Income hoặc Expense.");
         }
+
         // Kiểm tra và chuẩn hóa mô tả.
         private static string? ValidateAndNormalizeDescription(
             string? description)

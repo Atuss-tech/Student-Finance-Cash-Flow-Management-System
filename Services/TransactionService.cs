@@ -2,8 +2,6 @@ using BusinessObjects.Models;
 using Repositories;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Services
@@ -13,13 +11,15 @@ namespace Services
     {
         private readonly ITransactionRepository
             transactionRepository;
-        //Khởi tạo TransactionRepository để sử dụng các phương thức truy xuất dữ liệu.
+
+        // Constructor mặc định — khởi tạo TransactionRepository.
         public TransactionService()
         {
             transactionRepository =
                 new TransactionRepository();
         }
 
+        // Constructor dùng cho Dependency Injection hoặc Unit Test.
         public TransactionService(ITransactionRepository repository)
         {
             transactionRepository = repository;
@@ -65,6 +65,7 @@ namespace Services
             // DAO sẽ lưu giao dịch và tự cộng/trừ số dư ví.
             transactionRepository.AddTransaction(transaction);
         }
+
         public void UpdateTransaction(int userId, int transactionId, int walletId, int categoryId, string transactionType, decimal amount, DateTime transactionDate, string? description)
         {
             CheckUserId(userId);
@@ -97,7 +98,6 @@ namespace Services
                 amount,
                 transactionDate,
                 GetDescription(description));
-
         }
 
         public void DeleteTransaction(int userId, int transactionId)
@@ -112,8 +112,6 @@ namespace Services
             transactionRepository.DeleteTransaction(
                 transactionId,
                 userId);
-
-
         }
 
         // Gom toàn bộ kiểm tra dữ liệu giao dịch vào một hàm.
@@ -158,6 +156,7 @@ namespace Services
                     "Người dùng không hợp lệ.");
             }
         }
+
         // Kiểm tra số tiền.
         private static void CheckAmount(decimal amount)
         {
@@ -209,6 +208,7 @@ namespace Services
             throw new ArgumentException(
                 "Loại giao dịch chỉ được là Income hoặc Expense.");
         }
+
         // Lấy ví còn hoạt động.
         private Wallet GetWallet(
             int walletId,
@@ -307,6 +307,7 @@ namespace Services
                     "Không tìm thấy giao dịch.");
             }
         }
+
         // Chuẩn hóa mô tả.
         private static string? GetDescription(
             string? description)
@@ -327,7 +328,6 @@ namespace Services
 
             return finalDescription;
         }
-
 
         public async Task<List<FinanceTransaction>> GetTransactionsByMonthAsync(int userId, int month, int year)
         {

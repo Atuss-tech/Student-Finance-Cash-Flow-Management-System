@@ -1,13 +1,9 @@
-﻿using BusinessObjects.Models;
-using System;
+using BusinessObjects.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repositories
 {
-    //Quy định các chức năng Repository của Wallet
+    // Quy định các chức năng Repository của Wallet.
     public interface IWalletRepository
     {
         List<Wallet> GetWalletsByUserId(int userId);
@@ -41,6 +37,5 @@ namespace Repositories
         void DeactivateWallet(
             int walletId,
             int userId);
-
     }
 }

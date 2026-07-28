@@ -1,18 +1,15 @@
 using BusinessObjects.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repositories
 {
     // Khai báo các chức năng Repository của Category.
     public interface ICategoryRepository
     {
+        // Lấy danh sách danh mục thuộc 1 người dùng.
         List<Category> GetCategoriesByUserId(int userId);
 
-        // Lấy toàn bộ danh mục trong hệ thống (không lọc userId)
+        // Lấy toàn bộ danh mục trong hệ thống (không lọc userId).
         List<Category> GetAllCategories();
 
         List<Category> GetActiveCategoriesByType(

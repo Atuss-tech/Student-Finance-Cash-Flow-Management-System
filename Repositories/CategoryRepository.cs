@@ -1,30 +1,26 @@
 using BusinessObjects.Models;
 using DataAccess;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repositories
 {
-    //Cầu nối giữa CategoryService và CategoryDAO
+    // Cầu nối giữa CategoryService và CategoryDAO.
     public class CategoryRepository : ICategoryRepository
     {
-        //Lấy danh sách danh mục thuộc 1 người dùng
+        // Lấy danh sách danh mục thuộc 1 người dùng.
         public List<Category> GetCategoriesByUserId(int userId)
         {
             return CategoryDAO.Instance
                 .GetCategoriesByUserId(userId);
         }
 
-        // Lấy toàn bộ danh mục (không lọc userId)
+        // Lấy toàn bộ danh mục (không lọc userId).
         public List<Category> GetAllCategories()
         {
             return CategoryDAO.Instance.GetAllCategories();
         }
 
-        //Lấy danh mục theo Id và userId
+        // Lấy danh mục đang hoạt động theo loại (Income/Expense).
         public List<Category> GetActiveCategoriesByType(
            int userId,
            string categoryType)
@@ -34,7 +30,8 @@ namespace Repositories
                     userId,
                     categoryType);
         }
-        //Kiểm tra xem tên danh mục đã tồn tại chưa
+
+        // Lấy một danh mục theo ID và userId.
         public Category? GetCategoryById(
            int categoryId,
            int userId)
@@ -44,7 +41,8 @@ namespace Repositories
                     categoryId,
                     userId);
         }
-        //Kiểm tra xem danh mục có dữ liệu liên quan không
+
+        // Kiểm tra xem tên danh mục đã tồn tại chưa.
         public bool IsCategoryNameExists(
             int userId,
             string categoryName,
@@ -95,8 +93,7 @@ namespace Repositories
                 .DeleteCategory(categoryId, userId);
         }
 
-
-        // Kiểm tra xem danh mục có dữ liệu liên quan không
+        // Kiểm tra xem danh mục có dữ liệu liên quan không.
         public bool HasRelatedData(
             int categoryId,
             int userId)
@@ -104,9 +101,5 @@ namespace Repositories
             return CategoryDAO.Instance
                 .HasRelatedData(categoryId, userId);
         }
-
-        
-
-        
     }
 }

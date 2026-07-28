@@ -1,17 +1,14 @@
 using BusinessObjects.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
     public interface ICategoryService
     {
+        // Lấy danh sách danh mục thuộc 1 người dùng.
         List<Category> GetCategoriesByUserId(int userId);
 
-        // Lấy toàn bộ danh mục trong hệ thống (không lọc userId)
+        // Lấy toàn bộ danh mục trong hệ thống (không lọc userId).
         List<Category> GetAllCategories();
 
         List<Category> GetActiveCategoriesByType(
@@ -31,8 +28,8 @@ namespace Services
             string categoryType,
             string? description);
 
-        // true: danh mục được chuyển thành ngừng sử dụng.
-        // false: danh mục được xóa hoàn toàn.
+        // Trả về true: danh mục được chuyển thành ngừng sử dụng.
+        // Trả về false: danh mục được xóa hoàn toàn.
         bool DeleteCategory(
             int userId,
             int categoryId);

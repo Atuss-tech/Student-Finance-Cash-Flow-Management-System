@@ -1,8 +1,6 @@
 using BusinessObjects.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Repositories
@@ -23,6 +21,7 @@ namespace Repositories
         Category? GetCategoryById(
             int categoryId,
             int userId);
+
         void AddTransaction(
             FinanceTransaction transaction);
 

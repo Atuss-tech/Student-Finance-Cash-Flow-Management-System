@@ -1,10 +1,7 @@
-﻿using BusinessObjects.Models;
+using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess
 {
@@ -109,8 +106,6 @@ namespace DataAccess
             db.SaveChanges();
         }
 
-        
-
         // Xóa hẳn ví chưa có giao dịch.
         public void DeleteWallet(
             int walletId,
@@ -154,6 +149,7 @@ namespace DataAccess
             wallet.IsActive = false;
             db.SaveChanges();
         }
+
         // Kiểm tra ví đã được dùng trong giao dịch chưa.
         public bool HasTransactions(
             int walletId,
@@ -166,6 +162,5 @@ namespace DataAccess
                 transaction.WalletId == walletId &&
                 transaction.UserId == userId);
         }
-
     }
 }

@@ -2,13 +2,10 @@ using BusinessObjects.Models;
 using Repositories;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
-    //Xử lý các quy tắc nghệp vụ của ví 
+    // Xử lý các quy tắc nghiệp vụ của ví.
     public class WalletService : IWalletService
     {
         private readonly IWalletRepository walletRepository;
@@ -25,6 +22,7 @@ namespace Services
         {
             walletRepository = new WalletRepository();
         }
+
         // Thêm ví mới.
         public void CreateNewWallet(
             int userId,
@@ -128,7 +126,6 @@ namespace Services
                 .GetWalletsByUserId(userId);
         }
 
-
         // Sửa thông tin ví.
         public void UpdateWalletInfo(
             int userId,
@@ -176,6 +173,7 @@ namespace Services
                 walletType,
                 GetNote(note));
         }
+
         // Kiểm tra UserId.
         private static void CheckUserId(int userId)
         {
@@ -210,6 +208,7 @@ namespace Services
                     "Loại ví không hợp lệ.");
             }
         }
+
         // Chuẩn hóa ghi chú trước khi lưu.
         private static string? GetNote(string? note)
         {
@@ -220,7 +219,5 @@ namespace Services
 
             return note.Trim();
         }
-
-
     }
 }
