@@ -18,66 +18,6 @@ using Repositories;
 namespace WPF.Features.Budget
 {
     /// <summary>
-    /// Model đại diện cho các thẻ thống kê tổng quan ngân sách (Tổng, Đã chi, Còn lại, Tỷ lệ).
-    /// </summary>
-    public class BudgetStatCardModel : INotifyPropertyChanged
-    {
-        public string Label { get; set; } = string.Empty;
-        public string Icon { get; set; } = string.Empty;
-        public string AccentColor { get; set; } = "#10d9a0";
-        public Brush AccentBrush => new SolidColorBrush((Color)ColorConverter.ConvertFromString(AccentColor));
-
-        private decimal _targetValue;
-        public decimal TargetValue { get => _targetValue; set { _targetValue = value; } }
-
-        private decimal _value;
-        public decimal Value
-        {
-            get => _value;
-            set { _value = value; OnPropertyChanged(); OnPropertyChanged(nameof(FormattedValue)); }
-        }
-
-        public bool IsPercentage { get; set; }
-
-        public string FormattedValue
-        {
-            get
-            {
-                if (IsPercentage) return Value.ToString("0.0") + "%";
-                return Value >= 1_000_000
-                    ? (Value / 1_000_000).ToString("0.#") + "Mđ"
-                    : (Value / 1_000).ToString("0") + "Kđ";
-            }
-        }
-
-        /// <summary>
-        /// Tạo hiệu ứng animation chạy số tiền từ 0 lên giá trị thực tế.
-        /// </summary>
-        public void Animate()
-        {
-            int steps = 35;
-            int tick = 0;
-            decimal target = TargetValue;
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(30) };
-            timer.Tick += (s, e) =>
-            {
-                tick++;
-                double t = (double)tick / steps;
-                double eased = 1 - Math.Pow(1 - t, 3);
-                Value = (decimal)(eased * (double)target);
-                if (tick >= steps) { Value = target; timer.Stop(); }
-            };
-            timer.Start();
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    /// <summary>
     /// UserControl hiển thị màn hình Quản lý Ngân Sách.
     /// Cho phép xem tổng quan, chi tiết từng danh mục, và theo dõi tiến độ chi tiêu.
     /// </summary>
@@ -202,10 +142,10 @@ namespace WPF.Features.Budget
 
                 OnPropertyChanged(nameof(AllBudgets));
 
-                foreach (var b in AllBudgets) b.AnimateProgress();
-
                 CalculateStats();
                 SetupCharts();
+
+                foreach (var b in AllBudgets) b.AnimateProgress();
             }
             catch (Exception ex)
             {
@@ -240,6 +180,13 @@ namespace WPF.Features.Budget
 
         private void SetupCharts()
         {
+            SetupBarChart();
+            SetupDonutChart();
+            SetupAreaChart();
+        }
+
+        private void SetupBarChart()
+        {
             var top5 = AllBudgets.OrderByDescending(b => b.TotalAmount).Take(5).ToList();
             
             BarChartXAxes = new Axis[]
@@ -273,7 +220,14 @@ namespace WPF.Features.Budget
                     Rx = 4, Ry = 4
                 }
             };
+            
+            OnPropertyChanged(nameof(BarChartSeries));
+            OnPropertyChanged(nameof(BarChartXAxes));
+            OnPropertyChanged(nameof(BarChartYAxes));
+        }
 
+        private void SetupDonutChart()
+        {
             double spent = (double)CardSpent.TargetValue;
             double total = (double)CardTotalBudget.TargetValue;
             double remain = Math.Max(0, total - spent);
@@ -338,7 +292,11 @@ namespace WPF.Features.Budget
                     };
                 }
             }
+            OnPropertyChanged(nameof(DonutSeries));
+        }
 
+        private void SetupAreaChart()
+        {
             AreaChartXAxes = new Axis[] { new Axis { Labels = _trendLabels, LabelsPaint = new SolidColorPaint(SKColor.Parse("#4a5568")) } };
             AreaChartYAxes = new Axis[] { new Axis { LabelsPaint = new SolidColorPaint(SKColor.Parse("#4a5568")), Labeler = v => v >= 1_000_000 ? (v / 1_000_000).ToString("0.#") + "M" : (v / 1_000).ToString("0") + "K" } };
             
@@ -363,11 +321,7 @@ namespace WPF.Features.Budget
                     GeometryFill = new SolidColorPaint(SKColor.Parse("#10d9a0"))
                 }
             };
-
-            OnPropertyChanged(nameof(BarChartSeries));
-            OnPropertyChanged(nameof(BarChartXAxes));
-            OnPropertyChanged(nameof(BarChartYAxes));
-            OnPropertyChanged(nameof(DonutSeries));
+            
             OnPropertyChanged(nameof(AreaChartSeries));
             OnPropertyChanged(nameof(AreaChartXAxes));
             OnPropertyChanged(nameof(AreaChartYAxes));

@@ -33,6 +33,12 @@ namespace Services
                 throw new Exception("Ngân sách phải lớn hơn 0.");
             }
 
+            var category = _transactionRepository.GetCategoryById(budget.CategoryId, budget.UserId);
+            if (category == null || category.CategoryType != "Expense")
+            {
+                throw new Exception("Ngân sách chỉ được áp dụng cho danh mục Chi tiêu.");
+            }
+
             // Validate: Không trùng ngân sách trong tháng
             var existingBudget = await _budgetRepository.GetBudgetAsync(budget.UserId, budget.CategoryId, budget.Month, budget.Year);
             if (existingBudget != null)
@@ -51,6 +57,12 @@ namespace Services
             if (budget.AmountLimit <= 0)
             {
                 throw new Exception("Ngân sách phải lớn hơn 0.");
+            }
+
+            var category = _transactionRepository.GetCategoryById(budget.CategoryId, budget.UserId);
+            if (category == null || category.CategoryType != "Expense")
+            {
+                throw new Exception("Ngân sách chỉ được áp dụng cho danh mục Chi tiêu.");
             }
 
             await _budgetRepository.UpdateBudgetAsync(budget);

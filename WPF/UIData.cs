@@ -154,9 +154,9 @@ namespace WPF.UIData
         { 
             get 
             {
-                if (ProgressValue >= 100) return "Vượt ngân sách";
-                if (ProgressValue >= 80) return "Sắp hết";
-                return "An toàn";
+                if (ProgressValue >= 100) return "Đã vượt ngân sách";
+                if (ProgressValue >= 80) return "Sắp vượt ngân sách";
+                return "Bình thường";
             }
         }
         
