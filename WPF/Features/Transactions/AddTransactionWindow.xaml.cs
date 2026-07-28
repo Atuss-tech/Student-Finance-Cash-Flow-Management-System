@@ -13,6 +13,7 @@ namespace WPF.Features.Transactions
         private readonly IWalletService _walletService;
         private readonly ICategoryService _categoryService;
         private readonly TransactionData? _transactionToEdit;
+        private readonly System.Windows.Threading.DispatcherTimer _clockTimer;
 
         public AddTransactionWindow()
         {
@@ -22,6 +23,14 @@ namespace WPF.Features.Transactions
             _categoryService = new CategoryService();
             
             TransactionDatePicker.SelectedDate = DateTime.Now;
+
+            _clockTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            _clockTimer.Tick += (s, e) => TimeTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
+            _clockTimer.Start();
+            TimeTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
 
             LoadDropdownData();
         }
@@ -33,6 +42,14 @@ namespace WPF.Features.Transactions
             _walletService = new WalletService();
             _categoryService = new CategoryService();
             _transactionToEdit = transactionToEdit;
+
+            _clockTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            _clockTimer.Tick += (s, e) => TimeTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
+            _clockTimer.Start();
+            TimeTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
 
             LoadDropdownData();
             PopulateEditData();
@@ -174,7 +191,8 @@ namespace WPF.Features.Transactions
             int walletId = (int)WalletComboBox.SelectedValue;
             int categoryId = (int)CategoryComboBox.SelectedValue;
             string type = ExpenseRadio.IsChecked == true ? "Expense" : "Income";
-            DateTime date = TransactionDatePicker.SelectedDate.Value;
+            DateTime selectedDate = TransactionDatePicker.SelectedDate.Value.Date;
+            DateTime date = selectedDate + DateTime.Now.TimeOfDay;
             string note = NoteTextBox.Text;
 
             if (!string.IsNullOrEmpty(note) && note.Length > 250)

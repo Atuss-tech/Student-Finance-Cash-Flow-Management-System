@@ -165,9 +165,14 @@ namespace WPF.Features.Wallets
                     {
                         amountText = "0";
                     }
-                    if (!decimal.TryParse(amountText, out decimal balance))
+                    if (!decimal.TryParse(amountText, out decimal balance) || balance < 0)
                     {
                         MessageBox.Show("Số dư ban đầu không hợp lệ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+                    if (balance > 1_000_000_000m)
+                    {
+                        MessageBox.Show("Số dư ban đầu của Ví tối đa là 1 tỷ VNĐ (1,000,000,000 đ).", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
                     _walletService.CreateNewWallet(userId, walletName, type, balance, note);

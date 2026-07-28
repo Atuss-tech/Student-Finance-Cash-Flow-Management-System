@@ -78,12 +78,25 @@
                 </StackPanel>
             </Grid>
 
-            <!-- Ngày -->
+            <!-- Ngày & Giờ giao dịch (Thời gian thực) -->
             <StackPanel Grid.Row="4" Margin="0,0,0,16">
-                <TextBlock Text="Ngày giao dịch" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
-                <Border CornerRadius="8" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Background="#ffffff" Height="40">
-                    <DatePicker x:Name="TransactionDatePicker" FontSize="14" Background="Transparent" BorderThickness="0" Padding="8,0" VerticalContentAlignment="Center"/>
-                </Border>
+                <TextBlock Text="Ngày &amp; Giờ giao dịch (Thời gian thực)" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="8"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" CornerRadius="8" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Background="#ffffff" Height="40">
+                        <DatePicker x:Name="TransactionDatePicker" FontSize="14" Background="Transparent" BorderThickness="0" Padding="8,0" VerticalContentAlignment="Center"/>
+                    </Border>
+                    <Border Grid.Column="2" CornerRadius="8" BorderThickness="1" BorderBrush="#e2e8f0" Background="#f8fafc" Height="40" Padding="12,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="🕒 " FontSize="13"/>
+                            <TextBlock x:Name="TimeTextBlock" FontSize="14" Foreground="{StaticResource TextPrimary}" FontWeight="Bold"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </StackPanel>
 
             <!-- Ghi chú -->

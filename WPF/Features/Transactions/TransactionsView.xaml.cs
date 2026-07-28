@@ -319,7 +319,7 @@ namespace WPF.Features.Transactions
                     Title = string.IsNullOrEmpty(t.Description) ? (t.Category?.CategoryName ?? "Giao dịch") : t.Description,
                     Category = t.Category?.CategoryName ?? "Khác",
                     Amount = t.Amount,
-                    Date = t.TransactionDate.ToDateTime(TimeOnly.MinValue),
+                    Date = t.CreatedAt != default ? t.CreatedAt : t.TransactionDate.ToDateTime(TimeOnly.MinValue),
                     IsExpense = t.TransactionType == "Expense",
                     Status = "Hoàn thành",
                     Icon = t.TransactionType == "Expense" ? "🔥" : "💵",
