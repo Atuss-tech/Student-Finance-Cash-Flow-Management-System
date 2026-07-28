@@ -66,12 +66,12 @@ public partial class StudentFinanceDbContext : DbContext
 
             entity.HasIndex(e => new { e.UserId, e.CategoryName, e.CategoryType }, "UQ_Categories_User_Name_Type").IsUnique();
 
-            entity.Property(e => e.CategoryName).HasMaxLength(100);
+            entity.Property(e => e.CategoryName).HasMaxLength(250);
             entity.Property(e => e.CategoryType)
                 .HasMaxLength(20)
                 .IsUnicode(false);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetime())");
-            entity.Property(e => e.Description).HasMaxLength(200);
+            entity.Property(e => e.Description).HasMaxLength(250);
             entity.Property(e => e.IsActive).HasDefaultValue(true);
 
             entity.HasOne(d => d.User).WithMany(p => p.Categories)
@@ -86,7 +86,7 @@ public partial class StudentFinanceDbContext : DbContext
 
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetime())");
-            entity.Property(e => e.Description).HasMaxLength(200);
+            entity.Property(e => e.Description).HasMaxLength(250);
             entity.Property(e => e.TransactionType)
                 .HasMaxLength(20)
                 .IsUnicode(false);
