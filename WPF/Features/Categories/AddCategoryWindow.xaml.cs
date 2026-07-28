@@ -35,9 +35,20 @@ namespace WPF.Features.Categories
                 return;
             }
 
+            if (categoryName.Length > 250)
+            {
+                Common.CustomMessageBoxWindow.ShowInfo(this, "Cảnh báo", "Tên danh mục không được vượt quá 250 ký tự.");
+                return;
+            }
+
             string type = ExpenseRadio.IsChecked == true ? "Expense" : "Income";
 
             string note = NoteTextBox.Text;
+            if (!string.IsNullOrEmpty(note) && note.Length > 250)
+            {
+                Common.CustomMessageBoxWindow.ShowInfo(this, "Cảnh báo", "Mô tả / Ghi chú không được vượt quá 250 ký tự.");
+                return;
+            }
 
             try
             {

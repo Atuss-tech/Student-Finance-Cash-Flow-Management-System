@@ -117,8 +117,7 @@ namespace WPF.Features.Dashboard
                         Title = t.Description ?? "Giao dịch",
                         Category = t.Category?.CategoryName ?? "Khác",
                         Amount = t.Amount,
-                        // Chuyển đổi DateOnly sang DateTime để tương thích với Model WPF
-                        Date = t.TransactionDate.ToDateTime(TimeOnly.MinValue),
+                        Date = t.CreatedAt != default ? t.CreatedAt : t.TransactionDate.ToDateTime(TimeOnly.MinValue),
                         IsExpense = t.TransactionType == "Expense",
                         Icon = t.TransactionType == "Expense" ? "🔥" : "💵",
                         IconBackground = t.TransactionType == "Expense" ? "#45f43f5e" : "#4510d9a0"

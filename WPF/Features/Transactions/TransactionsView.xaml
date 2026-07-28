@@ -30,6 +30,29 @@
             <Setter Property="CornerRadius" Value="12"/>
         </Style>
 
+        <Style x:Key="ButtonSecondaryDark" TargetType="Button">
+            <Setter Property="Background" Value="#e6f0ff"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="12">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </UserControl.Resources>
 
@@ -215,15 +238,23 @@
                 </ItemsControl>
 
                 <!-- ── Pagination ── -->
-                <Border Style="{StaticResource StitchCard}" Padding="20,16" Margin="0,0,0,24">
+                <Border Style="{StaticResource StitchCard}" Padding="20,14" Margin="0,0,0,24">
                     <Grid>
-                        <Border HorizontalAlignment="Left" Background="Transparent" Padding="16,8" Cursor="Hand">
-                            <TextBlock Text="Trước" Foreground="{StaticResource TextPrimary}" FontWeight="SemiBold" FontSize="14"/>
-                        </Border>
-                        <TextBlock Text="{Binding PageLabel}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextSecondary}"/>
-                        <Border HorizontalAlignment="Right" Background="Transparent" Padding="16,8" Cursor="Hand">
-                            <TextBlock Text="Sau" Foreground="{StaticResource TextPrimary}" FontWeight="SemiBold" FontSize="14"/>
-                        </Border>
+                        <Button HorizontalAlignment="Left" Click="PrevPage_Click" IsEnabled="{Binding CanPrev}" Style="{StaticResource ButtonSecondaryDark}" Padding="20,10" Height="40">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="◀  Trang trước" FontSize="14" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Button>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+                            <Border Background="#f3f4f6" CornerRadius="12" Padding="16,8">
+                                <TextBlock Text="{Binding PageLabel}" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"/>
+                            </Border>
+                        </StackPanel>
+                        <Button HorizontalAlignment="Right" Click="NextPage_Click" IsEnabled="{Binding CanNext}" Style="{StaticResource ButtonSecondaryDark}" Padding="20,10" Height="40">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Trang sau  ▶" FontSize="14" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Button>
                     </Grid>
                 </Border>
 
@@ -269,22 +300,9 @@
                                 <TextBlock Text="{Binding WalletName}" Foreground="{StaticResource TextPrimary}" FontSize="15" HorizontalAlignment="Right" FontWeight="SemiBold"/>
                             </Grid>
                             <Border Height="1" Background="{StaticResource BorderColor}" Margin="0,0,0,16"/>
-                            <Grid Margin="0,0,0,16">
+                            <Grid>
                                 <TextBlock Text="Danh mục" Foreground="{StaticResource TextSecondary}" FontSize="15"/>
                                 <TextBlock Text="{Binding Category}" Foreground="{StaticResource TextPrimary}" FontSize="15" HorizontalAlignment="Right" FontWeight="SemiBold"/>
-                            </Grid>
-                            <Border Height="1" Background="{StaticResource BorderColor}" Margin="0,0,0,16"/>
-                            <Grid>
-                                <TextBlock Text="Loại" Foreground="{StaticResource TextSecondary}" FontSize="15"/>
-                                <TextBlock Foreground="{Binding AmountColorBrush, FallbackValue=#ffffff}" FontSize="15" FontWeight="Bold" HorizontalAlignment="Right">
-                                    <TextBlock.Text>
-                                        <Binding Path="IsExpense">
-                                            <Binding.Converter>
-                                                <BooleanToVisibilityConverter/>
-                                            </Binding.Converter>
-                                        </Binding>
-                                    </TextBlock.Text>
-                                </TextBlock>
                             </Grid>
                         </StackPanel>
                     </Border>

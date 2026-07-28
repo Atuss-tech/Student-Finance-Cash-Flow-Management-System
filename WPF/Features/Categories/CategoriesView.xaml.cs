@@ -324,13 +324,13 @@ namespace WPF.Features.Categories
 
             if (hasRelated)
             {
-                // Danh mục đã có giao dịch/ngân sách → không cho xóa hẳn
+                // Danh mục đã có giao dịch/ngân sách → ẩn khỏi danh sách, bảo toàn lịch sử giao dịch
                 bool isConfirmed = Common.CustomMessageBoxWindow.ShowConfirm(
                     Window.GetWindow(this),
-                    "Không thể xóa danh mục này",
-                    $"Danh mục \"{item.Name}\" đã có giao dịch hoặc ngân sách liên kết trong hệ thống.",
-                    "Danh mục sẽ được ẨN: Không xuất hiện khi chọn danh mục mới nhưng vẫn bảo toàn báo cáo và lịch sử cũ.",
-                    "Ẩn danh mục ngay",
+                    "Xác nhận xóa danh mục",
+                    $"Bạn có chắc chắn muốn xóa danh mục \"{item.Name}\" khỏi danh sách danh mục không?",
+                    "Danh mục sẽ được xóa khỏi danh sách hiển thị, nhưng toàn bộ lịch sử giao dịch cũ vẫn được bảo toàn trong mục Giao dịch.",
+                    "Xóa danh mục",
                     "Hủy bỏ",
                     Common.CustomDialogType.Warning,
                     "#E11D48");
@@ -343,12 +343,12 @@ namespace WPF.Features.Categories
                         Common.CustomMessageBoxWindow.ShowInfo(
                             Window.GetWindow(this),
                             "Thành công",
-                            $"Danh mục \"{item.Name}\" đã được chuyển sang trạng thái ĐÃ ẨN.");
+                            $"Danh mục \"{item.Name}\" đã được xóa thành công khỏi danh sách danh mục.");
                         await LoadDataAsync();
                     }
                     catch (Exception ex)
                     {
-                        Common.CustomMessageBoxWindow.ShowInfo(Window.GetWindow(this), "Lỗi khi ẩn danh mục", ex.Message);
+                        Common.CustomMessageBoxWindow.ShowInfo(Window.GetWindow(this), "Lỗi khi xóa danh mục", ex.Message);
                     }
                 }
             }

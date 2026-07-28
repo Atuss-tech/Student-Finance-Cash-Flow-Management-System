@@ -341,7 +341,7 @@ namespace WPF.Features.Reports
                 Title = t.Description ?? "Không có mô tả",
                 Category = t.Category?.CategoryName ?? "Khác",
                 Amount = t.Amount,
-                Date = t.TransactionDate.ToDateTime(TimeOnly.MinValue),
+                Date = t.CreatedAt != default ? t.CreatedAt : t.TransactionDate.ToDateTime(TimeOnly.MinValue),
                 IsExpense = t.TransactionType == "Expense",
                 Icon = "💵",
                 IconBackground = t.TransactionType == "Expense" ? "#45f43f5e" : "#4510d9a0"
