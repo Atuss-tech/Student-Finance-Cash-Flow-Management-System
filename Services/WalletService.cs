@@ -195,10 +195,10 @@ namespace Services
                     "Tên ví không được để trống.");
             }
 
-            if (walletName.Trim().Length > 100)
+            if (walletName.Trim().Length > 250)
             {
                 throw new ArgumentException(
-                    "Tên ví không được vượt quá 100 ký tự.");
+                    "Tên ví không được vượt quá 250 ký tự.");
             }
 
             if (string.IsNullOrWhiteSpace(walletType) ||
