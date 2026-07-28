@@ -320,10 +320,10 @@ namespace Services
             string finalDescription =
                 description.Trim();
 
-            if (finalDescription.Length > 256)
+            if (finalDescription.Length > 250)
             {
                 throw new ArgumentException(
-                    "Mô tả không được vượt quá 256 ký tự.");
+                    "Mô tả / Ghi chú không được vượt quá 250 ký tự.");
             }
 
             return finalDescription;

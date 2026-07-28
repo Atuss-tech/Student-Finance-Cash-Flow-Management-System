@@ -155,6 +155,22 @@ namespace WPF.Features.Transactions
             this.Close();
         }
 
+        private void NoteTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (NoteLengthTextBlock == null || NoteTextBox == null) return;
+            int len = NoteTextBox.Text.Length;
+            NoteLengthTextBlock.Text = $"{len}/250 ký tự";
+            if (len >= 250)
+            {
+                NoteLengthTextBlock.Foreground = System.Windows.Media.Brushes.Red;
+                NoteLengthTextBlock.Text = "250/250 (Đã đạt tối đa)";
+            }
+            else
+            {
+                NoteLengthTextBlock.Foreground = (System.Windows.Media.Brush)FindResource("TextSecondary");
+            }
+        }
+
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             string amountText = AmountTextBox.Text.Replace(".", "").Replace(",", "");
@@ -220,7 +236,12 @@ namespace WPF.Features.Transactions
             }
             catch (Exception ex)
             {
-                Common.CustomMessageBoxWindow.ShowInfo(this, "Lỗi lưu giao dịch", ex.Message);
+                string msg = ex.Message;
+                if (ex.InnerException != null || msg.Contains("entity changes", StringComparison.OrdinalIgnoreCase))
+                {
+                    msg = "Lưu không thành công. Mô tả / Ghi chú vượt quá 250 ký tự hoặc dữ liệu không hợp lệ. Vui lòng kiểm tra lại.";
+                }
+                Common.CustomMessageBoxWindow.ShowInfo(this, "Lỗi lưu giao dịch", msg);
             }
         }
     }
