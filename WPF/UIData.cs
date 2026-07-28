@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Threading;
 
 namespace WPF.UIData
@@ -59,6 +60,16 @@ namespace WPF.UIData
         public int TransactionId { get; set; }
         public int WalletId { get; set; }
         public string WalletName { get; set; } = string.Empty;
+
+        private bool _isWalletActive = true;
+        public bool IsWalletActive
+        {
+            get => _isWalletActive;
+            set { _isWalletActive = value; OnPropertyChanged(); OnPropertyChanged(nameof(ActionButtonsVisibility)); }
+        }
+
+        public Visibility ActionButtonsVisibility => IsWalletActive ? Visibility.Visible : Visibility.Collapsed;
+
         public int CategoryId { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;

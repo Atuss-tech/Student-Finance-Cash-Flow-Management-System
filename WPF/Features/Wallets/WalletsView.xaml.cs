@@ -95,11 +95,10 @@ namespace WPF.Features.Wallets
 
             foreach (var w in backendWallets)
             {
-                if (w.IsActive)
-                {
-                    activeTotal += w.Balance;
-                    activeWallets.Add(w);
-                }
+                if (!w.IsActive) continue;
+
+                activeTotal += w.Balance;
+                activeWallets.Add(w);
 
                 var wd = new WalletData
                 {
@@ -109,7 +108,7 @@ namespace WPF.Features.Wallets
                     WalletType = w.WalletType,
                     Note = w.Note ?? string.Empty,
                     Balance = w.Balance,
-                    Status = w.IsActive ? "Hoạt động" : "Đã khóa",
+                    Status = "Hoạt động",
                     Subtext = string.IsNullOrEmpty(w.Note) ? "Ví cá nhân" : w.Note
                 };
 

@@ -265,6 +265,11 @@
                             </Grid>
                             <Border Height="1" Background="{StaticResource BorderColor}" Margin="0,0,0,16"/>
                             <Grid Margin="0,0,0,16">
+                                <TextBlock Text="Ví thanh toán" Foreground="{StaticResource TextSecondary}" FontSize="15"/>
+                                <TextBlock Text="{Binding WalletName}" Foreground="{StaticResource TextPrimary}" FontSize="15" HorizontalAlignment="Right" FontWeight="SemiBold"/>
+                            </Grid>
+                            <Border Height="1" Background="{StaticResource BorderColor}" Margin="0,0,0,16"/>
+                            <Grid Margin="0,0,0,16">
                                 <TextBlock Text="Danh mục" Foreground="{StaticResource TextSecondary}" FontSize="15"/>
                                 <TextBlock Text="{Binding Category}" Foreground="{StaticResource TextPrimary}" FontSize="15" HorizontalAlignment="Right" FontWeight="SemiBold"/>
                             </Grid>
@@ -284,8 +289,8 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Action buttons -->
-                    <Grid>
+                    <!-- Action buttons (Disabled for transaction history to preserve audit logs) -->
+                    <Grid Visibility="Collapsed">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>

@@ -68,13 +68,13 @@ namespace WPF.Features.Wallets
 
             if (hasTransactions)
             {
-                // Ví đã có giao dịch → không cho xóa hẳn, chỉ cho khóa
+                // Ví đã có giao dịch → ẩn ví khỏi danh sách ví, giữ nguyên lịch sử giao dịch
                 bool isConfirmed = Common.CustomMessageBoxWindow.ShowConfirm(
                     this,
-                    "Không thể xóa ví này",
-                    $"Ví \"{_editingWallet.WalletName}\" đã phát sinh giao dịch trong hệ thống nên không thể xóa hoàn toàn.",
-                    "Ví sẽ được KHÓA: Không xuất hiện khi tạo giao dịch mới nhưng lịch sử thu chi cũ vẫn được bảo toàn.",
-                    "Khóa ví ngay",
+                    "Xác nhận xóa ví",
+                    $"Bạn có chắc chắn muốn xóa ví \"{_editingWallet.WalletName}\" khỏi danh sách ví không?",
+                    "Ví sẽ được xóa khỏi danh sách hiển thị Ví, nhưng toàn bộ lịch sử giao dịch cũ vẫn được bảo toàn trong mục Giao dịch.",
+                    "Xóa ví",
                     "Hủy bỏ",
                     Common.CustomDialogType.Warning,
                     "#E11D48");
@@ -87,13 +87,13 @@ namespace WPF.Features.Wallets
                         Common.CustomMessageBoxWindow.ShowInfo(
                             this,
                             "Thành công",
-                            $"Ví \"{_editingWallet.WalletName}\" đã được chuyển sang trạng thái ĐÃ KHÓA.");
+                            $"Ví \"{_editingWallet.WalletName}\" đã được xóa thành công khỏi danh sách ví.");
                         this.DialogResult = true;
                         this.Close();
                     }
                     catch (System.Exception ex)
                     {
-                        Common.CustomMessageBoxWindow.ShowInfo(this, "Lỗi khi khóa ví", ex.Message);
+                        Common.CustomMessageBoxWindow.ShowInfo(this, "Lỗi khi xóa ví", ex.Message);
                     }
                 }
             }
@@ -135,8 +135,21 @@ namespace WPF.Features.Wallets
                 return;
             }
 
+            if (walletName.Length > 250)
+            {
+                MessageBox.Show("Tên ví không được vượt quá 250 ký tự.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             string type = (WalletTypeComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "Cash";
             string note = NoteTextBox.Text;
+
+            if (!string.IsNullOrEmpty(note) && note.Length > 250)
+            {
+                MessageBox.Show("Ghi chú thêm không được vượt quá 250 ký tự.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             int userId = _editingWallet != null && _editingWallet.UserId > 0 ? _editingWallet.UserId : 1;
 
             try

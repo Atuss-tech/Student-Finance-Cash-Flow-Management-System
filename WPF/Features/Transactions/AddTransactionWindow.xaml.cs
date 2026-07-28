@@ -147,6 +147,12 @@ namespace WPF.Features.Transactions
                 return;
             }
 
+            if (amount > 1_000_000_000m)
+            {
+                Common.CustomMessageBoxWindow.ShowInfo(this, "Cảnh báo", "Số tiền giao dịch tối đa là 1 tỷ VNĐ (1,000,000,000 đ).");
+                return;
+            }
+
             if (WalletComboBox.SelectedValue == null)
             {
                 Common.CustomMessageBoxWindow.ShowInfo(this, "Cảnh báo", "Vui lòng chọn ví.");
@@ -170,6 +176,12 @@ namespace WPF.Features.Transactions
             string type = ExpenseRadio.IsChecked == true ? "Expense" : "Income";
             DateTime date = TransactionDatePicker.SelectedDate.Value;
             string note = NoteTextBox.Text;
+
+            if (!string.IsNullOrEmpty(note) && note.Length > 250)
+            {
+                Common.CustomMessageBoxWindow.ShowInfo(this, "Cảnh báo", "Mô tả / Ghi chú không được vượt quá 250 ký tự.");
+                return;
+            }
 
             try
             {

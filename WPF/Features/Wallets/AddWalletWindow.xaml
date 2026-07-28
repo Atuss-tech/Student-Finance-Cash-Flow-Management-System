@@ -40,9 +40,9 @@
 
             <!-- Tên ví -->
             <StackPanel Grid.Row="1" Margin="0,0,0,16">
-                <TextBlock Text="Tên ví" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
+                <TextBlock Text="Tên ví (tối đa 250 ký tự)" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
                 <Border CornerRadius="8" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Background="#ffffff" Height="40">
-                    <TextBox x:Name="WalletNameTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="12,0"/>
+                    <TextBox x:Name="WalletNameTextBox" FontSize="14" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Padding="12,0" MaxLength="250"/>
                 </Border>
             </StackPanel>
 
@@ -68,9 +68,9 @@
 
             <!-- Note -->
             <StackPanel Grid.Row="4" Margin="0,0,0,24">
-                <TextBlock Text="Ghi chú thêm" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
+                <TextBlock Text="Ghi chú thêm (tối đa 250 ký tự)" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,8"/>
                 <Border CornerRadius="8" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Background="#ffffff" Height="80">
-                    <TextBox x:Name="NoteTextBox" FontSize="14" Background="Transparent" BorderThickness="0" AcceptsReturn="True" TextWrapping="Wrap" Padding="12,8"/>
+                    <TextBox x:Name="NoteTextBox" FontSize="14" Background="Transparent" BorderThickness="0" AcceptsReturn="True" TextWrapping="Wrap" Padding="12,8" MaxLength="250"/>
                 </Border>
             </StackPanel>
 

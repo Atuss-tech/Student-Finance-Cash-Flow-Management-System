@@ -304,6 +304,7 @@ namespace WPF.Features.Transactions
                     TransactionId = t.TransactionId,
                     WalletId = t.WalletId,
                     WalletName = t.Wallet?.WalletName ?? "Ví",
+                    IsWalletActive = t.Wallet?.IsActive ?? false,
                     CategoryId = t.CategoryId,
                     Title = string.IsNullOrEmpty(t.Description) ? (t.Category?.CategoryName ?? "Giao dịch") : t.Description,
                     Category = t.Category?.CategoryName ?? "Khác",

@@ -259,6 +259,7 @@ namespace DataAccess
             using (var db = new StudentFinanceDbContext())
             {
                 return await db.FinanceTransactions
+                    .Include(t => t.Wallet)
                     .Include(t => t.Category)
                     .Where(t => t.UserId == userId && t.TransactionDate.Month == month && t.TransactionDate.Year == year)
                     .ToListAsync();
@@ -270,6 +271,7 @@ namespace DataAccess
             using (var db = new StudentFinanceDbContext())
             {
                 return await db.FinanceTransactions
+                    .Include(t => t.Wallet)
                     .Include(t => t.Category)
                     .Where(t => t.UserId == userId && t.TransactionDate.Year == year)
                     .ToListAsync();
