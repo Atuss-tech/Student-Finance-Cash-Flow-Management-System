@@ -11,3 +11,5 @@ obj/
 .codegraph/
 AGENTS.md
 mcp.json
+specs/
+graphify-out/

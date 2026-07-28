@@ -46,7 +46,6 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- KPI 1: Balance -->
@@ -56,10 +55,10 @@
                         <StackPanel Margin="20">
                             <Grid Margin="0,0,0,16">
                                 <TextBlock Text="SỐ DƯ HIỆN TẠI" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                <TextBlock Text="↑ 8.2%" FontSize="12" FontWeight="Bold" Foreground="{StaticResource PrimaryLightGreen}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+
                             </Grid>
-                            <TextBlock Text="127.5Mđ" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,4"/>
-                            <TextBlock Text="Tất cả tài khoản" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
+                            <TextBlock Text="{Binding TotalBalance.FormattedValue}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,4"/>
+                            <TextBlock Text="{Binding TotalBalance.Subtext}" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -71,40 +70,24 @@
                         <StackPanel Margin="20">
                             <Grid Margin="0,0,0,16">
                                 <TextBlock Text="THU NHẬP THÁNG" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                <TextBlock Text="↑ 12.4%" FontSize="12" FontWeight="Bold" Foreground="{StaticResource PrimaryLightGreen}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+
                             </Grid>
-                            <TextBlock Text="33.0Mđ" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,4"/>
-                            <TextBlock Text="Tháng 7/2026" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
+                            <TextBlock Text="{Binding TotalIncome.FormattedValue}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,4"/>
+                            <TextBlock Text="{Binding CurrentMonthYear}" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                         </StackPanel>
                     </Grid>
                 </Border>
 
                 <!-- KPI 3: Expense -->
-                <Border Grid.Column="2" Style="{StaticResource StitchCard}" Margin="10,0,10,0">
+                <Border Grid.Column="2" Style="{StaticResource StitchCard}" Margin="10,0,0,0">
                     <Grid>
                         <Border Height="4" VerticalAlignment="Bottom" Background="{StaticResource ExpenseRed}" CornerRadius="0,0,24,24"/>
                         <StackPanel Margin="20">
                             <Grid Margin="0,0,0,16">
                                 <TextBlock Text="CHI TIÊU THÁNG" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                <TextBlock Text="↓ 3.1%" FontSize="12" FontWeight="Bold" Foreground="{StaticResource ExpenseRed}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                             </Grid>
-                            <TextBlock Text="11.8Mđ" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,4"/>
-                            <TextBlock Text="Tháng 7/2026" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
-                        </StackPanel>
-                    </Grid>
-                </Border>
-
-                <!-- KPI 4: Savings -->
-                <Border Grid.Column="3" Style="{StaticResource StitchCard}" Margin="10,0,0,0">
-                    <Grid>
-                        <Border Height="4" VerticalAlignment="Bottom" Background="{StaticResource SavingsOrange}" CornerRadius="0,0,24,24"/>
-                        <StackPanel Margin="20">
-                            <Grid Margin="0,0,0,16">
-                                <TextBlock Text="TIẾT KIỆM" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                <TextBlock Text="↑ 5.7%" FontSize="12" FontWeight="Bold" Foreground="{StaticResource PrimaryLightGreen}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                            </Grid>
-                            <TextBlock Text="21.3Mđ" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,4"/>
-                            <TextBlock Text="Mục tiêu: 30Mđ" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
+                            <TextBlock Text="{Binding TotalExpense.FormattedValue}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,4"/>
+                            <TextBlock Text="{Binding CurrentMonthYear}" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -163,7 +146,7 @@
                         </StackPanel>
 
                         <lvc:PieChart Grid.Row="1" Series="{Binding ExpenseAllocationSeries}" Height="250"
-                                      LegendPosition="Bottom" AnimationsSpeed="00:00:01.0"
+                                      LegendPosition="Hidden" AnimationsSpeed="00:00:01.0"
                                       LegendTextPaint="{Binding ChartLegendTextPaint}"/>
                     </Grid>
                 </Border>
@@ -196,7 +179,7 @@
                                     FontWeight="SemiBold" FontSize="14"/>
                         </Grid>
 
-                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalOnly" MaxHeight="400">
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalOnly" MaxHeight="300">
                             <ItemsControl ItemsSource="{Binding RecentTransactions}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
@@ -256,7 +239,7 @@
                             </Border>
                         </Grid>
 
-                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalOnly" MaxHeight="400">
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" PanningMode="VerticalOnly" MaxHeight="300" ScrollViewer.CanContentScroll="False">
                             <ItemsControl ItemsSource="{Binding BudgetProgresses}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>

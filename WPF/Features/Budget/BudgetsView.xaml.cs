@@ -89,6 +89,7 @@ namespace WPF.Features.Budget
         public BudgetStatCardModel CardSpent       { get; } = new() { Label = "Đã chi tiêu",    Icon = "🔥", AccentColor = "#f43f5e" };
         public BudgetStatCardModel CardRemaining   { get; } = new() { Label = "Còn khả dụng",   Icon = "✨", AccentColor = "#10d9a0" };
         public BudgetStatCardModel CardSavingRate  { get; } = new() { Label = "Tỷ lệ tiết kiệm",Icon = "📈", AccentColor = "#7c6df8", IsPercentage = true };
+        public string CurrentMonthYear => $"Tháng {DateTime.Now.Month}/{DateTime.Now.Year}";
 
         public ObservableCollection<BudgetData> AllBudgets { get; set; }
 

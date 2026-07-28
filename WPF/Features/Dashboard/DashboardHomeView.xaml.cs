@@ -29,6 +29,7 @@ namespace WPF.Features.Dashboard
         public DashboardSummaryData TotalIncome { get; set; }
         public DashboardSummaryData TotalExpense { get; set; }
         public DashboardSummaryData NetCashFlow { get; set; }
+        public string CurrentMonthYear => $"Tháng {DateTime.Now.Month}/{DateTime.Now.Year}";
 
         public ObservableCollection<TransactionData> RecentTransactions { get; set; }
         public ObservableCollection<BudgetData> BudgetProgresses { get; set; }
@@ -49,6 +50,7 @@ namespace WPF.Features.Dashboard
         private readonly IReportService _reportService;
         private readonly ITransactionService _transactionService;
         private readonly IBudgetService _budgetService;
+        private readonly IWalletService _walletService;
 
         /// <summary>
         /// Constructor khởi tạo các Service và cấu hình ban đầu cho biểu đồ, danh sách.
@@ -62,6 +64,7 @@ namespace WPF.Features.Dashboard
             _reportService = new ReportService(new TransactionRepository());
             _transactionService = new TransactionService(new TransactionRepository());
             _budgetService = new BudgetService(new BudgetRepository(), new TransactionRepository());
+            _walletService = new WalletService();
 
             TotalBalance = new DashboardSummaryData { Title = "SỐ DƯ HIỆN TẠI", TargetAmount = 0, Subtext = "Tổng", BorderAccentBrush = "#10d9a0", Icon = "💳" };
             TotalIncome  = new DashboardSummaryData { Title = "THU NHẬP THÁNG", TargetAmount = 0, Subtext = "Tháng này", BorderAccentBrush = "#3b82f6", Icon = "📈" };
@@ -92,14 +95,28 @@ namespace WPF.Features.Dashboard
             int month = DateTime.Now.Month;
             int year = DateTime.Now.Year;
 
+            int prevMonth = month == 1 ? 12 : month - 1;
+            int prevYear = month == 1 ? year - 1 : year;
+
             try
             {
                 // 1. Tải số liệu tổng quan thống kê
                 var report = await _reportService.GetMonthlyReportAsync(userId, month, year);
-                TotalBalance.TargetAmount = report.Balance;
+                var prevReport = await _reportService.GetMonthlyReportAsync(userId, prevMonth, prevYear);
+
+                var wallets = _walletService.GetAllWalletsByUser(userId);
+                decimal actualBalance = wallets.Where(w => w.IsActive).Sum(w => w.Balance);
+                decimal prevBalance = actualBalance - report.Balance; // Số dư tháng trước = Số dư hiện tại - Dòng tiền tháng này
+
+                TotalBalance.TargetAmount = actualBalance;
                 TotalIncome.TargetAmount = report.TotalIncome;
                 TotalExpense.TargetAmount = report.TotalExpense;
-                NetCashFlow.TargetAmount = report.Balance;
+                NetCashFlow.TargetAmount = report.Balance; // NetCashFlow (Tiết kiệm/Dòng tiền) = Thu - Chi
+
+                SetTrend(TotalBalance, actualBalance, prevBalance);
+                SetTrend(TotalIncome, report.TotalIncome, prevReport.TotalIncome);
+                SetTrend(TotalExpense, report.TotalExpense, prevReport.TotalExpense, true);
+                SetTrend(NetCashFlow, report.Balance, prevReport.Balance);
 
                 // Kích hoạt animation chạy số tiền
                 TotalBalance.AnimateTo(TotalBalance.TargetAmount);
@@ -233,6 +250,34 @@ namespace WPF.Features.Dashboard
                     LineSmoothness = 0.5
                 }
             };
+        }
+
+        private void SetTrend(DashboardSummaryData data, decimal current, decimal prev, bool inverseColor = false)
+        {
+            if (prev == 0)
+            {
+                data.TrendText = current > 0 ? "+100%" : (current < 0 ? "-100%" : "0%");
+                data.TrendIcon = current >= 0 ? "↑" : "↓";
+                data.TrendColor = current >= 0 ? (inverseColor ? "#f43f5e" : "#10d9a0") : (inverseColor ? "#10d9a0" : "#f43f5e");
+                if (current == 0) data.TrendColor = "#6b7280";
+                return;
+            }
+            
+            decimal change = current - prev;
+            double percent = (double)(change / Math.Abs(prev)) * 100;
+            
+            data.TrendText = $"{(percent > 0 ? "+" : "")}{percent:0.#}%";
+            data.TrendIcon = percent >= 0 ? "↑" : "↓";
+            
+            if (percent > 0)
+                data.TrendColor = inverseColor ? "#f43f5e" : "#10d9a0";
+            else if (percent < 0)
+                data.TrendColor = inverseColor ? "#10d9a0" : "#f43f5e";
+            else
+            {
+                data.TrendColor = "#6b7280";
+                data.TrendIcon = "−";
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

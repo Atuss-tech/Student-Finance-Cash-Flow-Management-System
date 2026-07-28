@@ -6,17 +6,55 @@ using WPF.Features.Budget;
 using WPF.Features.Reports;
 using WPF.Features.Wallets;
 using WPF.Features.Categories;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Linq;
 
 namespace Student_Finance___Cash_Flow_Management_System
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private string _currentContext = "Dashboard";
+
+        private string _userName = "Người Dùng";
+        public string UserName 
+        { 
+            get => _userName; 
+            set { _userName = value; OnPropertyChanged(); } 
+        }
+
+        private string _userInitials = "U";
+        public string UserInitials 
+        { 
+            get => _userInitials; 
+            set { _userInitials = value; OnPropertyChanged(); } 
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) 
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = this;
             GlobalAddButton.Content = "Thêm Giao dịch";
+            this.Loaded += MainWindow_Loaded;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Tạm thời fix cứng ở ViewModel cho đến khi có Login Session thật sự
+            UserName = "Nguyễn Thành";
+            UserInitials = "NT";
+        }
+
+        private string GetInitials(string fullName)
+        {
+            if (string.IsNullOrWhiteSpace(fullName)) return "U";
+            var parts = fullName.Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length == 1) return parts[0][0].ToString().ToUpper();
+            return (parts[0][0].ToString() + parts[^1][0].ToString()).ToUpper();
         }
 
         private async void GlobalAddButton_Click(object sender, RoutedEventArgs e)

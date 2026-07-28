@@ -114,10 +114,48 @@ namespace WPF.Features.Reports
         public double BarWidth { get; set; }
     }
 
+    public enum ReportPeriod
+    {
+        Week,
+        Month,
+        Year
+    }
+
     public partial class ReportsView : UserControl, INotifyPropertyChanged
     {
-        public ReportStatCardModel TotalIncomeReport { get; } = new() { Title = "TỔNG THU", BorderAccentBrush = "#10d9a0", Icon = "💵", Subtext = "Tháng hiện tại" };
-        public ReportStatCardModel TotalExpenseReport { get; } = new() { Title = "TỔNG CHI", BorderAccentBrush = "#f43f5e", Icon = "🔥", Subtext = "Tháng hiện tại" };
+        private ReportPeriod _currentPeriod = ReportPeriod.Month;
+        public ReportPeriod CurrentPeriod
+        {
+            get => _currentPeriod;
+            set { _currentPeriod = value; OnPropertyChanged(); UpdateDateRange(); }
+        }
+
+        public DateTime StartDate { get; private set; }
+        public DateTime EndDate { get; private set; }
+
+        private void UpdateDateRange()
+        {
+            var today = DateTime.Today;
+            switch (CurrentPeriod)
+            {
+                case ReportPeriod.Week:
+                    int diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
+                    StartDate = today.AddDays(-1 * diff).Date;
+                    EndDate = StartDate.AddDays(7).AddTicks(-1);
+                    break;
+                case ReportPeriod.Month:
+                    StartDate = new DateTime(today.Year, today.Month, 1);
+                    EndDate = StartDate.AddMonths(1).AddTicks(-1);
+                    break;
+                case ReportPeriod.Year:
+                    StartDate = new DateTime(today.Year, 1, 1);
+                    EndDate = StartDate.AddYears(1).AddTicks(-1);
+                    break;
+            }
+        }
+
+        public ReportStatCardModel TotalIncomeReport { get; } = new() { Title = "TỔNG THU", BorderAccentBrush = "#10d9a0", Icon = "💵", Subtext = "Thời gian đã chọn" };
+        public ReportStatCardModel TotalExpenseReport { get; } = new() { Title = "TỔNG CHI", BorderAccentBrush = "#f43f5e", Icon = "🔥", Subtext = "Thời gian đã chọn" };
         public ReportStatCardModel NetCashFlowReport { get; } = new() { Title = "DÒNG TIỀN", BorderAccentBrush = "#7c6df8", Icon = "📈", Subtext = "Thu nhập - Chi tiêu" };
 
         public SolidColorPaint ChartLegendTextPaint { get; } = new SolidColorPaint(SKColor.Parse("#6b7280")) { SKTypeface = SKTypeface.FromFamilyName("Segoe UI") };
@@ -157,7 +195,6 @@ namespace WPF.Features.Reports
 
         public bool HasData => DetailTransactions != null && DetailTransactions.Count > 0;
 
-        private readonly IReportService _reportService;
         private readonly ITransactionService _transactionService;
 
         public ReportsView()
@@ -165,13 +202,14 @@ namespace WPF.Features.Reports
             InitializeComponent();
             this.DataContext = this;
 
-            _reportService = new ReportService(new TransactionRepository());
             _transactionService = new TransactionService(new TransactionRepository());
 
             DetailTransactions = new ObservableCollection<TransactionData>();
 
             CashFlowXAxes = new Axis[] { new Axis { LabelsPaint = new SolidColorPaint(SKColor.Parse("#4a5568")) } };
             CashFlowYAxes = new Axis[] { new Axis { LabelsPaint = new SolidColorPaint(SKColor.Parse("#4a5568")), Labeler = v => (v / 1_000_000).ToString("0.#") + "M" } };
+
+            UpdateDateRange();
 
             this.Loaded += ReportsView_Loaded;
 
@@ -185,30 +223,51 @@ namespace WPF.Features.Reports
             await GenerateReportsAsync();
         }
 
-        private void SetRange30_Click(object sender, RoutedEventArgs e) { /* Bỏ qua, sử dụng theo tháng */ }
-        private void SetRange90_Click(object sender, RoutedEventArgs e) { /* Bỏ qua */ }
-        private void SetRange180_Click(object sender, RoutedEventArgs e) { /* Bỏ qua */ }
+        private void Period_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!this.IsLoaded) return;
+            
+            if (sender is RadioButton rb)
+            {
+                var content = rb.Content?.ToString();
+                switch (content)
+                {
+                    case "Tuần này": CurrentPeriod = ReportPeriod.Week; break;
+                    case "Tháng này": CurrentPeriod = ReportPeriod.Month; break;
+                    case "Năm nay": CurrentPeriod = ReportPeriod.Year; break;
+                }
+                _ = GenerateReportsAsync();
+            }
+        }
 
         public async System.Threading.Tasks.Task GenerateReportsAsync()
         {
             int userId = 1;
-            int month = DateTime.Now.Month;
-            int year = DateTime.Now.Year;
 
             try
             {
-                // 1. Lấy thông số chung
-                var report = await _reportService.GetMonthlyReportAsync(userId, month, year);
+                var allTransactions = await System.Threading.Tasks.Task.Run(() => _transactionService.GetTransactionsByUserId(userId));
+                var start = DateOnly.FromDateTime(StartDate);
+                var end = DateOnly.FromDateTime(EndDate);
+                var transactions = allTransactions.Where(t => t.TransactionDate >= start && t.TransactionDate <= end).ToList();
 
-                TotalIncomeReport.TargetAmount = report.TotalIncome;
-                TotalIncomeReport.Value = report.TotalIncome;
-                TotalExpenseReport.TargetAmount = report.TotalExpense;
-                TotalExpenseReport.Value = report.TotalExpense;
-                NetCashFlowReport.TargetAmount = report.Balance;
-                NetCashFlowReport.Value = report.Balance;
+                // 1. Lấy thông số chung
+                decimal totalIncome = transactions.Where(t => t.TransactionType == "Income").Sum(t => t.Amount);
+                decimal totalExpense = transactions.Where(t => t.TransactionType == "Expense").Sum(t => t.Amount);
+                decimal balance = totalIncome - totalExpense;
+
+                TotalIncomeReport.TargetAmount = totalIncome;
+                TotalIncomeReport.Value = totalIncome;
+                TotalExpenseReport.TargetAmount = totalExpense;
+                TotalExpenseReport.Value = totalExpense;
+                NetCashFlowReport.TargetAmount = balance;
+                NetCashFlowReport.Value = balance;
 
                 // 2. Lấy chi phí theo danh mục (Pie Chart)
-                var expensesByCategory = await _reportService.GetExpenseByCategoryAsync(userId, month, year);
+                var expensesByCategory = transactions
+                    .Where(t => t.TransactionType == "Expense")
+                    .GroupBy(t => t.Category?.CategoryName ?? "Unknown")
+                    .ToDictionary(g => g.Key, g => g.Sum(t => t.Amount));
 
                 var colors = new[] { "#f43f5e", "#f59e0b", "#7c6df8", "#3b82f6", "#10d9a0", "#8b5cf6" };
                 var pieSeriesList = new List<PieSeries<double>>();
@@ -230,7 +289,7 @@ namespace WPF.Features.Reports
                         {
                             var clickedCategory = point.Context.Series.Name;
                             await System.Windows.Application.Current.Dispatcher.InvokeAsync(async () => {
-                                await ShowTransactionsForCategoryAsync(clickedCategory, userId, month, year);
+                                await ShowTransactionsForCategoryAsync(clickedCategory, transactions);
                             });
                         }
                     };
@@ -241,11 +300,35 @@ namespace WPF.Features.Reports
                 ExpenseAllocationSeries = pieSeriesList.ToArray();
 
                 // 3. Lấy xu hướng dòng tiền (Bar Chart)
-                var trend = await _reportService.GetCashFlowTrendAsync(userId, year);
+                Dictionary<string, decimal> trend = new Dictionary<string, decimal>();
+                if (CurrentPeriod == ReportPeriod.Year)
+                {
+                    trend = transactions.GroupBy(t => t.TransactionDate.Month)
+                                        .ToDictionary(g => $"Tháng {g.Key}", 
+                                                      g => g.Where(t => t.TransactionType == "Income").Sum(t => t.Amount) - g.Where(t => t.TransactionType == "Expense").Sum(t => t.Amount));
+                }
+                else
+                {
+                    trend = transactions.GroupBy(t => t.TransactionDate)
+                                        .ToDictionary(g => g.Key.ToString("dd/MM"), 
+                                                      g => g.Where(t => t.TransactionType == "Income").Sum(t => t.Amount) - g.Where(t => t.TransactionType == "Expense").Sum(t => t.Amount));
+                }
+
                 var labels = new List<string>();
                 var netVals = new List<double>();
+                
+                // Sort trend chronologically
+                IEnumerable<KeyValuePair<string, decimal>> orderedTrend;
+                if (CurrentPeriod == ReportPeriod.Year)
+                {
+                    orderedTrend = trend.OrderBy(x => int.Parse(x.Key.Replace("Tháng ", "")));
+                }
+                else
+                {
+                    orderedTrend = trend.OrderBy(x => DateTime.ParseExact(x.Key, "dd/MM", null));
+                }
 
-                foreach (var kvp in trend.OrderBy(x => x.Key)) // sort by "Tháng X"
+                foreach (var kvp in orderedTrend)
                 {
                     labels.Add(kvp.Key);
                     netVals.Add((double)kvp.Value);
@@ -265,10 +348,26 @@ namespace WPF.Features.Reports
                 };
 
                 // 4. Cơ cấu chi tiêu theo 4 nhóm
-                var spendingGroups = await _reportService.GetExpenseBySpendingGroupAsync(userId, month, year);
+                var essentialKeywords = new[] { "ăn", "uống", "nhà", "ở", "thuê", "điện", "nước", "y tế", "thuốc", "khám", "bệnh", "đi lại", "xăng", "sửa xe", "xe", "internet", "điện thoại", "sinh hoạt", "chợ", "tạp hóa", "thực phẩm" };
+                var personalKeywords = new[] { "giải trí", "cafe", "cà phê", "mua sắm", "du lịch", "thể thao", "mỹ phẩm", "làm đẹp", "quà tặng", "quà", "thời trang", "quần áo", "phim", "game", "nhà hàng", "karaoke", "vui chơi", "đồ dùng cá nhân" };
+                var savingsKeywords = new[] { "tiết kiệm", "đầu tư", "bảo hiểm", "tích lũy", "quỹ", "dự phòng" };
+                var futureKeywords = new[] { "học", "khóa học", "sách", "phát triển", "ngoại ngữ", "kỹ năng", "đào tạo", "chứng chỉ", "giáo dục", "học phí", "trường", "online" };
+                
+                var spendingGroups = new Dictionary<string, decimal> { ["🏠 Nhu cầu thiết yếu"] = 0, ["🎮 Sở thích cá nhân"] = 0, ["💰 Tích lũy"] = 0, ["🎓 Tương lai"] = 0 };
 
-                // Mầu sắc, icon và background cho 4 nhóm
-                // Key = tên đầy đủ (dùng để tra cứu), Name hiển thị = không có emoji
+                var expenses = transactions.Where(t => t.TransactionType == "Expense").ToList();
+                foreach (var t in expenses)
+                {
+                    var catName = (t.Category?.CategoryName ?? "").ToLowerInvariant();
+                    var desc = (t.Description ?? "").ToLowerInvariant();
+                    var combined = catName + " " + desc;
+
+                    if (futureKeywords.Any(k => combined.Contains(k))) spendingGroups["🎓 Tương lai"] += t.Amount;
+                    else if (savingsKeywords.Any(k => combined.Contains(k))) spendingGroups["💰 Tích lũy"] += t.Amount;
+                    else if (personalKeywords.Any(k => combined.Contains(k))) spendingGroups["🎮 Sở thích cá nhân"] += t.Amount;
+                    else spendingGroups["🏠 Nhu cầu thiết yếu"] += t.Amount;
+                }
+
                 var groupMeta = new Dictionary<string, (string Color, string Icon, string Light, string DisplayName)>
                 {
                     ["🏠 Nhu cầu thiết yếu"] = ("#f43f5e", "🏠", "#fff1f2", "Nhu cầu thiết yếu"),
@@ -281,18 +380,13 @@ namespace WPF.Features.Reports
                 var groupPieSeries = new List<PieSeries<double>>();
                 var legendItems = new ObservableCollection<SpendingGroupLegendItem>();
 
-                // Mảng key theo thứ tự ưu tiên hiển thị
-                var orderedKeys = new[]
-                {
-                    "🏠 Nhu cầu thiết yếu",
-                    "🎮 Sở thích cá nhân",
-                    "💰 Tích lũy",
-                    "🎓 Tương lai"
-                };
+                var orderedKeys = new[] { "🏠 Nhu cầu thiết yếu", "🎮 Sở thích cá nhân", "💰 Tích lũy", "🎓 Tương lai" };
 
                 foreach (var key in orderedKeys)
                 {
                     decimal amount = spendingGroups.ContainsKey(key) ? spendingGroups[key] : 0;
+                    if (amount <= 0) continue; // Skip empty groups
+                    
                     var (color, icon, light, displayName) = groupMeta[key];
                     double pct = totalGroupExpense > 0 ? (double)(amount / totalGroupExpense) * 100 : 0;
 
@@ -319,7 +413,7 @@ namespace WPF.Features.Reports
                 SpendingGroupSeries = groupPieSeries.ToArray();
                 SpendingGroupLegend = legendItems;
 
-                await ShowTransactionsForCategoryAsync("Tất cả chi tiêu", userId, month, year);
+                await ShowTransactionsForCategoryAsync("Tất cả chi tiêu", transactions);
             }
             catch (Exception ex)
             {
@@ -327,14 +421,13 @@ namespace WPF.Features.Reports
             }
         }
 
-        private async System.Threading.Tasks.Task ShowTransactionsForCategoryAsync(string? category, int userId, int month, int year)
+        private async System.Threading.Tasks.Task ShowTransactionsForCategoryAsync(string? category, List<BusinessObjects.Models.FinanceTransaction> filteredTransactions)
         {
             SelectedCategoryLabel = $"Chi tiết: {category}";
-            var allTransactions = await _transactionService.GetTransactionsByMonthAsync(userId, month, year);
 
             var details = category == "Tất cả chi tiêu" 
-                ? allTransactions.Where(t => t.TransactionType == "Expense").OrderByDescending(t => t.TransactionDate)
-                : allTransactions.Where(t => t.Category?.CategoryName == category).OrderByDescending(t => t.TransactionDate);
+                ? filteredTransactions.Where(t => t.TransactionType == "Expense").OrderByDescending(t => t.TransactionDate)
+                : filteredTransactions.Where(t => t.Category?.CategoryName == category).OrderByDescending(t => t.TransactionDate);
                 
             var models = details.Select(t => new TransactionData
             {
@@ -348,6 +441,7 @@ namespace WPF.Features.Reports
             }).ToList();
 
             DetailTransactions = new ObservableCollection<TransactionData>(models);
+            await System.Threading.Tasks.Task.CompletedTask;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

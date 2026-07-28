@@ -35,6 +35,15 @@ namespace WPF.Features.Transactions
             }
         }
 
+        private string _trendText = string.Empty;
+        public string TrendText { get => _trendText; set { _trendText = value; OnPropertyChanged(); } }
+
+        private string _trendIcon = string.Empty;
+        public string TrendIcon { get => _trendIcon; set { _trendIcon = value; OnPropertyChanged(); } }
+
+        private string _trendColor = string.Empty;
+        public string TrendColor { get => _trendColor; set { _trendColor = value; OnPropertyChanged(); } }
+
         private decimal _targetValue;
         public decimal TargetValue { get => _targetValue; set { _targetValue = value; } }
 
@@ -124,6 +133,7 @@ namespace WPF.Features.Transactions
         public TxStatCardModel CardTotal   { get; } = new() { Label = "Tổng giao dịch", Icon = "🔢", AccentColor = "#7c6df8" };
         public TxStatCardModel CardIncome  { get; } = new() { Label = "Tổng thu",        Icon = "📈", AccentColor = "#10d9a0" };
         public TxStatCardModel CardExpense { get; } = new() { Label = "Tổng chi",        Icon = "📉", AccentColor = "#f43f5e" };
+        public string CurrentMonthYear => $"Tháng {DateTime.Now.Month}/{DateTime.Now.Year}";
 
         private ISeries[] _chartSeries = Array.Empty<ISeries>();
         public ISeries[] ChartSeries { get => _chartSeries; set { _chartSeries = value; OnPropertyChanged(); } }

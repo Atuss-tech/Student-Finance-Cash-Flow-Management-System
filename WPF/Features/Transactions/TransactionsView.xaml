@@ -59,7 +59,7 @@
                             <StackPanel HorizontalAlignment="Left" Margin="20">
                                 <TextBlock Text="TỔNG GIAO DỊCH" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}"/>
                                 <TextBlock Text="{Binding CardTotal.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,6,0,4"/>
-                                <TextBlock Text="Tháng 7/2026" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
+                                <TextBlock Text="{Binding CurrentMonthYear}" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -71,7 +71,7 @@
                             <StackPanel HorizontalAlignment="Left" Margin="20">
                                 <TextBlock Text="TỔNG THU" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}"/>
                                 <TextBlock Text="{Binding CardIncome.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryLightGreen}" Margin="0,6,0,4"/>
-                                <TextBlock Text="Tháng 7/2026" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
+                                <TextBlock Text="{Binding CurrentMonthYear}" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -83,7 +83,7 @@
                             <StackPanel HorizontalAlignment="Left" Margin="20">
                                 <TextBlock Text="TỔNG CHI" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondary}"/>
                                 <TextBlock Text="{Binding CardExpense.FormattedValue}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource ExpenseRed}" Margin="0,6,0,4"/>
-                                <TextBlock Text="Tháng 7/2026" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
+                                <TextBlock Text="{Binding CurrentMonthYear}" FontSize="13" Foreground="{StaticResource TextSecondary}"/>
                             </StackPanel>
                         </Grid>
                     </Border>

@@ -14,6 +14,15 @@ namespace WPF.UIData
         public string Icon { get; set; } = string.Empty;
         public double ChangePercentage { get; set; }
 
+        private string _trendText = string.Empty;
+        public string TrendText { get => _trendText; set { _trendText = value; OnPropertyChanged(); } }
+
+        private string _trendIcon = string.Empty;
+        public string TrendIcon { get => _trendIcon; set { _trendIcon = value; OnPropertyChanged(); } }
+
+        private string _trendColor = string.Empty;
+        public string TrendColor { get => _trendColor; set { _trendColor = value; OnPropertyChanged(); } }
+
         private decimal _targetAmount;
         public decimal TargetAmount { get => _targetAmount; set { _targetAmount = value; OnPropertyChanged(); } }
 

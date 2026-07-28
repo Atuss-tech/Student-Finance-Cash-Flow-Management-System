@@ -30,14 +30,14 @@
     "semantic_hash": "c436fb5383375626aa3b5a303ab90982"
   },
   "DataAccess/BudgetDAO.cs": {
-    "mtime": 1783757065.203567,
-    "ast_hash": "842b50644f6abe1580033c14f05ba27f",
-    "semantic_hash": "842b50644f6abe1580033c14f05ba27f"
+    "mtime": 1785244912.8600037,
+    "ast_hash": "db4ddd9fdcbdf63051bccc7af729272d",
+    "semantic_hash": "db4ddd9fdcbdf63051bccc7af729272d"
   },
   "DataAccess/CategoryDAO.cs": {
-    "mtime": 1783757676.203684,
-    "ast_hash": "444814ed1d03fad423e6a46543a5a91b",
-    "semantic_hash": "444814ed1d03fad423e6a46543a5a91b"
+    "mtime": 1785244912.8605306,
+    "ast_hash": "b7094c7b019f3d0290e43308ce504766",
+    "semantic_hash": "b7094c7b019f3d0290e43308ce504766"
   },
   "DataAccess/DataAccess.csproj": {
     "mtime": 1783757065.204084,
@@ -45,24 +45,24 @@
     "semantic_hash": "31ba9733f3a27b05a0e02d2f63f8e387"
   },
   "DataAccess/StudentFinanceDbContext.cs": {
-    "mtime": 1783757065.2045958,
-    "ast_hash": "7f145b63a556a300d84a7c705a0cbcf6",
-    "semantic_hash": "7f145b63a556a300d84a7c705a0cbcf6"
+    "mtime": 1785244912.8614008,
+    "ast_hash": "b0f35bd70397e2f04f93209aa11ea37a",
+    "semantic_hash": "b0f35bd70397e2f04f93209aa11ea37a"
   },
   "DataAccess/TransactionDAO.cs": {
-    "mtime": 1783758129.9166973,
-    "ast_hash": "9adee4e86fc0ba0d6832f8bea95c692d",
-    "semantic_hash": "9adee4e86fc0ba0d6832f8bea95c692d"
+    "mtime": 1785244912.8619235,
+    "ast_hash": "2b58e25247d031eceae5afd2f06a63bc",
+    "semantic_hash": "2b58e25247d031eceae5afd2f06a63bc"
   },
   "DataAccess/UserDAO.cs": {
-    "mtime": 1783757065.2051265,
+    "mtime": 1783865934.5588374,
     "ast_hash": "e70bd7e1c798c01ebb1729abfbef5972",
     "semantic_hash": "e70bd7e1c798c01ebb1729abfbef5972"
   },
   "DataAccess/WalletDAO.cs": {
-    "mtime": 1783757065.205656,
-    "ast_hash": "b8a21cdd48584e7ab3fcaefd637c9343",
-    "semantic_hash": "b8a21cdd48584e7ab3fcaefd637c9343"
+    "mtime": 1785244912.8629837,
+    "ast_hash": "a691d4d136c40e732a3e926c911f8290",
+    "semantic_hash": "a691d4d136c40e732a3e926c911f8290"
   },
   "Database/Insert_60_Data_StudentFinance_AutoUsers.sql": {
     "mtime": 1783757065.206177,
@@ -75,14 +75,14 @@
     "semantic_hash": "568632c1b855dec7ec6dc09dab9e7457"
   },
   "Repositories/BudgetRepository.cs": {
-    "mtime": 1783757065.20722,
-    "ast_hash": "62cba64a959437a26316ce10ad83de60",
-    "semantic_hash": "62cba64a959437a26316ce10ad83de60"
+    "mtime": 1785244912.8633099,
+    "ast_hash": "84f71b5b206b7c55e82b030794695f3d",
+    "semantic_hash": "84f71b5b206b7c55e82b030794695f3d"
   },
   "Repositories/CategoryRepository.cs": {
-    "mtime": 1783757623.7797337,
-    "ast_hash": "71d7df477923b43a7ea137de508de944",
-    "semantic_hash": "71d7df477923b43a7ea137de508de944"
+    "mtime": 1785244912.8638704,
+    "ast_hash": "5f41f7e211b5a0915c9ed6f24a32cc85",
+    "semantic_hash": "5f41f7e211b5a0915c9ed6f24a32cc85"
   },
   "Repositories/IBudgetRepository.cs": {
     "mtime": 1783757065.2077415,
@@ -90,24 +90,24 @@
     "semantic_hash": "525866857fcd6fdb606dda6fa23eed90"
   },
   "Repositories/ICategoryRepository.cs": {
-    "mtime": 1783757623.7797337,
-    "ast_hash": "13b89fa413f30b89915700bed3ef6a5d",
-    "semantic_hash": "13b89fa413f30b89915700bed3ef6a5d"
+    "mtime": 1785244912.8648832,
+    "ast_hash": "fdf10406953c85aa3f4f93121f7ffac0",
+    "semantic_hash": "fdf10406953c85aa3f4f93121f7ffac0"
   },
   "Repositories/ITransactionRepository.cs": {
-    "mtime": 1783758140.88025,
-    "ast_hash": "5d843ec24f2554568389929f199d60a7",
-    "semantic_hash": "5d843ec24f2554568389929f199d60a7"
+    "mtime": 1785244912.8654861,
+    "ast_hash": "e854a052b534433785737daacc5edeaa",
+    "semantic_hash": "e854a052b534433785737daacc5edeaa"
   },
   "Repositories/IUserRepository.cs": {
-    "mtime": 1783757065.2082655,
-    "ast_hash": "c1a18f9c3e6dc0dfcd2295c2a64acfd5",
-    "semantic_hash": "c1a18f9c3e6dc0dfcd2295c2a64acfd5"
+    "mtime": 1785244912.8658009,
+    "ast_hash": "79a21093266bb0e7400096aa9e25b0f1",
+    "semantic_hash": "79a21093266bb0e7400096aa9e25b0f1"
   },
   "Repositories/IWalletRepository.cs": {
-    "mtime": 1783757065.2087755,
-    "ast_hash": "134d4f0ffed00e0c1f6de3cc0c55d677",
-    "semantic_hash": "134d4f0ffed00e0c1f6de3cc0c55d677"
+    "mtime": 1785244912.8658009,
+    "ast_hash": "1d9fb7ed021dd1988489a8583a03b750",
+    "semantic_hash": "1d9fb7ed021dd1988489a8583a03b750"
   },
   "Repositories/Repositories.csproj": {
     "mtime": 1783757065.2087755,
@@ -115,64 +115,54 @@
     "semantic_hash": "51f29aabb2da4f4f5b70896cf30ca0dc"
   },
   "Repositories/TransactionRepository.cs": {
-    "mtime": 1783758153.5885189,
-    "ast_hash": "8430c735e5c6d962eb9ae06466752740",
-    "semantic_hash": "8430c735e5c6d962eb9ae06466752740"
+    "mtime": 1785244912.8658009,
+    "ast_hash": "2beb6cead25181ef25f9483044b55c37",
+    "semantic_hash": "2beb6cead25181ef25f9483044b55c37"
   },
   "Repositories/UserRepository.cs": {
-    "mtime": 1783757065.2093055,
-    "ast_hash": "fc969f11ad57c8b7ef59f2add8e4cabd",
-    "semantic_hash": "fc969f11ad57c8b7ef59f2add8e4cabd"
+    "mtime": 1785244912.8658009,
+    "ast_hash": "d7bacec00f85c6ac78f12b349bc54137",
+    "semantic_hash": "d7bacec00f85c6ac78f12b349bc54137"
   },
   "Repositories/WalletRepository.cs": {
-    "mtime": 1783757065.2093055,
-    "ast_hash": "4d17cc5d1a4b61a2b14a9e11aa3f89d8",
-    "semantic_hash": "4d17cc5d1a4b61a2b14a9e11aa3f89d8"
-  },
-  "Services/BugetService.cs": {
-    "mtime": 1783757065.2093055,
-    "ast_hash": "0da6f27441a2132731ffecfefb080d76",
-    "semantic_hash": "0da6f27441a2132731ffecfefb080d76"
+    "mtime": 1785244912.8658009,
+    "ast_hash": "63a5d5708cf92d4bcab0fb6aca9921b6",
+    "semantic_hash": "63a5d5708cf92d4bcab0fb6aca9921b6"
   },
   "Services/CategoryService.cs": {
-    "mtime": 1783757623.7797337,
-    "ast_hash": "dd93943c2b5963721ddb69c5f3f440b6",
-    "semantic_hash": "dd93943c2b5963721ddb69c5f3f440b6"
-  },
-  "Services/IBugetService.cs": {
-    "mtime": 1783757065.2093055,
-    "ast_hash": "0f35f1500f2589f766fbd0b9d2345337",
-    "semantic_hash": "0f35f1500f2589f766fbd0b9d2345337"
+    "mtime": 1785244912.8658009,
+    "ast_hash": "d86f0f80bb4fc47597921263b2ead0fc",
+    "semantic_hash": "d86f0f80bb4fc47597921263b2ead0fc"
   },
   "Services/ICategoryService.cs": {
-    "mtime": 1783757623.7797337,
-    "ast_hash": "fc969aa723720f45d223ed0b0b45c6e7",
-    "semantic_hash": "fc969aa723720f45d223ed0b0b45c6e7"
+    "mtime": 1785244912.8698123,
+    "ast_hash": "59af4a08408676235c1d26957eeabf44",
+    "semantic_hash": "59af4a08408676235c1d26957eeabf44"
   },
   "Services/IReportService.cs": {
-    "mtime": 1783757065.2093055,
-    "ast_hash": "2e58acf49f40c77d6ddb0842fc374ea0",
-    "semantic_hash": "2e58acf49f40c77d6ddb0842fc374ea0"
+    "mtime": 1784606458.9936519,
+    "ast_hash": "466b04e35d002e04a5da9721ffdd61a2",
+    "semantic_hash": "466b04e35d002e04a5da9721ffdd61a2"
   },
   "Services/ITransactionService.cs": {
-    "mtime": 1783758164.7150888,
-    "ast_hash": "9431bae8e338fdc510531da63193b480",
-    "semantic_hash": "9431bae8e338fdc510531da63193b480"
+    "mtime": 1785244912.8698123,
+    "ast_hash": "da915151fee9a96f1cd287168736b2d8",
+    "semantic_hash": "da915151fee9a96f1cd287168736b2d8"
   },
   "Services/IUserService.cs": {
-    "mtime": 1783757065.2093055,
-    "ast_hash": "16249dd6ff78c52ccd5c25a25016daf9",
-    "semantic_hash": "16249dd6ff78c52ccd5c25a25016daf9"
+    "mtime": 1785244912.8698123,
+    "ast_hash": "6115dec305ff4612c98811717ce9adc0",
+    "semantic_hash": "6115dec305ff4612c98811717ce9adc0"
   },
   "Services/IWalletService.cs": {
-    "mtime": 1783757065.2093055,
-    "ast_hash": "523d21535d01ec74d182406dfe2f49bb",
-    "semantic_hash": "523d21535d01ec74d182406dfe2f49bb"
+    "mtime": 1785244912.8698123,
+    "ast_hash": "25a9b02e0896edddc34241716ffdfe9d",
+    "semantic_hash": "25a9b02e0896edddc34241716ffdfe9d"
   },
   "Services/ReportService.cs": {
-    "mtime": 1783757065.2093055,
-    "ast_hash": "9bc3f77a4838360d2c7b2f3a9b8b3e1c",
-    "semantic_hash": "9bc3f77a4838360d2c7b2f3a9b8b3e1c"
+    "mtime": 1784606458.9936519,
+    "ast_hash": "fec6fb07947643bd18e4a87a12a3804b",
+    "semantic_hash": "fec6fb07947643bd18e4a87a12a3804b"
   },
   "Services/Services.csproj": {
     "mtime": 1783757065.2093055,
@@ -180,19 +170,19 @@
     "semantic_hash": "fd08088981af21b44d0db2f562b030c0"
   },
   "Services/TransactionService.cs": {
-    "mtime": 1783758209.7234795,
-    "ast_hash": "881fe6bfd6992585688294662773f064",
-    "semantic_hash": "881fe6bfd6992585688294662773f064"
+    "mtime": 1785244912.8698123,
+    "ast_hash": "825563d21eb64d635767c89eaf75a640",
+    "semantic_hash": "825563d21eb64d635767c89eaf75a640"
   },
   "Services/UserService.cs": {
-    "mtime": 1783757065.21309,
-    "ast_hash": "9d49e1f14fbe604e3c9c04614ba97cde",
-    "semantic_hash": "9d49e1f14fbe604e3c9c04614ba97cde"
+    "mtime": 1785244912.8698123,
+    "ast_hash": "bb1132974df5ee2bbd0ad39d459ab9ca",
+    "semantic_hash": "bb1132974df5ee2bbd0ad39d459ab9ca"
   },
   "Services/WalletService.cs": {
-    "mtime": 1783757065.2140677,
-    "ast_hash": "c9cbd5ea0be19e2e677296fdbc4083d9",
-    "semantic_hash": "c9cbd5ea0be19e2e677296fdbc4083d9"
+    "mtime": 1785244912.8698123,
+    "ast_hash": "ca33ba9a78e965b754c5f7878f519a5e",
+    "semantic_hash": "ca33ba9a78e965b754c5f7878f519a5e"
   },
   "Student Finance & Cash Flow Management System.sln": {
     "mtime": 1783757065.2145734,
@@ -200,113 +190,198 @@
     "semantic_hash": "84dfd532f32d7d9e5a9ed6f52b269adc"
   },
   "WPF/App.xaml": {
-    "mtime": 1783757065.2145734,
+    "mtime": 1783865934.5632455,
     "ast_hash": "01eda762e2b5f0a520024aa584cdadc7",
     "semantic_hash": "01eda762e2b5f0a520024aa584cdadc7"
   },
   "WPF/App.xaml.cs": {
-    "mtime": 1783757065.2145734,
+    "mtime": 1783865934.5637891,
     "ast_hash": "82a4d4ccce2bd6f7aaf200f3ea4db64c",
     "semantic_hash": "82a4d4ccce2bd6f7aaf200f3ea4db64c"
   },
   "WPF/AssemblyInfo.cs": {
-    "mtime": 1783757065.2145734,
+    "mtime": 1783865934.5648644,
     "ast_hash": "43d4bbaefa283c5e39a538fd15fc69ab",
     "semantic_hash": "43d4bbaefa283c5e39a538fd15fc69ab"
   },
   "WPF/Features/Budget/BudgetsView.xaml": {
-    "mtime": 1783757065.2145734,
-    "ast_hash": "4c4bf27f468421364f241b2ef2245191",
-    "semantic_hash": "4c4bf27f468421364f241b2ef2245191"
+    "mtime": 1785244912.8749313,
+    "ast_hash": "428383d36c874c5fe7ac7363735ccf3e",
+    "semantic_hash": "428383d36c874c5fe7ac7363735ccf3e"
   },
   "WPF/Features/Budget/BudgetsView.xaml.cs": {
-    "mtime": 1783757065.2145734,
-    "ast_hash": "94db535f2517077a2a10056c1f00ee8b",
-    "semantic_hash": "94db535f2517077a2a10056c1f00ee8b"
+    "mtime": 1785244912.8749313,
+    "ast_hash": "51d5f0655595f5ac0554d44ff17c7b63",
+    "semantic_hash": "51d5f0655595f5ac0554d44ff17c7b63"
   },
   "WPF/Features/Categories/CategoriesView.xaml": {
-    "mtime": 1783757065.2145734,
-    "ast_hash": "6c038d32096961953284aded3327d8b8",
-    "semantic_hash": "6c038d32096961953284aded3327d8b8"
+    "mtime": 1785244912.8749313,
+    "ast_hash": "fb367be997dbf65e595dde685f51d042",
+    "semantic_hash": "fb367be997dbf65e595dde685f51d042"
   },
   "WPF/Features/Categories/CategoriesView.xaml.cs": {
-    "mtime": 1783757065.2145734,
-    "ast_hash": "4ae6c67d21ba0bbdd2128770a95f7b60",
-    "semantic_hash": "4ae6c67d21ba0bbdd2128770a95f7b60"
+    "mtime": 1785244912.8749313,
+    "ast_hash": "b4b84206baaf00154921eb852c0456f3",
+    "semantic_hash": "b4b84206baaf00154921eb852c0456f3"
   },
   "WPF/Features/Dashboard/DashboardHomeView.xaml": {
-    "mtime": 1783757065.2185745,
-    "ast_hash": "b9302dbfe2f11e0c9aed1d85b88cb55e",
-    "semantic_hash": "b9302dbfe2f11e0c9aed1d85b88cb55e"
+    "mtime": 1785252333.9519603,
+    "ast_hash": "bb2774a09e0ed3375635d1e90423008a",
+    "semantic_hash": "bb2774a09e0ed3375635d1e90423008a"
   },
   "WPF/Features/Dashboard/DashboardHomeView.xaml.cs": {
-    "mtime": 1783757065.2185745,
-    "ast_hash": "80474d370f6cc078ba92edca2e66182c",
-    "semantic_hash": "80474d370f6cc078ba92edca2e66182c"
+    "mtime": 1785244912.879864,
+    "ast_hash": "7ed9e261195060bf8b7255240cc17813",
+    "semantic_hash": "7ed9e261195060bf8b7255240cc17813"
   },
   "WPF/Features/Profile/ProfileView.xaml": {
-    "mtime": 1783757065.2185745,
+    "mtime": 1783865934.570212,
     "ast_hash": "7732616fc11293e3c05335c5517811c1",
     "semantic_hash": "7732616fc11293e3c05335c5517811c1"
   },
   "WPF/Features/Profile/ProfileView.xaml.cs": {
-    "mtime": 1783757065.2185745,
+    "mtime": 1783865934.570212,
     "ast_hash": "7886fb6693fa8d96608d376c1b3c9cca",
     "semantic_hash": "7886fb6693fa8d96608d376c1b3c9cca"
   },
   "WPF/Features/Reports/ReportsView.xaml": {
-    "mtime": 1783757065.2205882,
-    "ast_hash": "3a7594dc7fca98d63508601e212c4a73",
-    "semantic_hash": "3a7594dc7fca98d63508601e212c4a73"
+    "mtime": 1785252497.8265412,
+    "ast_hash": "440531ab5a500b53ca4c0e418f89d11a",
+    "semantic_hash": "440531ab5a500b53ca4c0e418f89d11a"
   },
   "WPF/Features/Reports/ReportsView.xaml.cs": {
-    "mtime": 1783757065.2205882,
-    "ast_hash": "25a85fd336233cca109351b37ceebc63",
-    "semantic_hash": "25a85fd336233cca109351b37ceebc63"
+    "mtime": 1785251097.6295822,
+    "ast_hash": "f2de609afcaea5a1d73d6b88ce95b63e",
+    "semantic_hash": "f2de609afcaea5a1d73d6b88ce95b63e"
   },
   "WPF/Features/Transactions/TransactionsView.xaml": {
-    "mtime": 1783757065.2205882,
-    "ast_hash": "628041bcd83ac5eed14cbf8f94234b8b",
-    "semantic_hash": "628041bcd83ac5eed14cbf8f94234b8b"
+    "mtime": 1785244912.879864,
+    "ast_hash": "ace8646c9a7560b4bed445ed6db2d9cb",
+    "semantic_hash": "ace8646c9a7560b4bed445ed6db2d9cb"
   },
   "WPF/Features/Transactions/TransactionsView.xaml.cs": {
-    "mtime": 1783757065.2205882,
-    "ast_hash": "de240a0eab54c2bd0706aff80fd68e6f",
-    "semantic_hash": "de240a0eab54c2bd0706aff80fd68e6f"
+    "mtime": 1785244912.8818927,
+    "ast_hash": "8b8b864f83f689dd7f64802a7e4a8a8b",
+    "semantic_hash": "8b8b864f83f689dd7f64802a7e4a8a8b"
   },
   "WPF/Features/Wallets/WalletsView.xaml": {
-    "mtime": 1783757065.2205882,
-    "ast_hash": "5aa9b1a8897f97cdc114d4e0d8f47d1b",
-    "semantic_hash": "5aa9b1a8897f97cdc114d4e0d8f47d1b"
+    "mtime": 1785244912.8818927,
+    "ast_hash": "4f4545ee1db1c250b115cce5f6d3d4b3",
+    "semantic_hash": "4f4545ee1db1c250b115cce5f6d3d4b3"
   },
   "WPF/Features/Wallets/WalletsView.xaml.cs": {
-    "mtime": 1783757065.2205882,
-    "ast_hash": "9f59acb432809354c0e6e31ca52926dc",
-    "semantic_hash": "9f59acb432809354c0e6e31ca52926dc"
+    "mtime": 1784768759.7392976,
+    "ast_hash": "dfedcaefdb14d65db439ab3fda7bc621",
+    "semantic_hash": "dfedcaefdb14d65db439ab3fda7bc621"
   },
   "WPF/MainWindow.xaml": {
-    "mtime": 1783757065.2205882,
-    "ast_hash": "6f6dfc9077395a3ef31fc8e1f6e43dbc",
-    "semantic_hash": "6f6dfc9077395a3ef31fc8e1f6e43dbc"
+    "mtime": 1785244912.8818927,
+    "ast_hash": "67c4d57b47809fcc4c37a6fc90309be4",
+    "semantic_hash": "67c4d57b47809fcc4c37a6fc90309be4"
   },
   "WPF/MainWindow.xaml.cs": {
-    "mtime": 1783757065.2205882,
-    "ast_hash": "f0cc2f8054d9bb9f369fa3e657b56fc7",
-    "semantic_hash": "f0cc2f8054d9bb9f369fa3e657b56fc7"
-  },
-  "WPF/Models.cs": {
-    "mtime": 1783757065.2205882,
-    "ast_hash": "1f60c301a40df9e2b68bc84b51172f32",
-    "semantic_hash": "1f60c301a40df9e2b68bc84b51172f32"
+    "mtime": 1785244912.8818927,
+    "ast_hash": "84399fbcbdfcfae9054beee8e8ce321a",
+    "semantic_hash": "84399fbcbdfcfae9054beee8e8ce321a"
   },
   "WPF/WPF.csproj": {
-    "mtime": 1783757065.2205882,
+    "mtime": 1783865934.575574,
     "ast_hash": "2ca08afb509d019692f5d9246b7cd2ec",
     "semantic_hash": "2ca08afb509d019692f5d9246b7cd2ec"
   },
   "WPF/appsettings.json": {
-    "mtime": 1783757065.2205882,
-    "ast_hash": "18db6cebae105faabebe087c15edf9fe",
-    "semantic_hash": "18db6cebae105faabebe087c15edf9fe"
+    "mtime": 1785244912.8855035,
+    "ast_hash": "6044f4956f0d7cb844a1ddaf7f3508a3",
+    "semantic_hash": "6044f4956f0d7cb844a1ddaf7f3508a3"
+  },
+  "Services/BudgetService.cs": {
+    "mtime": 1785244912.8658009,
+    "ast_hash": "e3fc364ee4e04b1a1ef262c3ae6c78e7",
+    "semantic_hash": "e3fc364ee4e04b1a1ef262c3ae6c78e7"
+  },
+  "Services/IBudgetService.cs": {
+    "mtime": 1785244912.8658009,
+    "ast_hash": "e56e2f1f467737ca25ed8c35aaede50f",
+    "semantic_hash": "e56e2f1f467737ca25ed8c35aaede50f"
+  },
+  "WPF/Common/CustomMessageBoxWindow.xaml": {
+    "mtime": 1785244912.8734007,
+    "ast_hash": "86f516d940f7ae60e34e318fd0525bdb",
+    "semantic_hash": "86f516d940f7ae60e34e318fd0525bdb"
+  },
+  "WPF/Common/CustomMessageBoxWindow.xaml.cs": {
+    "mtime": 1785244912.8734007,
+    "ast_hash": "8bbddf21d89cd5fca464e7e78939b886",
+    "semantic_hash": "8bbddf21d89cd5fca464e7e78939b886"
+  },
+  "WPF/Features/Budget/AddBudgetWindow.xaml": {
+    "mtime": 1785244912.8749313,
+    "ast_hash": "43c577f61fdc462776e8251a6b9546de",
+    "semantic_hash": "43c577f61fdc462776e8251a6b9546de"
+  },
+  "WPF/Features/Budget/AddBudgetWindow.xaml.cs": {
+    "mtime": 1785244912.8749313,
+    "ast_hash": "3835be2df12d45dc6378a2f5d1107eb3",
+    "semantic_hash": "3835be2df12d45dc6378a2f5d1107eb3"
+  },
+  "WPF/Features/Categories/AddCategoryWindow.xaml": {
+    "mtime": 1783865910.5527742,
+    "ast_hash": "6b50a1fcaf5fa100474d6b293900647d",
+    "semantic_hash": "6b50a1fcaf5fa100474d6b293900647d"
+  },
+  "WPF/Features/Categories/AddCategoryWindow.xaml.cs": {
+    "mtime": 1785244912.8749313,
+    "ast_hash": "83dc0740318056217da6d43147ab51a2",
+    "semantic_hash": "83dc0740318056217da6d43147ab51a2"
+  },
+  "WPF/Features/Categories/EditCategoryWindow.xaml": {
+    "mtime": 1784768759.7336738,
+    "ast_hash": "6d00b1659d478bb40f5c61719504a7e9",
+    "semantic_hash": "6d00b1659d478bb40f5c61719504a7e9"
+  },
+  "WPF/Features/Categories/EditCategoryWindow.xaml.cs": {
+    "mtime": 1785244912.879864,
+    "ast_hash": "d41974a0be6b1e6768685dae51877d12",
+    "semantic_hash": "d41974a0be6b1e6768685dae51877d12"
+  },
+  "WPF/Features/Transactions/AddTransactionWindow.xaml": {
+    "mtime": 1784768759.736504,
+    "ast_hash": "d7eda71b5db22225b47819dbcef07863",
+    "semantic_hash": "d7eda71b5db22225b47819dbcef07863"
+  },
+  "WPF/Features/Transactions/AddTransactionWindow.xaml.cs": {
+    "mtime": 1785244912.879864,
+    "ast_hash": "2367e915b74ecb6b12a4ed7a98c11433",
+    "semantic_hash": "2367e915b74ecb6b12a4ed7a98c11433"
+  },
+  "WPF/Features/Transactions/AllTransactionsWindow.xaml": {
+    "mtime": 1784712219.9124148,
+    "ast_hash": "96e6bd1a06981276e31fa0cd580e3973",
+    "semantic_hash": "96e6bd1a06981276e31fa0cd580e3973"
+  },
+  "WPF/Features/Transactions/AllTransactionsWindow.xaml.cs": {
+    "mtime": 1784712230.4329033,
+    "ast_hash": "696dfa7d220ac4f8eeb6f586ac864e75",
+    "semantic_hash": "696dfa7d220ac4f8eeb6f586ac864e75"
+  },
+  "WPF/Features/Wallets/AddWalletWindow.xaml": {
+    "mtime": 1784768759.7382462,
+    "ast_hash": "2b3a19423f77360002a37601e1a63ffa",
+    "semantic_hash": "2b3a19423f77360002a37601e1a63ffa"
+  },
+  "WPF/Features/Wallets/AddWalletWindow.xaml.cs": {
+    "mtime": 1785244912.8818927,
+    "ast_hash": "78a25a3623c324c50870fca87e0135a8",
+    "semantic_hash": "78a25a3623c324c50870fca87e0135a8"
+  },
+  "WPF/UIData.cs": {
+    "mtime": 1785244912.8818927,
+    "ast_hash": "52e5209cb8d6f9b49132b049977c2da6",
+    "semantic_hash": "52e5209cb8d6f9b49132b049977c2da6"
+  },
+  "README.md": {
+    "mtime": 1782835591.2822516,
+    "ast_hash": "a1401afed10909f16d87c75f06500ca0",
+    "semantic_hash": "a1401afed10909f16d87c75f06500ca0"
   }
 }
