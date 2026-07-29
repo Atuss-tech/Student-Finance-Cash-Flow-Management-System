@@ -66,54 +66,6 @@ namespace Services
             transactionRepository.AddTransaction(transaction);
         }
 
-        public void UpdateTransaction(int userId, int transactionId, int walletId, int categoryId, string transactionType, decimal amount, DateTime transactionDate, string? description)
-        {
-            CheckUserId(userId);
-
-            CheckTransactionExists(
-                transactionId,
-                userId);
-
-            string finalTransactionType =
-                GetTransactionType(transactionType);
-
-            // Khi sửa giao dịch, không kiểm tra số dư hiện tại ở Service.
-            // Lý do: DAO sẽ hoàn tác giao dịch cũ trước,
-            // rồi mới áp dụng giao dịch mới trong transaction database.
-            CheckTransactionInput(
-                userId,
-                walletId,
-                categoryId,
-                finalTransactionType,
-                amount,
-                transactionDate,
-                checkCurrentBalance: false);
-
-            transactionRepository.UpdateTransaction(
-                transactionId,
-                userId,
-                walletId,
-                categoryId,
-                finalTransactionType,
-                amount,
-                transactionDate,
-                GetDescription(description));
-        }
-
-        public void DeleteTransaction(int userId, int transactionId)
-        {
-            CheckUserId(userId);
-
-            CheckTransactionExists(
-                transactionId,
-                userId);
-
-            // DAO sẽ tự hoàn lại số dư ví.
-            transactionRepository.DeleteTransaction(
-                transactionId,
-                userId);
-        }
-
         // Gom toàn bộ kiểm tra dữ liệu giao dịch vào một hàm.
         private void CheckTransactionInput(
             int userId,
@@ -347,16 +299,6 @@ namespace Services
         public async Task AddTransactionAsync(FinanceTransaction transaction)
         {
             await transactionRepository.AddTransactionAsync(transaction);
-        }
-
-        public async Task UpdateTransactionAsync(FinanceTransaction transaction)
-        {
-            await transactionRepository.UpdateTransactionAsync(transaction);
-        }
-
-        public async Task DeleteTransactionAsync(int id)
-        {
-            await transactionRepository.DeleteTransactionAsync(id);
         }
     }
 }

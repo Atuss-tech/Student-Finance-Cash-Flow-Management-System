@@ -307,31 +307,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Action buttons (Disabled for transaction history to preserve audit logs) -->
-                    <Grid Visibility="Collapsed">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Background="#e6f0ff" Cursor="Hand" Margin="0,0,8,0" Click="EditTransaction_Click" BorderThickness="0" Padding="0">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}" CornerRadius="12" Padding="0,14">
-                                        <TextBlock Text="✏️ Sửa" Foreground="{StaticResource TextPrimary}" HorizontalAlignment="Center" FontWeight="SemiBold" FontSize="15"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-                        <Button Grid.Column="1" Background="#cf202f" Cursor="Hand" Margin="8,0,0,0" Click="DeleteTransaction_Click" BorderThickness="0" Padding="0">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}" CornerRadius="12" Padding="0,14">
-                                        <TextBlock Text="🗑️ Xóa" Foreground="#ffffff" HorizontalAlignment="Center" FontWeight="SemiBold" FontSize="15"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-                    </Grid>
                 </StackPanel>
             </ScrollViewer>
         </Border>

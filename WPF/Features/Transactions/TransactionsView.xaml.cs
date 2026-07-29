@@ -389,53 +389,6 @@ namespace WPF.Features.Transactions
 
         private void CloseDetail_Click(object sender, RoutedEventArgs e) => SelectedTransaction = null;
 
-        private async void EditTransaction_Click(object sender, RoutedEventArgs e)
-        {
-            if (SelectedTransaction != null)
-            {
-                var window = new AddTransactionWindow(SelectedTransaction);
-                if (window.ShowDialog() == true)
-                {
-                    SelectedTransaction = null;
-                    await LoadDataAsync();
-                }
-            }
-        }
-
-        private async void DeleteTransaction_Click(object sender, RoutedEventArgs e)
-        {
-            if (SelectedTransaction != null)
-            {
-                bool isConfirmed = Common.CustomMessageBoxWindow.ShowConfirm(
-                    Window.GetWindow(this),
-                    "Xác nhận xóa giao dịch",
-                    $"Bạn có chắc chắn muốn xóa giao dịch \"{SelectedTransaction.Title}\" ({SelectedTransaction.Amount:N0} đ) không?",
-                    "Số tiền trong ví liên quan sẽ được tự động hoàn lại tương ứng.",
-                    "Xóa giao dịch",
-                    "Hủy bỏ",
-                    Common.CustomDialogType.Warning,
-                    "#DC2626");
-
-                if (isConfirmed)
-                {
-                    try
-                    {
-                        if (SelectedTransaction.TransactionId > 0)
-                        {
-                            _transactionService.DeleteTransaction(1, SelectedTransaction.TransactionId);
-                        }
-                        SelectedTransaction = null;
-                        Common.CustomMessageBoxWindow.ShowInfo(Window.GetWindow(this), "Thành công", "Đã xóa giao dịch và cập nhật lại số dư ví!");
-                        await LoadDataAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        Common.CustomMessageBoxWindow.ShowInfo(Window.GetWindow(this), "Lỗi khi xóa giao dịch", ex.Message);
-                    }
-                }
-            }
-        }
-
         private void ExportCsv_Click(object sender, RoutedEventArgs e)
         {
             var dlg = new SaveFileDialog { Filter = "CSV|*.csv", FileName = "giao_dich.csv" };

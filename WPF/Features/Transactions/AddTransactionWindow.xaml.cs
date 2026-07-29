@@ -221,16 +221,8 @@ namespace WPF.Features.Transactions
             try
             {
                 int userId = Services.UserSession.CurrentUserId;
-                if (_transactionToEdit != null)
-                {
-                    _transactionService.UpdateTransaction(userId, _transactionToEdit.TransactionId, walletId, categoryId, type, amount, date, note);
-                    Common.CustomMessageBoxWindow.ShowInfo(this, "Thành công", "Cập nhật giao dịch và số dư ví thành công!");
-                }
-                else
-                {
-                    _transactionService.AddTransaction(userId, walletId, categoryId, type, amount, date, note);
-                    Common.CustomMessageBoxWindow.ShowInfo(this, "Thành công", "Thêm giao dịch thành công! Số dư ví đã được tự động cập nhật.");
-                }
+                _transactionService.AddTransaction(userId, walletId, categoryId, type, amount, date, note);
+                Common.CustomMessageBoxWindow.ShowInfo(this, "Thành công", "Thêm giao dịch thành công! Số dư ví đã được tự động cập nhật.");
                 
                 this.DialogResult = true;
                 this.Close();
